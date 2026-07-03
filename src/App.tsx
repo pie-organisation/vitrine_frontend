@@ -1,0 +1,78 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Login }                    from './pages/Login'
+import { Registration }             from './pages/Registration'
+import { MotDePasseOublie }         from './pages/MotDePasseOublie'
+import { ReinitialiserMotDePasse }  from './pages/ReinitialiserMotDePasse'
+import { ResetPassword }            from './pages/ResetPassword'
+import { NotFound }                 from './pages/NotFound'
+import { AdminLayout }        from './layouts/AdminLayout'
+import { Overview }           from './pages/admin/Overview'
+import { Organisations }      from './pages/admin/Organisations'
+import { OrganisationDetail } from './pages/admin/OrganisationDetail'
+import { Plans }              from './pages/admin/Plans'
+import { Demandes }           from './pages/admin/Demandes'
+import { Sessions }           from './pages/admin/Sessions'
+import { Facturation }        from './pages/admin/Facturation'
+import { Logs }               from './pages/admin/Logs'
+import { Equipe }             from './pages/admin/Equipe'
+import { Offres }             from './pages/admin/Offres'
+import { Messages }           from './pages/admin/Messages'
+import { Analytics }          from './pages/admin/Analytics'
+import { Profil }             from './pages/admin/Profil'
+import { SchoolLayout }       from './layouts/SchoolLayout'
+import { Dashboard }          from './pages/school/Dashboard'
+import { Comptes }            from './pages/school/Comptes'
+import { FacturationEcole }   from './pages/school/FacturationEcole'
+import { Contact }            from './pages/school/Contact'
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Public */}
+          <Route path="/login"                       element={<Login />} />
+          <Route path="/inscription"                 element={<Registration />} />
+          <Route path="/mot-de-passe-oublie"         element={<MotDePasseOublie />} />
+          <Route path="/reinitialiser-mot-de-passe"  element={<ReinitialiserMotDePasse />} />
+          <Route path="/reset-password"              element={<ResetPassword />} />
+
+          {/* Admin back-office — protected */}
+          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<Navigate to="overview" replace />} />
+            <Route path="overview"              element={<Overview />} />
+            <Route path="demandes"              element={<Demandes />} />
+            <Route path="organisations"         element={<Organisations />} />
+            <Route path="organisations/:id"     element={<OrganisationDetail />} />
+            <Route path="sessions"              element={<Sessions />} />
+            <Route path="facturation"           element={<Facturation />} />
+            <Route path="plans"                 element={<Plans />} />
+            <Route path="logs"                  element={<Logs />} />
+            <Route path="equipe"                element={<Equipe />} />
+            <Route path="offres"                element={<Offres />} />
+            <Route path="messages"              element={<Messages />} />
+            <Route path="analytics"             element={<Analytics />} />
+            <Route path="profil"                element={<Profil />} />
+          </Route>
+
+          {/* School / Group dashboard — protected */}
+          <Route path="/school" element={<ProtectedRoute><SchoolLayout /></ProtectedRoute>}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard"   element={<Dashboard />}        />
+            <Route path="comptes"     element={<Comptes />}          />
+            <Route path="facturation" element={<FacturationEcole />} />
+            <Route path="contact"     element={<Contact />}          />
+          </Route>
+
+          {/* Root redirect */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  )
+}
