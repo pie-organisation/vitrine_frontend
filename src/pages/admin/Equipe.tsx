@@ -142,7 +142,7 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
       const res = await api.post<{ utilisateur_id: string; reset_token?: string; reset_link: string }>(
         ENDPOINTS.adminUsers, { prenom, nom, email, role }
       )
-      // Toujours afficher le lien — email = bonus
+      // Toujours afficher le lien — email
       setResetLink(res.reset_link)
       setEmailFailed(!!(res.reset_token))
     } catch (e) {
@@ -181,7 +181,7 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
         <div className="flex flex-col gap-3">
           {emailFailed ? (
             <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(245,158,11,0.08)', color: '#b45309', border: '1px solid rgba(245,158,11,0.2)' }}>
-              Email non envoyé (SMTP non configuré) — partage ce lien manuellement :
+              Email non envoyé — partage ce lien manuellement :
             </div>
           ) : (
             <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d', border: '1px solid rgba(34,197,94,0.2)' }}>
