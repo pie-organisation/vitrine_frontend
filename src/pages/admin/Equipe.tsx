@@ -130,9 +130,10 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
   const [nom,       setNom]       = useState('')
   const [email,     setEmail]     = useState('')
   const [role,      setRole]      = useState('admin')
-  const [sending,   setSending]   = useState(false)
-  const [error,     setError]     = useState<string | null>(null)
-  const [resetLink, setResetLink] = useState<string | null>(null)
+  const [sending,     setSending]     = useState(false)
+  const [error,       setError]       = useState<string | null>(null)
+  const [resetLink,   setResetLink]   = useState<string | null>(null)
+  const [emailFailed, setEmailFailed] = useState(false)
 
   const handleSend = async () => {
     if (!prenom || !nom || !email) { setError('Tous les champs sont obligatoires.'); return }
@@ -141,12 +142,9 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
       const res = await api.post<{ utilisateur_id: string; reset_token?: string; reset_link: string }>(
         ENDPOINTS.adminUsers, { prenom, nom, email, role }
       )
-      // Si email échoué → affiche le lien directement
-      if (res.reset_token) {
-        setResetLink(res.reset_link)
-      } else {
-        onInvited(); onClose()
-      }
+      // Toujours afficher le lien — email = bonus
+      setResetLink(res.reset_link)
+      setEmailFailed(!!(res.reset_token))
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erreur lors de l'invitation.")
     } finally {
@@ -181,9 +179,15 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
       {resetLink ? (
         /* Email non reçu → affiche le lien ici directement */
         <div className="flex flex-col gap-3">
-          <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(245,158,11,0.08)', color: '#b45309', border: '1px solid rgba(245,158,11,0.2)' }}>
-            Email non envoyé (SMTP non configuré). Transmets ce lien manuellement à l'utilisateur :
-          </div>
+          {emailFailed ? (
+            <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(245,158,11,0.08)', color: '#b45309', border: '1px solid rgba(245,158,11,0.2)' }}>
+              Email non envoyé (SMTP non configuré) — partage ce lien manuellement :
+            </div>
+          ) : (
+            <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d', border: '1px solid rgba(34,197,94,0.2)' }}>
+              Compte créé ! Email envoyé. Voici aussi le lien de création de mot de passe :
+            </div>
+          )}
           <div
             className="text-xs break-all p-3 rounded-xl font-mono select-all"
             style={{ background: 'rgba(107,79,224,0.06)', color: '#6B4FE0', border: '1px solid rgba(107,79,224,0.15)' }}
