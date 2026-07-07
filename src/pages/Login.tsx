@@ -52,7 +52,7 @@ export function Login() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <Input
-              label="Email de facturation"
+              label="Email"
               name="email"
               type="email"
               placeholder="votre@email.fr"

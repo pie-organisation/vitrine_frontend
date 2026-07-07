@@ -6,9 +6,8 @@ import { SectionCard }   from '../../components/ui/SectionCard'
 import { ProgressBar }   from '../../components/ui/ProgressBar'
 import { FilterPills }   from '../../components/ui/FilterPills'
 import { DotsPagination } from '../../components/ui/DotsPagination'
-import { useApi }        from '../../hooks/useApi'
-import { api, ENDPOINTS } from '../../api/client'
-import type { Alerte, AlerteSev, DashboardMetrics } from '../../mocks/data'
+import { mockMetrics, mockAlertes } from '../../mocks/data'
+import type { Alerte, AlerteSev } from '../../mocks/data'
 
 // ── Alert item ────────────────────────────────────────────────────────────────
 
@@ -53,40 +52,17 @@ const ALERT_FILTERS = [
 
 const ALERTS_PER_PAGE = 3
 
-// ── Loading / Error ───────────────────────────────────────────────────────────
-
-function Spinner() {
-  return (
-    <div className="flex items-center justify-center py-16">
-      <div className="w-7 h-7 rounded-full border-2 animate-spin"
-        style={{ borderColor: 'rgba(107,79,224,0.2)', borderTopColor: '#6B4FE0' }} />
-    </div>
-  )
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
-
-interface OverviewData {
-  metriques: DashboardMetrics
-  alertes:   Alerte[]
-}
 
 export function Overview() {
   const [alertFilter, setAlertFilter] = useState('all')
   const [alertPage,   setAlertPage]   = useState(0)
 
-  const { data, loading, error, refetch } = useApi<OverviewData>(
-    () => Promise.all([
-      api.get<DashboardMetrics>(ENDPOINTS.metriques),
-      api.get<Alerte[]>(ENDPOINTS.alertes),
-    ]).then(([metriques, alertes]) => ({ metriques, alertes })),
-    []
-  )
+  // Données mockées pour l'MVP — pas encore branché sur de vraies métriques agrégées.
+  const alertes   = mockAlertes
+  const metriques = mockMetrics
 
   const handleFilter = (f: string) => { setAlertFilter(f); setAlertPage(0) }
-
-  const alertes   = data?.alertes ?? []
-  const metriques = data?.metriques
 
   const filtered = alertFilter === 'all'
     ? alertes
@@ -94,22 +70,7 @@ export function Overview() {
 
   const totalPages = Math.ceil(filtered.length / ALERTS_PER_PAGE)
   const visible    = filtered.slice(alertPage * ALERTS_PER_PAGE, (alertPage + 1) * ALERTS_PER_PAGE)
-  const traitedPct = metriques
-    ? Math.round((metriques.alertesTraitees / metriques.alertesTotales) * 100)
-    : 0
-
-  if (loading) return <Spinner />
-
-  if (error) return (
-    <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
-      <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
-        style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>
-        Réessayer
-      </button>
-    </div>
-  )
+  const traitedPct = Math.round((metriques.alertesTraitees / metriques.alertesTotales) * 100)
 
   return (
     <div>
@@ -120,10 +81,10 @@ export function Overview() {
 
       {/* KPI grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
-        <MetricCard label="Organisations actives" value={metriques?.organisationsActives ?? '—'} sublabel="dont 3 en attente" />
-        <MetricCard label="Utilisateurs"          value={metriques ? metriques.utilisateursTotal.toLocaleString('fr-FR') : '—'} sublabel="+24 ce mois" />
-        <MetricCard label="Sessions en cours"     value={metriques?.sessionsEnCours ?? '—'} sublabel="en temps réel" />
-        <MetricCard label="Taux renouvellement"   value={metriques?.tauxRenouvellement ?? '—'} sublabel="12 derniers mois" />
+        <MetricCard label="Organisations actives" value={metriques.organisationsActives} sublabel="dont 3 en attente" />
+        <MetricCard label="Utilisateurs"          value={metriques.utilisateursTotal.toLocaleString('fr-FR')} sublabel="+24 ce mois" />
+        <MetricCard label="Sessions en cours"     value={metriques.sessionsEnCours} sublabel="en temps réel" />
+        <MetricCard label="Taux renouvellement"   value={metriques.tauxRenouvellement} sublabel="12 derniers mois" />
       </div>
 
       {/* Alertes */}
@@ -132,7 +93,7 @@ export function Overview() {
           <ProgressBar
             value={traitedPct}
             label="Alertes traitées"
-            valueLabel={metriques ? `${metriques.alertesTraitees} / ${metriques.alertesTotales}` : '—'}
+            valueLabel={`${metriques.alertesTraitees} / ${metriques.alertesTotales}`}
           />
         </div>
 

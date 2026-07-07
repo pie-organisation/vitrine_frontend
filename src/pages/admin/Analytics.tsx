@@ -10,9 +10,7 @@ import { PageHeader }  from '../../components/ui/PageHeader'
 import { SectionCard } from '../../components/ui/SectionCard'
 import { FilterPills } from '../../components/ui/FilterPills'
 import { MetricCard }  from '../../components/ui/MetricCard'
-import { useApi }        from '../../hooks/useApi'
-import { api, ENDPOINTS } from '../../api/client'
-import type { AnalyticsPeriod } from '../../mocks/data'
+import { mockAnalytics } from '../../mocks/data'
 
 // ── Period filter ─────────────────────────────────────────────────────────────
 
@@ -42,42 +40,17 @@ const TOOLTIP_STYLE = {
 
 const AXIS_TICK = { fontSize: 10, fill: 'rgba(30,15,70,0.38)', fontFamily: 'var(--font-sans)' }
 
-// ── Spinner ───────────────────────────────────────────────────────────────────
-
-function Spinner() {
-  return (
-    <div className="flex items-center justify-center py-16">
-      <div className="w-7 h-7 rounded-full border-2 animate-spin"
-        style={{ borderColor: 'rgba(107,79,224,0.2)', borderTopColor: '#6B4FE0' }} />
-    </div>
-  )
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Analytics() {
   const [period, setPeriod] = useState('annee')
 
-  const { data, loading, error, refetch } = useApi<AnalyticsPeriod>(
-    () => api.get<AnalyticsPeriod>(ENDPOINTS.analytics),
-    []
-  )
-
-  const evolutionOrgs   = data?.evolutionOrgs   ?? []
-  const usageSessions   = data?.usageSessions   ?? []
-  const repartitionPlans= data?.repartitionPlans ?? []
-  const tauxRenouvellement = data?.tauxRenouvellement ?? 0
-  const churn           = data?.churn           ?? 0
-
-  if (loading) return <Spinner />
-  if (error) return (
-    <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
-      <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
-        style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
-    </div>
-  )
+  // Données mockées pour l'MVP — pas encore branché sur de vraies métriques agrégées.
+  const evolutionOrgs      = mockAnalytics.evolutionOrgs
+  const usageSessions      = mockAnalytics.usageSessions
+  const repartitionPlans   = mockAnalytics.repartitionPlans
+  const tauxRenouvellement = mockAnalytics.tauxRenouvellement
+  const churn              = mockAnalytics.churn
 
   return (
     <div>

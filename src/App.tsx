@@ -11,9 +11,7 @@ import { AdminLayout }        from './layouts/AdminLayout'
 import { Overview }           from './pages/admin/Overview'
 import { Organisations }      from './pages/admin/Organisations'
 import { OrganisationDetail } from './pages/admin/OrganisationDetail'
-import { Plans }              from './pages/admin/Plans'
 import { Demandes }           from './pages/admin/Demandes'
-import { Sessions }           from './pages/admin/Sessions'
 import { Facturation }        from './pages/admin/Facturation'
 import { Logs }               from './pages/admin/Logs'
 import { Equipe }             from './pages/admin/Equipe'
@@ -46,9 +44,7 @@ export default function App() {
             <Route path="demandes"              element={<Demandes />} />
             <Route path="organisations"         element={<Organisations />} />
             <Route path="organisations/:id"     element={<OrganisationDetail />} />
-            <Route path="sessions"              element={<Sessions />} />
             <Route path="facturation"           element={<Facturation />} />
-            <Route path="plans"                 element={<Plans />} />
             <Route path="logs"                  element={<Logs />} />
             <Route path="equipe"                element={<Equipe />} />
             <Route path="offres"                element={<Offres />} />

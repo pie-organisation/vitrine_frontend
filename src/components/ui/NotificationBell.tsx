@@ -82,7 +82,7 @@ export function NotificationBell() {
       <button
         ref={btnRef}
         className="relative w-9 h-9 flex items-center justify-center rounded-xl border-none cursor-pointer transition-colors"
-        style={{ background: open ? 'rgba(107,79,224,0.1)' : 'rgba(107,79,224,0.06)', color: '#6B4FE0' }}
+        style={{ background: open ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.08)', color: '#C084FC' }}
         onClick={() => setOpen((v) => !v)}
         aria-label="Notifications"
       >

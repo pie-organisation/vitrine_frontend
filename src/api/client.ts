@@ -102,12 +102,8 @@ export const ENDPOINTS = {
   // Admin — CRUD
   organisations:       '/admin/organisations',
   organisation:        (id: string) => `/admin/organisations/${id}`,
-  plans:               '/admin/plans',
-  plan:                (id: string) => `/admin/plans/${id}`,
   demandes:            '/admin/demandes',
   demande:             (id: string) => `/admin/demandes/${id}`,
-  sessions:            '/admin/sessions',
-  session:             (id: string) => `/admin/sessions/${id}`,
   factures:            '/admin/factures',
   facture:             (id: string) => `/admin/factures/${id}`,
   logs:                '/admin/journaux',

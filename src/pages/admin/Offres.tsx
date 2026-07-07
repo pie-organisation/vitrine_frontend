@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Pencil, CheckCircle2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, CheckCircle2 } from 'lucide-react'
 import { PageHeader }  from '../../components/ui/PageHeader'
 import { ListCard }    from '../../components/ui/ListCard'
 import { Badge }       from '../../components/ui/Badge'
@@ -19,7 +19,7 @@ const STATUT_BADGE: Record<OffreStatut, { label: string; variant: 'green' | 'neu
 
 // ── Offre row card ────────────────────────────────────────────────────────────
 
-function OffreRow({ offre, onEdit }: { offre: Offre; onEdit: () => void }) {
+function OffreRow({ offre, onEdit, onDelete }: { offre: Offre; onEdit: () => void; onDelete: () => void }) {
   const st = STATUT_BADGE[offre.statut]
   return (
     <ListCard>
@@ -50,34 +50,85 @@ function OffreRow({ offre, onEdit }: { offre: Offre; onEdit: () => void }) {
             </div>
           </div>
         </div>
-        <button
-          className="w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer shrink-0"
-          style={{ background: 'rgba(107,79,224,0.07)', color: '#6B4FE0' }}
-          onClick={onEdit}
-          title="Modifier"
-        >
-          <Pencil size={14} />
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            className="w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer"
+            style={{ background: 'rgba(107,79,224,0.07)', color: '#6B4FE0' }}
+            onClick={onEdit}
+            title="Modifier"
+          >
+            <Pencil size={14} />
+          </button>
+          <button
+            className="w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer"
+            style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}
+            onClick={onDelete}
+            title="Supprimer"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       </div>
     </ListCard>
   )
 }
 
-// ── Edit modal ────────────────────────────────────────────────────────────────
+// ── Create / edit form modal ─────────────────────────────────────────────────
 
-function EditOffreModal({ offre, onClose }: { offre: Offre; onClose: () => void }) {
-  const [features, setFeatures] = useState(offre.features)
-  const [publiee,  setPubliee]  = useState(offre.statut === 'publiee')
+function OffreFormModal({
+  offre,
+  onClose,
+  onSaved,
+}: {
+  offre: Offre | null // null = création
+  onClose: () => void
+  onSaved: () => void
+}) {
+  const [nom,       setNom]       = useState(offre?.nom ?? '')
+  const [tagline,   setTagline]   = useState(offre?.tagline ?? '')
+  const [prix,      setPrix]      = useState(offre?.prix ?? '')
+  const [features,  setFeatures]  = useState<string[]>(offre?.features ?? [])
+  const [publiee,   setPubliee]   = useState(offre?.statut === 'publiee')
+  const [populaire, setPopulaire] = useState(offre?.populaire ?? false)
+  const [saving,    setSaving]    = useState(false)
+  const [error,     setError]     = useState<string | null>(null)
 
   const updateFeature = (i: number, val: string) => {
     const next = [...features]; next[i] = val; setFeatures(next)
   }
+  const addFeature = () => setFeatures([...features, ''])
+  const removeFeature = (i: number) => setFeatures(features.filter((_, idx) => idx !== i))
+
+  const handleSave = async () => {
+    if (!nom.trim()) { setError('Le nom de la licence est obligatoire.'); return }
+    setSaving(true); setError(null)
+    const payload = {
+      nom,
+      tagline,
+      prix,
+      statut: publiee ? 'publiee' : 'brouillon',
+      features: features.filter((f) => f.trim() !== ''),
+      populaire,
+    }
+    try {
+      if (offre) {
+        await api.patch(ENDPOINTS.offre(offre.id), payload)
+      } else {
+        await api.post(ENDPOINTS.offres, payload)
+      }
+      onSaved()
+      onClose()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erreur lors de l'enregistrement.")
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
-      <Input label="Nom de l'offre"  defaultValue={offre.nom}     />
-      <Input label="Tagline"         defaultValue={offre.tagline}  />
-      <Input label="Prix affiché"    defaultValue={offre.prix}     />
+      <Input label="Nom de la licence"  value={nom}     onChange={(e) => setNom(e.target.value)}     />
+      <Input label="Tagline"         value={tagline} onChange={(e) => setTagline(e.target.value)} />
+      <Input label="Prix affiché"    value={prix}    onChange={(e) => setPrix(e.target.value)}    />
 
       <div>
         <p className="text-xs font-semibold mb-2.5" style={{ color: 'rgba(30,15,70,0.6)', fontFamily: 'var(--font-sans)' }}>
@@ -85,44 +136,88 @@ function EditOffreModal({ offre, onClose }: { offre: Offre; onClose: () => void 
         </p>
         <div className="flex flex-col gap-2">
           {features.map((f, i) => (
-            <Input
-              key={i}
-              label={`Fonctionnalité ${i + 1}`}
-              value={f}
-              onChange={(e) => updateFeature(i, e.target.value)}
-            />
+            <div key={i} className="flex items-center gap-2">
+              <div className="flex-1">
+                <Input
+                  label={`Fonctionnalité ${i + 1}`}
+                  value={f}
+                  onChange={(e) => updateFeature(i, e.target.value)}
+                />
+              </div>
+              <button
+                className="w-8 h-8 mt-5 flex items-center justify-center rounded-lg border-none cursor-pointer shrink-0"
+                style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}
+                onClick={() => removeFeature(i)}
+                title="Retirer"
+              >
+                <Trash2 size={13} />
+              </button>
+            </div>
           ))}
         </div>
-      </div>
-
-      {/* Toggle publish */}
-      <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
-        <div>
-          <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Publiée sur le site</div>
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
-            {publiee ? "Visible par tous les visiteurs" : "Masquée du site vitrine"}
-          </div>
-        </div>
         <button
-          role="switch"
-          aria-checked={publiee}
-          className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
-          style={{ width: '36px', height: '20px', background: publiee ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
-          onClick={() => setPubliee((v) => !v)}
+          className="text-xs mt-2 font-semibold border-none bg-transparent cursor-pointer p-0"
+          style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
+          onClick={addFeature}
         >
-          <span
-            className="absolute rounded-full bg-white transition-all duration-200"
-            style={{ width: '14px', height: '14px', left: publiee ? '19px' : '3px', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}
-          />
+          + Ajouter une fonctionnalité
         </button>
       </div>
 
+      {/* Toggles */}
+      <div className="flex flex-col gap-2.5">
+        <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
+          <div>
+            <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Publiée sur le site</div>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+              {publiee ? "Visible par tous les visiteurs" : "Masquée du site vitrine"}
+            </div>
+          </div>
+          <button
+            role="switch"
+            aria-checked={publiee}
+            className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
+            style={{ width: '36px', height: '20px', background: publiee ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            onClick={() => setPubliee((v) => !v)}
+          >
+            <span
+              className="absolute rounded-full bg-white transition-all duration-200"
+              style={{ width: '14px', height: '14px', left: publiee ? '19px' : '3px', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}
+            />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
+          <div>
+            <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Licence populaire</div>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+              Mise en avant avec un badge "★ Populaire"
+            </div>
+          </div>
+          <button
+            role="switch"
+            aria-checked={populaire}
+            className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
+            style={{ width: '36px', height: '20px', background: populaire ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            onClick={() => setPopulaire((v) => !v)}
+          >
+            <span
+              className="absolute rounded-full bg-white transition-all duration-200"
+              style={{ width: '14px', height: '14px', left: populaire ? '19px' : '3px', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}
+            />
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+          {error}
+        </div>
+      )}
+
       <div className="flex gap-3 mt-3">
-        <button
-          className="btn-primary flex-1"
-          onClick={() => api.patch(ENDPOINTS.offre(offre.id), { statut: publiee ? 'publiee' : 'brouillon', features }).then(onClose)}
-        >
-          Enregistrer
+        <button className="btn-primary flex-1" onClick={handleSave} disabled={saving}>
+          {saving ? 'Enregistrement…' : offre ? 'Enregistrer' : 'Créer la licence'}
         </button>
         <button className="btn-action flex-1" onClick={onClose}>Annuler</button>
       </div>
@@ -230,17 +325,59 @@ function Spinner() {
   )
 }
 
+// ── Delete confirmation modal ────────────────────────────────────────────────
+
+function ConfirmDeleteOffreModal({ offre, onClose, onDeleted }: { offre: Offre; onClose: () => void; onDeleted: () => void }) {
+  const [deleting, setDeleting] = useState(false)
+  const [error,    setError]    = useState<string | null>(null)
+
+  const handleDelete = async () => {
+    setDeleting(true); setError(null)
+    try {
+      await api.delete(ENDPOINTS.offre(offre.id))
+      onDeleted()
+      onClose()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur lors de la suppression.')
+      setDeleting(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
+        Supprimer définitivement la licence <strong>{offre.nom}</strong> ? Elle disparaîtra aussi de la page publique.
+        Cette action est irréversible.
+      </div>
+      {error && (
+        <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+          {error}
+        </div>
+      )}
+      <div className="flex gap-3 mt-1">
+        <button className="btn-danger flex-1" onClick={handleDelete} disabled={deleting}>
+          {deleting ? 'Suppression…' : 'Supprimer'}
+        </button>
+        <button className="btn-action flex-1" onClick={onClose}>Annuler</button>
+      </div>
+    </div>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Offres() {
-  const [editId, setEditId] = useState<string | null>(null)
+  const [editId,      setEditId]      = useState<string | null>(null)
+  const [deletingId,  setDeletingId]  = useState<string | null>(null)
+  const [showCreate,  setShowCreate]  = useState(false)
 
   const { data: offres, loading, error, refetch } = useApi<Offre[]>(
     () => api.get<Offre[]>(ENDPOINTS.offres),
     []
   )
   const allOffres = offres ?? []
-  const editOffre = allOffres.find((o) => o.id === editId) ?? null
+  const editOffre     = allOffres.find((o) => o.id === editId) ?? null
+  const deletingOffre = allOffres.find((o) => o.id === deletingId) ?? null
 
   if (loading) return <Spinner />
   if (error) return (
@@ -255,15 +392,15 @@ export function Offres() {
   return (
     <div>
       <PageHeader
-        title="Offres commerciales"
+        title="Licences commerciales"
         subtitle="Contenu affiché sur la page de souscription publique"
         actions={
           <button
             className="btn-primary !w-auto flex items-center gap-1.5 text-sm !py-2.5 !px-4"
-            onClick={() => api.post(ENDPOINTS.offres, {}).then(refetch)}
+            onClick={() => setShowCreate(true)}
           >
             <Plus size={15} />
-            Nouvelle offre
+            Nouvelle licence
           </button>
         }
       />
@@ -271,7 +408,7 @@ export function Offres() {
       {/* Offer list */}
       <div className="flex flex-col gap-2.5 mb-8">
         {allOffres.map((o) => (
-          <OffreRow key={o.id} offre={o} onEdit={() => setEditId(o.id)} />
+          <OffreRow key={o.id} offre={o} onEdit={() => setEditId(o.id)} onDelete={() => setDeletingId(o.id)} />
         ))}
       </div>
 
@@ -291,14 +428,42 @@ export function Offres() {
         </div>
       </SectionCard>
 
+      {/* Create modal */}
+      <Modal
+        isOpen={showCreate}
+        onClose={() => setShowCreate(false)}
+        title="Nouvelle licence"
+        size="lg"
+        dismissable={false}
+      >
+        {showCreate && (
+          <OffreFormModal offre={null} onClose={() => setShowCreate(false)} onSaved={refetch} />
+        )}
+      </Modal>
+
       {/* Edit modal */}
       <Modal
         isOpen={!!editOffre}
         onClose={() => setEditId(null)}
-        title="Modifier l'offre"
+        title="Modifier la licence"
         size="lg"
+        dismissable={false}
       >
-        {editOffre && <EditOffreModal offre={editOffre} onClose={() => { setEditId(null); refetch() }} />}
+        {editOffre && (
+          <OffreFormModal offre={editOffre} onClose={() => setEditId(null)} onSaved={refetch} />
+        )}
+      </Modal>
+
+      {/* Delete confirmation modal */}
+      <Modal
+        isOpen={!!deletingOffre}
+        onClose={() => setDeletingId(null)}
+        title="Supprimer cette licence"
+        dismissable={false}
+      >
+        {deletingOffre && (
+          <ConfirmDeleteOffreModal offre={deletingOffre} onClose={() => setDeletingId(null)} onDeleted={refetch} />
+        )}
       </Modal>
     </div>
   )
