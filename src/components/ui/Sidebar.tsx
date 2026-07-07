@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, Layers, LogOut, X,
   ClipboardList, Monitor, Receipt, Terminal, Users,
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { Logo }          from './Logo'
 import { mockMessages }  from '../../mocks/data'
+import { useAuth }       from '../../contexts/AuthContext'
 
 interface NavItemDef {
   to: string
@@ -78,7 +79,14 @@ interface SidebarProps {
 
 export function Sidebar({ onClose, isMobile }: SidebarProps) {
   const { pathname } = useLocation()
+  const { logout }   = useAuth()
+  const navigate     = useNavigate()
   const isProfileActive = pathname.startsWith('/admin/profil')
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   // Close on nav change (mobile drawer)
   useEffect(() => {
@@ -148,7 +156,7 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
         <button
           className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] w-full border-none cursor-pointer"
           style={{ background: 'transparent', color: 'rgba(30,15,70,0.4)', fontFamily: 'var(--font-sans)' }}
-          onClick={() => console.log('logout')}
+          onClick={handleLogout}
         >
           <LogOut size={17} strokeWidth={1.8} />
           <span className="text-sm font-medium">Déconnexion</span>

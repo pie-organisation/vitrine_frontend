@@ -14,12 +14,15 @@ export interface AuthUser {
   nom:      string
   email:    string
   role:     string
+  type:     'cubi' | 'ecole'
   initials: string
 }
 
 interface LoginResponse {
-  token: string
-  user?: Omit<AuthUser, 'initials'>
+  token:   string
+  user_id: string
+  role:    string
+  type:    'cubi' | 'ecole'
 }
 
 interface AuthContextValue {
@@ -28,8 +31,9 @@ interface AuthContextValue {
   isAuthenticated: boolean
   isLoading:       boolean
   loginError:      string | null
-  login:           (email: string, mot_de_passe: string) => Promise<void>
+  login:           (email: string, mot_de_passe: string) => Promise<AuthUser>
   logout:          () => void
+  updateUser:      (patch: Partial<Pick<AuthUser, 'prenom' | 'nom' | 'email'>>) => void
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -66,30 +70,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(TOKEN_KEY, res.token)
       setToken(res.token)
 
-      if (res.user) {
-        const authUser: AuthUser = {
-          ...res.user,
-          initials: makeInitials(res.user.prenom, res.user.nom),
-        }
-        localStorage.setItem(USER_KEY, JSON.stringify(authUser))
-        setUser(authUser)
-      } else {
-        // Backend didn't include user in login response — fetch /me separately
-        try {
-          const me = await api.get<Omit<AuthUser, 'initials'>>(ENDPOINTS.me)
-          const authUser: AuthUser = { ...me, initials: makeInitials(me.prenom, me.nom) }
-          localStorage.setItem(USER_KEY, JSON.stringify(authUser))
-          setUser(authUser)
-        } catch {
-          // /me failed — set a minimal user from token payload (base64 decode)
-          setUser({ id: '', prenom: '', nom: '', email, role: 'admin', initials: email[0]?.toUpperCase() ?? 'A' })
-        }
+      // Le login ne renvoie pas nom/prénom — on complète via /me, avec un repli
+      // minimal (mais fidèle à ce que le serveur a authentifié) si /me échoue.
+      let authUser: AuthUser = {
+        id: res.user_id,
+        prenom: '',
+        nom: '',
+        email,
+        role: res.role,
+        type: res.type,
+        initials: email[0]?.toUpperCase() ?? '?',
       }
+      try {
+        const me = await api.get<Omit<AuthUser, 'initials'>>(ENDPOINTS.me)
+        authUser = { ...me, initials: makeInitials(me.prenom, me.nom) }
+      } catch {
+        // garde le repli minimal construit ci-dessus
+      }
+
+      localStorage.setItem(USER_KEY, JSON.stringify(authUser))
+      setUser(authUser)
+      return authUser
     } catch (err) {
       if (err instanceof ApiError && err.status === 403 && err.code === 'FORBIDDEN') {
         // Backend renvoie 403 "reset_required" → mot de passe temporaire à changer
         window.location.href = '/reset-password'
-        return
+        throw err
       }
       const msg =
         err instanceof ApiError && err.status === 401
@@ -108,6 +114,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }, [])
 
+  const updateUser = useCallback((patch: Partial<Pick<AuthUser, 'prenom' | 'nom' | 'email'>>) => {
+    setUser((prev) => {
+      if (!prev) return prev
+      const next = { ...prev, ...patch }
+      next.initials = makeInitials(next.prenom, next.nom)
+      localStorage.setItem(USER_KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -117,6 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginError,
       login,
       logout,
+      updateUser,
     }}>
       {children}
     </AuthContext.Provider>

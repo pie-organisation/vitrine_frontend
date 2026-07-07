@@ -39,8 +39,8 @@ export default function App() {
           <Route path="/reinitialiser-mot-de-passe"  element={<ReinitialiserMotDePasse />} />
           <Route path="/reset-password"              element={<ResetPassword />} />
 
-          {/* Admin back-office — protected */}
-          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+          {/* Admin back-office — protected, réservé à l'équipe Cubi */}
+          <Route path="/admin" element={<ProtectedRoute allow="cubi"><AdminLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview"              element={<Overview />} />
             <Route path="demandes"              element={<Demandes />} />
@@ -57,8 +57,8 @@ export default function App() {
             <Route path="profil"                element={<Profil />} />
           </Route>
 
-          {/* School / Group dashboard — protected */}
-          <Route path="/school" element={<ProtectedRoute><SchoolLayout /></ProtectedRoute>}>
+          {/* School / Group dashboard — protected, réservé aux admins d'école */}
+          <Route path="/school" element={<ProtectedRoute allow="ecole"><SchoolLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard"   element={<Dashboard />}        />
             <Route path="comptes"     element={<Comptes />}          />

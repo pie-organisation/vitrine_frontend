@@ -92,6 +92,7 @@ export const ENDPOINTS = {
 
   // Current user
   me:             '/me',
+  mePassword:     '/me/password',
 
   // Admin — dashboard
   metriques:      '/admin/metriques',
@@ -110,7 +111,6 @@ export const ENDPOINTS = {
   factures:            '/admin/factures',
   facture:             (id: string) => `/admin/factures/${id}`,
   logs:                '/admin/journaux',
-  adminUsers:          '/admin/users',
   equipe:              '/admin/equipe',
   membreEquipe:        (id: string) => `/admin/equipe/${id}`,
   messages:            '/admin/messages',

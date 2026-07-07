@@ -12,7 +12,7 @@ export function Login() {
   const { login, isLoading, loginError } = useAuth()
   const navigate  = useNavigate()
   const location  = useLocation()
-  const from      = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/admin'
+  const from      = (location.state as { from?: { pathname: string } })?.from?.pathname
 
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -20,8 +20,8 @@ export function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await login(email, password)
-      navigate(from, { replace: true })
+      const user = await login(email, password)
+      navigate(from ?? (user.type === 'cubi' ? '/admin' : '/school'), { replace: true })
     } catch {
       // loginError is set in context
     }
