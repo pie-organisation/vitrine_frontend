@@ -100,7 +100,7 @@ function OffreFormModal({
   const removeFeature = (i: number) => setFeatures(features.filter((_, idx) => idx !== i))
 
   const handleSave = async () => {
-    if (!nom.trim()) { setError('Le nom de la licence est obligatoire.'); return }
+    if (!nom.trim()) { setError("Le nom de l'offre est obligatoire."); return }
     setSaving(true); setError(null)
     const payload = {
       nom,
@@ -126,7 +126,7 @@ function OffreFormModal({
 
   return (
     <div className="flex flex-col gap-4">
-      <Input label="Nom de la licence"  value={nom}     onChange={(e) => setNom(e.target.value)}     />
+      <Input label="Nom de l'offre"  value={nom}     onChange={(e) => setNom(e.target.value)}     />
       <Input label="Tagline"         value={tagline} onChange={(e) => setTagline(e.target.value)} />
       <Input label="Prix affiché"    value={prix}    onChange={(e) => setPrix(e.target.value)}    />
 
@@ -189,7 +189,7 @@ function OffreFormModal({
 
         <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
           <div>
-            <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Licence populaire</div>
+            <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Offre populaire</div>
             <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
               Mise en avant avec un badge "★ Populaire"
             </div>
@@ -217,7 +217,7 @@ function OffreFormModal({
 
       <div className="flex gap-3 mt-3">
         <button className="btn-primary flex-1" onClick={handleSave} disabled={saving}>
-          {saving ? 'Enregistrement…' : offre ? 'Enregistrer' : 'Créer la licence'}
+          {saving ? 'Enregistrement…' : offre ? 'Enregistrer' : "Créer l'offre"}
         </button>
         <button className="btn-action flex-1" onClick={onClose}>Annuler</button>
       </div>
@@ -346,7 +346,7 @@ function ConfirmDeleteOffreModal({ offre, onClose, onDeleted }: { offre: Offre; 
   return (
     <div className="flex flex-col gap-4">
       <div className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
-        Supprimer définitivement la licence <strong>{offre.nom}</strong> ? Elle disparaîtra aussi de la page publique.
+        Supprimer définitivement l'offre <strong>{offre.nom}</strong> ? Elle disparaîtra aussi de la page publique.
         Cette action est irréversible.
       </div>
       {error && (
@@ -392,7 +392,7 @@ export function Offres() {
   return (
     <div>
       <PageHeader
-        title="Licences commerciales"
+        title="Offres commerciales"
         subtitle="Contenu affiché sur la page de souscription publique"
         actions={
           <button
@@ -400,7 +400,7 @@ export function Offres() {
             onClick={() => setShowCreate(true)}
           >
             <Plus size={15} />
-            Nouvelle licence
+            Nouvelle offre
           </button>
         }
       />
@@ -432,7 +432,7 @@ export function Offres() {
       <Modal
         isOpen={showCreate}
         onClose={() => setShowCreate(false)}
-        title="Nouvelle licence"
+        title="Nouvelle offre"
         size="lg"
         dismissable={false}
       >
@@ -445,7 +445,7 @@ export function Offres() {
       <Modal
         isOpen={!!editOffre}
         onClose={() => setEditId(null)}
-        title="Modifier la licence"
+        title="Modifier l'offre"
         size="lg"
         dismissable={false}
       >
@@ -458,7 +458,7 @@ export function Offres() {
       <Modal
         isOpen={!!deletingOffre}
         onClose={() => setDeletingId(null)}
-        title="Supprimer cette licence"
+        title="Supprimer cette offre"
         dismissable={false}
       >
         {deletingOffre && (

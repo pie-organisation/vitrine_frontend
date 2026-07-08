@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Users, Receipt, Phone, LogOut, Menu, X, type LucideIcon } from 'lucide-react'
+import { LayoutDashboard, Users, Receipt, Phone, Wifi, LogOut, Menu, X, type LucideIcon } from 'lucide-react'
 import { Logo } from '../components/ui/Logo'
 import { useAuth } from '../contexts/AuthContext'
 import { api, ENDPOINTS } from '../api/client'
@@ -10,6 +10,7 @@ interface SchoolOrgMin { nom: string; plan: string }
 const NAV: { to: string; icon: LucideIcon; label: string }[] = [
   { to: '/school/dashboard',   icon: LayoutDashboard, label: 'Tableau de bord' },
   { to: '/school/comptes',     icon: Users,           label: 'Comptes'         },
+  { to: '/school/sessions',    icon: Wifi,            label: 'Sessions'        },
   { to: '/school/facturation', icon: Receipt,         label: 'Facturation'     },
   { to: '/school/contact',     icon: Phone,           label: 'Contact'         },
 ]

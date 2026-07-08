@@ -53,6 +53,31 @@ body {
   color: rgba(30, 15, 70, 0.35);
 }
 
+/* ── Admin login input (dark theme) ── */
+.admin-login-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(139, 111, 240, 0.35);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #fff;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.admin-login-input:focus {
+  border-color: #C084FC;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.2);
+}
+
+.admin-login-input::placeholder {
+  color: rgba(232, 225, 255, 0.35);
+}
+
 /* ── List card (admin) ── */
 .list-card {
   background: rgba(255, 255, 255, 0.72);

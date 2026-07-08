@@ -1,14 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, LogOut, X,
   ClipboardList, Receipt, Terminal, Users,
-  Mail, Sparkles, BarChart2,
+  Mail, Sparkles, BarChart2, KeyRound,
   type LucideIcon,
 } from 'lucide-react'
 import { Logo }          from './Logo'
 import { mockMessages }  from '../../mocks/data'
 import { useAuth }       from '../../contexts/AuthContext'
+import { api, ENDPOINTS } from '../../api/client'
 
 interface NavItemDef {
   to: string
@@ -19,16 +20,19 @@ interface NavItemDef {
 
 const MSG_BADGE = mockMessages.filter((m) => m.statut === 'non_lu').length
 
-const NAV_MAIN: NavItemDef[] = [
-  { to: '/admin/overview',      icon: LayoutDashboard, label: "Vue d'ensemble" },
-  { to: '/admin/demandes',      icon: ClipboardList,   label: 'Demandes',       badge: 3         },
-  { to: '/admin/messages',      icon: Mail,            label: 'Messages',       badge: MSG_BADGE },
-  { to: '/admin/organisations', icon: Building2,       label: 'Organisations'   },
-  { to: '/admin/analytics',     icon: BarChart2,       label: 'Analytics'       },
-  { to: '/admin/facturation',   icon: Receipt,         label: 'Facturation'     },
-  { to: '/admin/offres',        icon: Sparkles,        label: 'Licences'        },
-  { to: '/admin/logs',          icon: Terminal,        label: 'Logs'            },
-]
+function navMain(demandesEnAttente: number): NavItemDef[] {
+  return [
+    { to: '/admin/overview',      icon: LayoutDashboard, label: "Vue d'ensemble" },
+    { to: '/admin/demandes',      icon: ClipboardList,   label: 'Demandes',       badge: demandesEnAttente || undefined },
+    { to: '/admin/messages',      icon: Mail,            label: 'Messages',       badge: MSG_BADGE },
+    { to: '/admin/organisations', icon: Building2,       label: 'Organisations'   },
+    { to: '/admin/analytics',     icon: BarChart2,       label: 'Analytics'       },
+    { to: '/admin/facturation',   icon: Receipt,         label: 'Facturation'     },
+    { to: '/admin/offres',        icon: Sparkles,        label: 'Offres'          },
+    { to: '/admin/licences',      icon: KeyRound,        label: 'Licences'        },
+    { to: '/admin/logs',          icon: Terminal,        label: 'Logs'            },
+  ]
+}
 
 const CURRENT_ADMIN = { initials: 'TL', prenom: 'Thomas', nom: 'Leduc', role: 'Super admin' }
 
@@ -80,10 +84,17 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
   const { logout }   = useAuth()
   const navigate     = useNavigate()
   const isProfileActive = pathname.startsWith('/admin/profil')
+  const [demandesEnAttente, setDemandesEnAttente] = useState(0)
+
+  useEffect(() => {
+    api.get<{ nb_demandes_en_attente: number }>(ENDPOINTS.metriques)
+      .then((m) => setDemandesEnAttente(m.nb_demandes_en_attente))
+      .catch(() => {})
+  }, [])
 
   const handleLogout = () => {
     logout()
-    navigate('/login', { replace: true })
+    navigate('/admin/login', { replace: true })
   }
 
   // Close on nav change (mobile drawer)
@@ -127,7 +138,7 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
 
         {/* Main nav — scrollable if content overflows */}
         <nav className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
-          {NAV_MAIN.map((item) => (
+          {navMain(demandesEnAttente).map((item) => (
             <NavItem key={item.to} {...item} />
           ))}
         </nav>

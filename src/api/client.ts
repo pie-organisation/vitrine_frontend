@@ -88,6 +88,7 @@ export const ENDPOINTS = {
   // Auth
   login:          '/auth/login',
   inscription:    '/auth/inscription',
+  licences:       '/auth/licences',
   motDePasseReset:'/auth/reset-password',
 
   // Current user
@@ -97,6 +98,7 @@ export const ENDPOINTS = {
   // Admin — dashboard
   metriques:      '/admin/metriques',
   alertes:        '/admin/alertes',
+  notifications:  '/admin/notifications',
   analytics:      '/admin/analytiques',
 
   // Admin — CRUD
@@ -113,6 +115,8 @@ export const ENDPOINTS = {
   message:             (id: string) => `/admin/messages/${id}`,
   offres:              '/admin/offres',
   offre:               (id: string) => `/admin/offres/${id}`,
+  plans:               '/admin/plans',
+  plan:                (id: string) => `/admin/plans/${id}`,
 
   // School
   schoolOrg:           '/school/organisation',
@@ -121,4 +125,6 @@ export const ENDPOINTS = {
   schoolFactures:      '/school/factures',
   schoolActivite:      '/school/activite',
   schoolContact:       '/school/contact',
+  schoolSessions:      '/school/sessions',
+  schoolSession:       (id: string) => `/school/sessions/${id}`,
 } as const

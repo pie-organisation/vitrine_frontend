@@ -310,7 +310,6 @@ export interface Demande {
   codePostal: string
   ville: string
   planDemande: string
-  dureePlan: string
   nomContact: string
   prenomContact: string
   emailContact: string
@@ -334,7 +333,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '75006',
     ville: 'Paris',
     planDemande: 'Licence 2 — Standard',
-    dureePlan: '12 mois',
     nomContact: 'Lefebvre',
     prenomContact: 'Christine',
     emailContact: 'c.lefebvre@icp.fr',
@@ -355,7 +353,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '34000',
     ville: 'Montpellier',
     planDemande: 'Licence 1 — Découverte',
-    dureePlan: '6 mois',
     nomContact: 'Ramirez',
     prenomContact: 'Diego',
     emailContact: 'd.ramirez@formaprosud.fr',
@@ -377,7 +374,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '93300',
     ville: 'Aubervilliers',
     planDemande: 'Licence 2 — Standard',
-    dureePlan: '12 mois',
     nomContact: 'Mounier',
     prenomContact: 'Pascal',
     emailContact: 'p.mounier@lyceebergson.fr',
@@ -398,7 +394,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '29000',
     ville: 'Quimper',
     planDemande: 'Licence 3 — Sur-mesure',
-    dureePlan: '24 mois',
     nomContact: 'Tremblay',
     prenomContact: 'Marie',
     emailContact: 'm.tremblay@numeriqueeduc.fr',
@@ -420,7 +415,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '59000',
     ville: 'Lille',
     planDemande: 'Licence 1 — Découverte',
-    dureePlan: '12 mois',
     nomContact: 'Fontaine',
     prenomContact: 'Luc',
     emailContact: 'l.fontaine@cfatechavenir.fr',

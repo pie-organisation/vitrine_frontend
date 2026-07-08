@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Bell, ClipboardList, CreditCard, AlertTriangle, Info } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { mockNotifications, type AppNotification, type NotifType } from '../../mocks/data'
+import { api, ENDPOINTS } from '../../api/client'
+import type { AppNotification, NotifType } from '../../mocks/data'
 
 // ── Type meta ─────────────────────────────────────────────────────────────────
 
@@ -50,8 +51,15 @@ function NotifItem({ notif }: { notif: AppNotification }) {
 export function NotificationBell() {
   const [open, setOpen]       = useState(false)
   const [pos,  setPos]        = useState({ top: 0, right: 0 })
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
   const btnRef = useRef<HTMLButtonElement>(null)
   const ref    = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    api.get<AppNotification[]>(ENDPOINTS.notifications)
+      .then(setNotifications)
+      .catch(() => setNotifications([]))
+  }, [])
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -74,7 +82,7 @@ export function NotificationBell() {
     }
   }, [open])
 
-  const unreadCount = mockNotifications.filter((n) => !n.lu).length
+  const unreadCount = notifications.filter((n) => !n.lu).length
 
   return (
     <div className="relative">
@@ -133,7 +141,12 @@ export function NotificationBell() {
 
           {/* List */}
           <div>
-            {mockNotifications.map((n) => (
+            {notifications.length === 0 && (
+              <div className="px-4 py-6 text-center text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>
+                Aucune notification pour le moment.
+              </div>
+            )}
+            {notifications.map((n) => (
               <NotifItem key={n.id} notif={n} />
             ))}
           </div>

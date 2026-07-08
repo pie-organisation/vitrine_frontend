@@ -1,7 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
-// Redirects to /login if not authenticated, preserving the intended destination.
+// Redirects to /login (or /admin/login for the "cubi" space) if not authenticated,
+// preserving the intended destination.
 // If `allow` is set, also redirects users of the wrong account type to their own space
 // (a Cubi platform account can't reach /school, a school account can't reach /admin).
 export function ProtectedRoute({ children, allow }: { children: React.ReactNode; allow?: 'cubi' | 'ecole' }) {
@@ -9,7 +10,8 @@ export function ProtectedRoute({ children, allow }: { children: React.ReactNode;
   const location = useLocation()
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
+    const loginPath = allow === 'cubi' ? '/admin/login' : '/login'
+    return <Navigate to={loginPath} state={{ from: location }} replace />
   }
 
   if (allow && user && user.type !== allow) {
