@@ -58,12 +58,38 @@ export const mockSchoolOrg: SchoolOrg = {
   licencesUtilisees: 46,
 }
 
+// Comble les champs pas encore alimentés par le backend (fin de contrat,
+// quotas de licences) avec des valeurs de démonstration, sans écraser les
+// vraies données quand elles existent.
+export function withOrgMockFallbacks(org: SchoolOrg | null): SchoolOrg {
+  if (!org) return mockSchoolOrg
+  return {
+    ...org,
+    dateExpiration:    org.dateExpiration    || mockSchoolOrg.dateExpiration,
+    nbLicences:        org.nbLicences        || mockSchoolOrg.nbLicences,
+    licencesUtilisees: org.licencesUtilisees || mockSchoolOrg.licencesUtilisees,
+  }
+}
+
 export const mockSchoolContact: SchoolContact = {
   nom: 'Dupont',
   prenom: 'Marie',
   email: 'marie.dupont@lycee-vhugo.fr',
   boiteFacturation: 'compta@lycee-vhugo.fr',
   telephone: '01 42 00 00 00',
+}
+
+// Nom/prénom/e-mail viennent du compte admin connecté (le référent par
+// défaut) et sont réels dès qu'on est authentifié. La boîte de facturation
+// et le téléphone ne sont pas encore forcément renseignés en base : on les
+// mock tant qu'ils sont vides.
+export function withContactMockFallbacks(contact: SchoolContact | null): SchoolContact {
+  if (!contact) return mockSchoolContact
+  return {
+    ...contact,
+    boiteFacturation: contact.boiteFacturation || mockSchoolContact.boiteFacturation,
+    telephone:        contact.telephone        || mockSchoolContact.telephone,
+  }
 }
 
 export const mockSchoolAccounts: SchoolAccount[] = [

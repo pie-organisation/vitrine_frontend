@@ -1,15 +1,10 @@
 import { useState } from 'react'
 import { Outlet }   from 'react-router-dom'
-import { Link }     from 'react-router-dom'
 import { Menu }     from 'lucide-react'
 import { Sidebar }  from '../components/ui/Sidebar'
 import { Logo }     from '../components/ui/Logo'
-import { NotificationBell } from '../components/ui/NotificationBell'
-import { useAuth }  from '../contexts/AuthContext'
 
 export function AdminLayout() {
-  const { user, logout } = useAuth()
-  const admin = user ?? { initials: '?', prenom: '', nom: '' }
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -58,34 +53,6 @@ export function AdminLayout() {
           <span className="relative">
             <Logo size="sm" />
           </span>
-          <div className="relative ml-auto">
-            <NotificationBell />
-          </div>
-        </div>
-
-        {/* Desktop top-bar */}
-        <div
-          className="hidden md:flex items-center justify-end gap-3 px-6 py-2.5 shrink-0 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, rgba(42,22,96,0.95), rgba(23,12,56,0.95))', borderBottom: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}
-        >
-          <div
-            className="absolute -top-16 left-1/3 w-56 h-56 rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(192,132,252,0.14), transparent 70%)' }}
-          />
-          <span className="relative"><NotificationBell /></span>
-          <Link to="/admin/profil" className="relative no-underline">
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl transition-colors" style={{ background: 'rgba(255,255,255,0.07)' }}>
-              <div
-                className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-xs"
-                style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
-              >
-                {admin.initials}
-              </div>
-              <span className="text-xs font-semibold" style={{ color: '#fff', fontFamily: 'var(--font-sans)' }}>
-                {admin.prenom} {admin.nom}
-              </span>
-            </div>
-          </Link>
         </div>
 
         {/* Scrollable content area */}

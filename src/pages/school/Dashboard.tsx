@@ -3,18 +3,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar'
 import { useApi } from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import type { SchoolOrg, SchoolAccount, SchoolInvoice, SchoolActivity } from '../../mocks/schoolData'
-
-// ── Fallback org ──────────────────────────────────────────────────────────────
-
-const fallbackSchoolOrg: SchoolOrg = {
-  nom: '',
-  plan: '',
-  dateDebut: '',
-  dateExpiration: '',
-  montant: '',
-  nbLicences: 0,
-  licencesUtilisees: 0,
-}
+import { withOrgMockFallbacks, mockSchoolFactures, mockSchoolActivity } from '../../mocks/schoolData'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -122,10 +111,12 @@ export function Dashboard() {
 
   const loading = loadingOrg || loadingAccounts || loadingFactures || loadingActivity
 
-  const org = orgData ?? fallbackSchoolOrg
+  const org = withOrgMockFallbacks(orgData)
   const allAccounts = accounts ?? []
-  const allFactures = facturesData ?? []
-  const allActivity = activityData ?? []
+  // Facturation et journal d'activité ne sont pas encore alimentés par le backend :
+  // on retombe sur des données de démonstration tant qu'ils sont vides.
+  const allFactures = facturesData && facturesData.length > 0 ? facturesData : mockSchoolFactures
+  const allActivity = activityData && activityData.length > 0 ? activityData : mockSchoolActivity
 
   const nbActifs    = allAccounts.filter((a) => a.statut === 'actif').length
   const nbInactifs  = allAccounts.filter((a) => a.statut === 'inactif').length

@@ -100,13 +100,14 @@ export function Login() {
           </form>
 
           <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
-            Pas encore de compte ?{' '}
+            Pas encore de compte ?
+            <br />
             <Link
               to="/inscription"
               className="font-semibold transition-opacity hover:opacity-80"
               style={{ color: '#6B4FE0' }}
             >
-              Faire une demande d'inscription →
+              Faire une demande d'inscription
             </Link>
           </p>
         </Card>

@@ -6,6 +6,7 @@ import { Modal }       from '../../components/ui/Modal'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import type { Message } from '../../mocks/data'
+import { withMessagesMockFallbacks } from '../../mocks/data'
 
 // ── Filter options ─────────────────────────────────────────────────────────────
 
@@ -168,7 +169,7 @@ export function Messages() {
     () => api.get<Message[]>(ENDPOINTS.messages),
     []
   )
-  const allMessages = messages ?? []
+  const allMessages = withMessagesMockFallbacks(messages)
 
   const unreadCount = allMessages.filter((m) => m.statut === 'non_lu').length
 

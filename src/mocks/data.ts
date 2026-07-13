@@ -214,6 +214,29 @@ export const mockOrganisations: Organisation[] = [
   },
 ]
 
+// La date de fin de contrat, les admins, l'historique et l'usage ne sont pas
+// (encore) suivis en base pour chaque organisation. On mock ces champs tant
+// qu'ils sont vides, sans écraser les vraies données (nom, plan, quotas...).
+const MOCK_ORG_FILLER = mockOrganisations[0]
+
+export function withOrgListMockFallbacks(orgs: Organisation[] | null): Organisation[] {
+  if (!orgs || orgs.length === 0) return mockOrganisations
+  return orgs.map((org) => ({
+    ...org,
+    dateExpiration: org.dateExpiration || MOCK_ORG_FILLER.dateExpiration,
+  }))
+}
+
+export function withOrgDetailMockFallbacks(org: Organisation): Organisation {
+  return {
+    ...org,
+    dateExpiration: org.dateExpiration || MOCK_ORG_FILLER.dateExpiration,
+    admins:         org.admins?.length     ? org.admins     : MOCK_ORG_FILLER.admins,
+    historique:     org.historique?.length ? org.historique : MOCK_ORG_FILLER.historique,
+    usage:          org.usage              ?? MOCK_ORG_FILLER.usage,
+  }
+}
+
 export const mockPlans: Plan[] = [
   {
     id: 'p1',
@@ -469,6 +492,13 @@ export const mockFactures: Facture[] = [
   { id: 'f7', organisationId: '2', organisation: 'École Supérieure du Numérique', plan: 'Licence 2 — Standard',   montant: '2 988 €',  echeance: '30/06/2024', statut: 'payee',      reference: 'FAC-2024-0012' },
 ]
 
+// La facturation n'est pas encore implémentée côté backend (le stub renvoie
+// toujours []) : on retombe sur des factures de démonstration tant que
+// l'API n'a rien de réel à montrer.
+export function withFacturesMockFallbacks(factures: Facture[] | null): Facture[] {
+  return factures && factures.length > 0 ? factures : mockFactures
+}
+
 // ── Logs ──────────────────────────────────────────────────────────────────────
 
 export type LogType = 'connexion' | 'modification' | 'erreur' | 'securite'
@@ -654,6 +684,13 @@ export const mockMessages: Message[] = [
     statut: 'non_lu',
   },
 ]
+
+// Les messages de contact ne sont pas encore stockés côté backend (le stub
+// renvoie toujours []) : on retombe sur des messages de démonstration tant
+// que l'API n'a rien de réel à montrer.
+export function withMessagesMockFallbacks(messages: Message[] | null): Message[] {
+  return messages && messages.length > 0 ? messages : mockMessages
+}
 
 // ── Analytics ─────────────────────────────────────────────────────────────────
 

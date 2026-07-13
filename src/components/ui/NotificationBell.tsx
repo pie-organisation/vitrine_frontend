@@ -48,9 +48,12 @@ function NotifItem({ notif }: { notif: AppNotification }) {
 
 // ── Bell component ────────────────────────────────────────────────────────────
 
+const PANEL_WIDTH = 320
+const VIEWPORT_MARGIN = 8
+
 export function NotificationBell() {
   const [open, setOpen]       = useState(false)
-  const [pos,  setPos]        = useState({ top: 0, right: 0 })
+  const [pos,  setPos]        = useState({ top: 0, left: 0 })
   const [notifications, setNotifications] = useState<AppNotification[]>([])
   const btnRef = useRef<HTMLButtonElement>(null)
   const ref    = useRef<HTMLDivElement>(null)
@@ -75,10 +78,11 @@ export function NotificationBell() {
   useLayoutEffect(() => {
     if (open && btnRef.current) {
       const r = btnRef.current.getBoundingClientRect()
-      setPos({
-        top:   r.bottom + 8,
-        right: window.innerWidth - r.right,
-      })
+      const left = Math.min(
+        Math.max(r.left, VIEWPORT_MARGIN),
+        window.innerWidth - PANEL_WIDTH - VIEWPORT_MARGIN
+      )
+      setPos({ top: r.bottom + 8, left })
     }
   }, [open])
 
@@ -113,12 +117,12 @@ export function NotificationBell() {
           style={{
             position: 'fixed',
             top:      pos.top,
-            right:    pos.right,
+            left:     pos.left,
             zIndex:   9999,
             background: '#fff',
             border: '1px solid rgba(107,79,224,0.12)',
             boxShadow: '0 16px 48px rgba(107,79,224,0.16)',
-            width: '320px',
+            width: `${PANEL_WIDTH}px`,
           }}
         >
           {/* Header */}

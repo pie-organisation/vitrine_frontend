@@ -151,16 +151,6 @@ export function AdminLogin() {
               </Button>
             </div>
           </form>
-
-          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(232,225,255,0.4)' }}>
-            <Link
-              to="/login"
-              className="font-semibold transition-opacity hover:opacity-80"
-              style={{ color: '#8B6FF0' }}
-            >
-              ← Connexion école
-            </Link>
-          </p>
         </div>
       </main>
     </div>

@@ -6,10 +6,11 @@ import {
   Mail, Sparkles, BarChart2, KeyRound,
   type LucideIcon,
 } from 'lucide-react'
-import { Logo }          from './Logo'
-import { mockMessages }  from '../../mocks/data'
-import { useAuth }       from '../../contexts/AuthContext'
-import { api, ENDPOINTS } from '../../api/client'
+import { Logo }             from './Logo'
+import { NotificationBell } from './NotificationBell'
+import { mockMessages }     from '../../mocks/data'
+import { useAuth }          from '../../contexts/AuthContext'
+import { api, ENDPOINTS }   from '../../api/client'
 
 interface NavItemDef {
   to: string
@@ -122,18 +123,21 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
 
       {/* Content — above the glows */}
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
-        {/* Logo + mobile close */}
+        {/* Logo + notifications + mobile close */}
         <div className="flex items-center justify-between mb-6 px-1">
           <Logo />
-          {isMobile && (
-            <button
-              onClick={onClose}
-              className="w-7 h-7 flex items-center justify-center rounded-lg border-none cursor-pointer"
-              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)' }}
-            >
-              <X size={14} />
-            </button>
-          )}
+          <div className="flex items-center gap-1.5">
+            <NotificationBell />
+            {isMobile && (
+              <button
+                onClick={onClose}
+                className="w-7 h-7 flex items-center justify-center rounded-lg border-none cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)' }}
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Main nav — scrollable if content overflows */}

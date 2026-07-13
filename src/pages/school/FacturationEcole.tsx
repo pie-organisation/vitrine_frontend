@@ -8,6 +8,7 @@ import { ProgressBar }    from '../../components/ui/ProgressBar'
 import { useApi }         from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import type { SchoolOrg, SchoolAccount, SchoolInvoice, InvoiceStatut } from '../../mocks/schoolData'
+import { withOrgMockFallbacks, mockSchoolFactures } from '../../mocks/schoolData'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -115,8 +116,10 @@ export function FacturationEcole() {
 
   if (loading) return <Spinner />
 
-  const org = orgData ?? { nom: '', plan: '', dateDebut: '', dateExpiration: '', montant: '', nbLicences: 0, licencesUtilisees: 0 }
-  const allFactures = facturesData ?? []
+  const org = withOrgMockFallbacks(orgData)
+  // Aucune facture n'est encore générée côté backend : on retombe sur des
+  // données de démonstration tant que l'API ne renvoie rien.
+  const allFactures = facturesData && facturesData.length > 0 ? facturesData : mockSchoolFactures
   const allAccounts = accountsData ?? []
 
   const nbAdmins    = allAccounts.filter((a) => a.type === 'admin').length
