@@ -22,6 +22,7 @@ import type {
   HistoType,
   Facture,
 } from '../../mocks/data'
+import { withOrgDetailMockFallbacks } from '../../mocks/data'
 
 // ── Badge helpers ─────────────────────────────────────────────────────────────
 
@@ -194,7 +195,7 @@ export function OrganisationDetail() {
   const { id }    = useParams<{ id: string }>()
   const navigate  = useNavigate()
 
-  const { data: org, loading: loadingOrg, error: errorOrg } = useApi<Organisation>(
+  const { data: rawOrg, loading: loadingOrg, error: errorOrg } = useApi<Organisation>(
     () => api.get<Organisation>(ENDPOINTS.organisation(id ?? '')),
     [id]
   )
@@ -209,7 +210,7 @@ export function OrganisationDetail() {
   const [isImpersonating, setIsImpersonating] = useState(false)
 
   if (loadingOrg) return <Spinner />
-  if (errorOrg || !org) return (
+  if (errorOrg || !rawOrg) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
       <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{errorOrg ?? 'Organisation introuvable'}</p>
@@ -218,6 +219,7 @@ export function OrganisationDetail() {
     </div>
   )
 
+  const org         = withOrgDetailMockFallbacks(rawOrg)
   const orgFactures = factures ?? []
   const st          = STATUS_BADGE[org.statut]
 

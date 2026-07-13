@@ -214,6 +214,29 @@ export const mockOrganisations: Organisation[] = [
   },
 ]
 
+// La date de fin de contrat, les admins, l'historique et l'usage ne sont pas
+// (encore) suivis en base pour chaque organisation. On mock ces champs tant
+// qu'ils sont vides, sans écraser les vraies données (nom, plan, quotas...).
+const MOCK_ORG_FILLER = mockOrganisations[0]
+
+export function withOrgListMockFallbacks(orgs: Organisation[] | null): Organisation[] {
+  if (!orgs || orgs.length === 0) return mockOrganisations
+  return orgs.map((org) => ({
+    ...org,
+    dateExpiration: org.dateExpiration || MOCK_ORG_FILLER.dateExpiration,
+  }))
+}
+
+export function withOrgDetailMockFallbacks(org: Organisation): Organisation {
+  return {
+    ...org,
+    dateExpiration: org.dateExpiration || MOCK_ORG_FILLER.dateExpiration,
+    admins:         org.admins?.length     ? org.admins     : MOCK_ORG_FILLER.admins,
+    historique:     org.historique?.length ? org.historique : MOCK_ORG_FILLER.historique,
+    usage:          org.usage              ?? MOCK_ORG_FILLER.usage,
+  }
+}
+
 export const mockPlans: Plan[] = [
   {
     id: 'p1',
@@ -310,7 +333,6 @@ export interface Demande {
   codePostal: string
   ville: string
   planDemande: string
-  dureePlan: string
   nomContact: string
   prenomContact: string
   emailContact: string
@@ -334,7 +356,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '75006',
     ville: 'Paris',
     planDemande: 'Licence 2 — Standard',
-    dureePlan: '12 mois',
     nomContact: 'Lefebvre',
     prenomContact: 'Christine',
     emailContact: 'c.lefebvre@icp.fr',
@@ -355,7 +376,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '34000',
     ville: 'Montpellier',
     planDemande: 'Licence 1 — Découverte',
-    dureePlan: '6 mois',
     nomContact: 'Ramirez',
     prenomContact: 'Diego',
     emailContact: 'd.ramirez@formaprosud.fr',
@@ -377,7 +397,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '93300',
     ville: 'Aubervilliers',
     planDemande: 'Licence 2 — Standard',
-    dureePlan: '12 mois',
     nomContact: 'Mounier',
     prenomContact: 'Pascal',
     emailContact: 'p.mounier@lyceebergson.fr',
@@ -398,7 +417,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '29000',
     ville: 'Quimper',
     planDemande: 'Licence 3 — Sur-mesure',
-    dureePlan: '24 mois',
     nomContact: 'Tremblay',
     prenomContact: 'Marie',
     emailContact: 'm.tremblay@numeriqueeduc.fr',
@@ -420,7 +438,6 @@ export const mockDemandes: Demande[] = [
     codePostal: '59000',
     ville: 'Lille',
     planDemande: 'Licence 1 — Découverte',
-    dureePlan: '12 mois',
     nomContact: 'Fontaine',
     prenomContact: 'Luc',
     emailContact: 'l.fontaine@cfatechavenir.fr',
@@ -474,6 +491,13 @@ export const mockFactures: Facture[] = [
   { id: 'f6', organisationId: '1', organisation: 'Lycée Jean Moulin',             plan: 'Licence 2 — Standard',   montant: '2 988 €',  echeance: '31/12/2023', statut: 'payee',      reference: 'FAC-2023-0089' },
   { id: 'f7', organisationId: '2', organisation: 'École Supérieure du Numérique', plan: 'Licence 2 — Standard',   montant: '2 988 €',  echeance: '30/06/2024', statut: 'payee',      reference: 'FAC-2024-0012' },
 ]
+
+// La facturation n'est pas encore implémentée côté backend (le stub renvoie
+// toujours []) : on retombe sur des factures de démonstration tant que
+// l'API n'a rien de réel à montrer.
+export function withFacturesMockFallbacks(factures: Facture[] | null): Facture[] {
+  return factures && factures.length > 0 ? factures : mockFactures
+}
 
 // ── Logs ──────────────────────────────────────────────────────────────────────
 
@@ -660,6 +684,13 @@ export const mockMessages: Message[] = [
     statut: 'non_lu',
   },
 ]
+
+// Les messages de contact ne sont pas encore stockés côté backend (le stub
+// renvoie toujours []) : on retombe sur des messages de démonstration tant
+// que l'API n'a rien de réel à montrer.
+export function withMessagesMockFallbacks(messages: Message[] | null): Message[] {
+  return messages && messages.length > 0 ? messages : mockMessages
+}
 
 // ── Analytics ─────────────────────────────────────────────────────────────────
 

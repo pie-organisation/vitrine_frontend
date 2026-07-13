@@ -6,9 +6,12 @@ interface ModalProps {
   title: string
   children: React.ReactNode
   size?: 'md' | 'lg'
+  /** When false, hides the X button and disables closing by clicking the backdrop —
+   *  forces the caller's own action buttons to be used instead. Defaults to true. */
+  dismissable?: boolean
 }
 
-export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, size = 'md', dismissable = true }: ModalProps) {
   if (!isOpen) return null
 
   const maxW = size === 'lg' ? 'max-w-xl' : 'max-w-md'
@@ -17,7 +20,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
       style={{ background: 'rgba(26,16,64,0.3)', backdropFilter: 'blur(8px)' }}
-      onClick={onClose}
+      onClick={dismissable ? onClose : undefined}
     >
       <div
         className={`w-full ${maxW} rounded-[20px] p-8 relative my-auto`}
@@ -35,13 +38,15 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
           >
             {title}
           </h2>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
-            style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.5)' }}
-          >
-            <X size={15} />
-          </button>
+          {dismissable && (
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
+              style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.5)' }}
+            >
+              <X size={15} />
+            </button>
+          )}
         </div>
         {children}
       </div>

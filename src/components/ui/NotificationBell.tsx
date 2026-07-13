@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Bell, ClipboardList, CreditCard, AlertTriangle, Info } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { mockNotifications, type AppNotification, type NotifType } from '../../mocks/data'
+import { api, ENDPOINTS } from '../../api/client'
+import type { AppNotification, NotifType } from '../../mocks/data'
 
 // ── Type meta ─────────────────────────────────────────────────────────────────
 
@@ -47,11 +48,21 @@ function NotifItem({ notif }: { notif: AppNotification }) {
 
 // ── Bell component ────────────────────────────────────────────────────────────
 
+const PANEL_WIDTH = 320
+const VIEWPORT_MARGIN = 8
+
 export function NotificationBell() {
   const [open, setOpen]       = useState(false)
-  const [pos,  setPos]        = useState({ top: 0, right: 0 })
+  const [pos,  setPos]        = useState({ top: 0, left: 0 })
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
   const btnRef = useRef<HTMLButtonElement>(null)
   const ref    = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    api.get<AppNotification[]>(ENDPOINTS.notifications)
+      .then(setNotifications)
+      .catch(() => setNotifications([]))
+  }, [])
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -67,14 +78,15 @@ export function NotificationBell() {
   useLayoutEffect(() => {
     if (open && btnRef.current) {
       const r = btnRef.current.getBoundingClientRect()
-      setPos({
-        top:   r.bottom + 8,
-        right: window.innerWidth - r.right,
-      })
+      const left = Math.min(
+        Math.max(r.left, VIEWPORT_MARGIN),
+        window.innerWidth - PANEL_WIDTH - VIEWPORT_MARGIN
+      )
+      setPos({ top: r.bottom + 8, left })
     }
   }, [open])
 
-  const unreadCount = mockNotifications.filter((n) => !n.lu).length
+  const unreadCount = notifications.filter((n) => !n.lu).length
 
   return (
     <div className="relative">
@@ -82,7 +94,7 @@ export function NotificationBell() {
       <button
         ref={btnRef}
         className="relative w-9 h-9 flex items-center justify-center rounded-xl border-none cursor-pointer transition-colors"
-        style={{ background: open ? 'rgba(107,79,224,0.1)' : 'rgba(107,79,224,0.06)', color: '#6B4FE0' }}
+        style={{ background: open ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.08)', color: '#C084FC' }}
         onClick={() => setOpen((v) => !v)}
         aria-label="Notifications"
       >
@@ -105,12 +117,12 @@ export function NotificationBell() {
           style={{
             position: 'fixed',
             top:      pos.top,
-            right:    pos.right,
+            left:     pos.left,
             zIndex:   9999,
             background: '#fff',
             border: '1px solid rgba(107,79,224,0.12)',
             boxShadow: '0 16px 48px rgba(107,79,224,0.16)',
-            width: '320px',
+            width: `${PANEL_WIDTH}px`,
           }}
         >
           {/* Header */}
@@ -133,7 +145,12 @@ export function NotificationBell() {
 
           {/* List */}
           <div>
-            {mockNotifications.map((n) => (
+            {notifications.length === 0 && (
+              <div className="px-4 py-6 text-center text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>
+                Aucune notification pour le moment.
+              </div>
+            )}
+            {notifications.map((n) => (
               <NotifItem key={n.id} notif={n} />
             ))}
           </div>

@@ -88,35 +88,35 @@ export const ENDPOINTS = {
   // Auth
   login:          '/auth/login',
   inscription:    '/auth/inscription',
+  licences:       '/auth/licences',
   motDePasseReset:'/auth/reset-password',
 
   // Current user
   me:             '/me',
+  mePassword:     '/me/password',
 
   // Admin — dashboard
   metriques:      '/admin/metriques',
   alertes:        '/admin/alertes',
+  notifications:  '/admin/notifications',
   analytics:      '/admin/analytiques',
 
   // Admin — CRUD
   organisations:       '/admin/organisations',
   organisation:        (id: string) => `/admin/organisations/${id}`,
-  plans:               '/admin/plans',
-  plan:                (id: string) => `/admin/plans/${id}`,
   demandes:            '/admin/demandes',
   demande:             (id: string) => `/admin/demandes/${id}`,
-  sessions:            '/admin/sessions',
-  session:             (id: string) => `/admin/sessions/${id}`,
   factures:            '/admin/factures',
   facture:             (id: string) => `/admin/factures/${id}`,
   logs:                '/admin/journaux',
-  adminUsers:          '/admin/users',
   equipe:              '/admin/equipe',
   membreEquipe:        (id: string) => `/admin/equipe/${id}`,
   messages:            '/admin/messages',
   message:             (id: string) => `/admin/messages/${id}`,
   offres:              '/admin/offres',
   offre:               (id: string) => `/admin/offres/${id}`,
+  plans:               '/admin/plans',
+  plan:                (id: string) => `/admin/plans/${id}`,
 
   // School
   schoolOrg:           '/school/organisation',
@@ -125,4 +125,6 @@ export const ENDPOINTS = {
   schoolFactures:      '/school/factures',
   schoolActivite:      '/school/activite',
   schoolContact:       '/school/contact',
+  schoolSessions:      '/school/sessions',
+  schoolSession:       (id: string) => `/school/sessions/${id}`,
 } as const

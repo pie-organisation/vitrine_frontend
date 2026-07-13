@@ -210,12 +210,11 @@ function DemandeDetailModal({
         <InfoRow label="Ville"       value={demande.ville}      />
       </SectionCard>
 
-      <SectionCard title="Plan souhaité" className="mt-4">
+      <SectionCard title="Licence souhaitée" className="mt-4">
         <InfoRow
-          label="Plan"
+          label="Licence"
           value={<span className="font-semibold" style={{ color: '#6B4FE0' }}>{demande.planDemande}</span>}
         />
-        <InfoRow label="Durée" value={demande.dureePlan} />
       </SectionCard>
 
       <SectionCard title="Contact référent" className="mt-4">
@@ -257,15 +256,23 @@ function DemandeDetailModal({
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Demandes() {
-  const [filter,     setFilter]     = useState('all')
-  const [page,       setPage]       = useState(0)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [filter,      setFilter]      = useState('all')
+  const [page,        setPage]        = useState(0)
+  const [selectedId,  setSelectedId]  = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   const { data: demandes, loading, error, refetch } = useApi<Demande[]>(
     () => api.get<Demande[]>(ENDPOINTS.demandes),
     []
   )
   const allDemandes = demandes ?? []
+
+  const handleAction = (id: string, statut: 'validee' | 'refusee') => {
+    setActionError(null)
+    api.patch(ENDPOINTS.demande(id), { statut })
+      .then(refetch)
+      .catch((e) => setActionError(e instanceof Error ? e.message : 'Erreur lors du traitement de la demande.'))
+  }
 
   const enAttenteCount = allDemandes.filter((d) => d.statut === 'en_attente').length
 
@@ -308,6 +315,22 @@ export function Demandes() {
         }
       />
 
+      {actionError && (
+        <div
+          className="rounded-xl px-4 py-3 text-sm mb-4 flex items-center justify-between gap-3"
+          style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#dc2626' }}
+        >
+          <span>{actionError}</span>
+          <button
+            onClick={() => setActionError(null)}
+            className="text-xs font-semibold border-none bg-transparent cursor-pointer shrink-0"
+            style={{ color: '#dc2626' }}
+          >
+            Fermer
+          </button>
+        </div>
+      )}
+
       <FilterPills options={FILTERS} value={filter} onChange={handleFilter} />
 
       <div className="flex items-center mt-5 mb-4">
@@ -322,8 +345,8 @@ export function Demandes() {
             key={d.id}
             demande={d}
             onView={() => setSelectedId(d.id)}
-            onValider={() => api.patch(ENDPOINTS.demande(d.id), { statut: 'validee' }).then(refetch)}
-            onRefuser={() => api.patch(ENDPOINTS.demande(d.id), { statut: 'refusee' }).then(refetch)}
+            onValider={() => handleAction(d.id, 'validee')}
+            onRefuser={() => handleAction(d.id, 'refusee')}
           />
         ))}
         {visible.length === 0 && (
@@ -352,8 +375,8 @@ export function Demandes() {
           <DemandeDetailModal
             demande={selected}
             onClose={() => setSelectedId(null)}
-            onValider={() => api.patch(ENDPOINTS.demande(selected.id), { statut: 'validee' }).then(refetch)}
-            onRefuser={() => api.patch(ENDPOINTS.demande(selected.id), { statut: 'refusee' }).then(refetch)}
+            onValider={() => handleAction(selected.id, 'validee')}
+            onRefuser={() => handleAction(selected.id, 'refusee')}
           />
         )}
       </Modal>

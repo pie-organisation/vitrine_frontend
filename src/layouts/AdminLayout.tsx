@@ -1,15 +1,10 @@
 import { useState } from 'react'
 import { Outlet }   from 'react-router-dom'
-import { Link }     from 'react-router-dom'
 import { Menu }     from 'lucide-react'
 import { Sidebar }  from '../components/ui/Sidebar'
 import { Logo }     from '../components/ui/Logo'
-import { NotificationBell } from '../components/ui/NotificationBell'
-import { useAuth }  from '../contexts/AuthContext'
 
 export function AdminLayout() {
-  const { user, logout } = useAuth()
-  const admin = user ?? { initials: '?', prenom: '', nom: '' }
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -41,41 +36,23 @@ export function AdminLayout() {
 
         {/* Mobile top-bar */}
         <div
-          className="md:hidden flex items-center gap-3 px-4 py-3 shrink-0"
-          style={{ background: '#fff', borderBottom: '1px solid rgba(107,79,224,0.1)' }}
+          className="md:hidden flex items-center gap-3 px-4 py-3 shrink-0 relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #2a1660, #170c38)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
         >
+          <div
+            className="absolute -top-10 left-10 w-40 h-40 rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(192,132,252,0.18), transparent 70%)' }}
+          />
           <button
             onClick={() => setSidebarOpen(true)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer"
-            style={{ background: 'rgba(107,79,224,0.07)', color: '#6B4FE0' }}
+            className="relative w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer"
+            style={{ background: 'rgba(255,255,255,0.08)', color: '#C084FC' }}
           >
             <Menu size={17} />
           </button>
-          <Logo size="sm" />
-          <div className="ml-auto">
-            <NotificationBell />
-          </div>
-        </div>
-
-        {/* Desktop top-bar */}
-        <div
-          className="hidden md:flex items-center justify-end gap-3 px-6 py-2.5 shrink-0"
-          style={{ background: 'rgba(255,255,255,0.92)', borderBottom: '1px solid rgba(107,79,224,0.08)', backdropFilter: 'blur(8px)' }}
-        >
-          <NotificationBell />
-          <Link to="/admin/profil" className="no-underline">
-            <div className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl transition-colors" style={{ background: 'rgba(107,79,224,0.05)' }}>
-              <div
-                className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-xs"
-                style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
-              >
-                {admin.initials}
-              </div>
-              <span className="text-xs font-semibold" style={{ color: '#1a1040', fontFamily: 'var(--font-sans)' }}>
-                {admin.prenom} {admin.nom}
-              </span>
-            </div>
-          </Link>
+          <span className="relative">
+            <Logo size="sm" />
+          </span>
         </div>
 
         {/* Scrollable content area */}

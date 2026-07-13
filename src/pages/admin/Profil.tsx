@@ -4,6 +4,7 @@ import { PageHeader }  from '../../components/ui/PageHeader'
 import { SectionCard } from '../../components/ui/SectionCard'
 import { Input }       from '../../components/ui/Input'
 import { useAuth }     from '../../contexts/AuthContext'
+import { api, ENDPOINTS } from '../../api/client'
 
 // ── Inline Switch ─────────────────────────────────────────────────────────────
 
@@ -60,11 +61,68 @@ function ToggleRow({ id, label, description, checked, onChange }: {
   )
 }
 
+// ── Role labels ───────────────────────────────────────────────────────────────
+
+const ROLE_LABELS: Record<string, string> = {
+  super_admin: 'Super admin',
+  support:     'Support',
+  lecture:     'Lecture seule',
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Profil() {
-  const { user } = useAuth()
-  const admin = user ?? { prenom: '', nom: '', email: '', initials: '' }
+  const { user, updateUser } = useAuth()
+  const admin = user ?? { prenom: '', nom: '', email: '', role: '', initials: '' }
+  const roleLabel = ROLE_LABELS[admin.role] ?? admin.role
+
+  // Personal info form
+  const [prenom, setPrenom] = useState(admin.prenom)
+  const [nom,    setNom]    = useState(admin.nom)
+  const [email,  setEmail]  = useState(admin.email)
+  const [savingInfo, setSavingInfo] = useState(false)
+  const [infoError,  setInfoError]  = useState<string | null>(null)
+  const [infoSaved,  setInfoSaved]  = useState(false)
+
+  const handleSaveInfo = async () => {
+    setSavingInfo(true); setInfoError(null); setInfoSaved(false)
+    try {
+      await api.patch(ENDPOINTS.me, { prenom, nom, email })
+      updateUser({ prenom, nom, email })
+      setInfoSaved(true)
+    } catch (e) {
+      setInfoError(e instanceof Error ? e.message : 'Erreur lors de la sauvegarde.')
+    } finally {
+      setSavingInfo(false)
+    }
+  }
+
+  // Password form
+  const [currentPw, setCurrentPw] = useState('')
+  const [newPw,     setNewPw]     = useState('')
+  const [confirmPw, setConfirmPw] = useState('')
+  const [savingPw, setSavingPw] = useState(false)
+  const [pwError,  setPwError]  = useState<string | null>(null)
+  const [pwSaved,  setPwSaved]  = useState(false)
+
+  const handleChangePassword = async () => {
+    setPwError(null); setPwSaved(false)
+    if (newPw.length < 8) { setPwError('Le nouveau mot de passe doit contenir au moins 8 caractères.'); return }
+    if (newPw !== confirmPw) { setPwError('Les mots de passe ne correspondent pas.'); return }
+    setSavingPw(true)
+    try {
+      await api.post(ENDPOINTS.mePassword, {
+        mot_de_passe_actuel: currentPw,
+        nouveau_mot_de_passe: newPw,
+      })
+      setPwSaved(true)
+      setCurrentPw(''); setNewPw(''); setConfirmPw('')
+    } catch (e) {
+      setPwError(e instanceof Error ? e.message : 'Erreur lors du changement de mot de passe.')
+    } finally {
+      setSavingPw(false)
+    }
+  }
 
   // Security toggles
   const [twoFA,      setTwoFA]      = useState(false)
@@ -106,7 +164,7 @@ export function Profil() {
             <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>
               {admin.prenom} {admin.nom}
             </div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>Super admin</div>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>{roleLabel}</div>
             <button
               className="text-xs mt-2 font-semibold border-none bg-transparent cursor-pointer p-0"
               style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
@@ -119,22 +177,34 @@ export function Profil() {
 
         {/* Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input label="Prénom" defaultValue={admin.prenom} />
-          <Input label="Nom"    defaultValue={admin.nom}    />
+          <Input label="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} />
+          <Input label="Nom"    value={nom}    onChange={(e) => setNom(e.target.value)}    />
           <div className="sm:col-span-2">
-            <Input label="Adresse e-mail" defaultValue={admin.email} type="email" />
+            <Input label="Adresse e-mail" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
           </div>
           <div className="sm:col-span-2">
-            <Input label="Rôle" defaultValue="Super admin" disabled />
+            <Input label="Rôle" defaultValue={roleLabel} disabled />
           </div>
         </div>
+
+        {infoError && (
+          <div className="text-xs px-3 py-2 rounded-xl mt-4" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+            {infoError}
+          </div>
+        )}
+        {infoSaved && (
+          <div className="text-xs px-3 py-2 rounded-xl mt-4" style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d' }}>
+            Informations mises à jour.
+          </div>
+        )}
 
         <div className="flex justify-end mt-5">
           <button
             className="btn-primary !w-auto !py-2.5 !px-5 text-sm"
-            onClick={() => console.log('save-profile')}
+            onClick={handleSaveInfo}
+            disabled={savingInfo}
           >
-            Enregistrer les modifications
+            {savingInfo ? 'Enregistrement…' : 'Enregistrer les modifications'}
           </button>
         </div>
       </SectionCard>
@@ -142,17 +212,29 @@ export function Profil() {
       {/* ── Sécurité ─────────────────────────────────────────────────────────── */}
       <SectionCard title="Sécurité" className="mb-5">
         <div className="flex flex-col gap-4 mb-5">
-          <Input label="Mot de passe actuel"       type="password" placeholder="••••••••" />
-          <Input label="Nouveau mot de passe"      type="password" placeholder="••••••••" />
-          <Input label="Confirmer le mot de passe" type="password" placeholder="••••••••" />
+          <Input label="Mot de passe actuel"       type="password" placeholder="••••••••" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} />
+          <Input label="Nouveau mot de passe"      type="password" placeholder="••••••••" value={newPw}     onChange={(e) => setNewPw(e.target.value)}     />
+          <Input label="Confirmer le mot de passe" type="password" placeholder="••••••••" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} />
         </div>
+
+        {pwError && (
+          <div className="text-xs px-3 py-2 rounded-xl mb-4" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+            {pwError}
+          </div>
+        )}
+        {pwSaved && (
+          <div className="text-xs px-3 py-2 rounded-xl mb-4" style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d' }}>
+            Mot de passe mis à jour.
+          </div>
+        )}
 
         <div className="flex justify-end mb-6">
           <button
             className="btn-action !w-auto !py-2.5 !px-5 text-sm"
-            onClick={() => console.log('change-password')}
+            onClick={handleChangePassword}
+            disabled={savingPw || !currentPw || !newPw || !confirmPw}
           >
-            Modifier le mot de passe
+            {savingPw ? 'Modification…' : 'Modifier le mot de passe'}
           </button>
         </div>
 

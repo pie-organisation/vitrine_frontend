@@ -266,8 +266,21 @@ function DetailPanel({ account, statut, onEdit, onDelete, onClose, onToggleStatu
 
 // ── EditModal ─────────────────────────────────────────────────────────────────
 
-function EditModal({ account, onClose }: { account: SchoolAccount; onClose: () => void }) {
-  const [role, setRole] = useState<AccountType>(account.type)
+function EditModal({ account, onClose, onSaved }: { account: SchoolAccount; onClose: () => void; onSaved: () => void }) {
+  const [role,  setRole]  = useState<AccountType>(account.type)
+  const [error, setError] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+
+  const handleSave = () => {
+    setSaving(true); setError(null)
+    api.patch(ENDPOINTS.schoolCompte(account.id), { role })
+      .then(() => { onSaved(); onClose() })
+      .catch((e) => {
+        setSaving(false)
+        setError(e instanceof Error ? e.message : "Erreur lors de l'enregistrement.")
+      })
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -289,8 +302,15 @@ function EditModal({ account, onClose }: { account: SchoolAccount; onClose: () =
       <Input label="E-mail" defaultValue={account.email} type="email" />
       <Input label="Licence CUBI" defaultValue={account.licenceCubi} disabled />
       <Input label="Nouveau mot de passe" type="password" placeholder="Laisser vide pour ne pas changer" />
+      {error && (
+        <div className="text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+          {error}
+        </div>
+      )}
       <div className="flex gap-3 mt-2">
-        <button className="btn-primary flex-1" onClick={() => api.patch(ENDPOINTS.schoolCompte(account.id), { role }).then(onClose)}>Enregistrer</button>
+        <button className="btn-primary flex-1" onClick={handleSave} disabled={saving}>
+          {saving ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
         <button className="btn-action flex-1" onClick={onClose}>Annuler</button>
       </div>
     </div>
@@ -299,7 +319,20 @@ function EditModal({ account, onClose }: { account: SchoolAccount; onClose: () =
 
 // ── DeleteModal ───────────────────────────────────────────────────────────────
 
-function DeleteModal({ account, onClose }: { account: SchoolAccount; onClose: () => void }) {
+function DeleteModal({ account, onClose, onDeleted }: { account: SchoolAccount; onClose: () => void; onDeleted: () => void }) {
+  const [error,    setError]    = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+
+  const handleDelete = () => {
+    setDeleting(true); setError(null)
+    api.delete(ENDPOINTS.schoolCompte(account.id))
+      .then(() => { onDeleted(); onClose() })
+      .catch((e) => {
+        setDeleting(false)
+        setError(e instanceof Error ? e.message : 'Erreur lors de la suppression.')
+      })
+  }
+
   return (
     <div className="text-center">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239,68,68,0.08)' }}>
@@ -309,9 +342,16 @@ function DeleteModal({ account, onClose }: { account: SchoolAccount; onClose: ()
       <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
         Le compte de <strong>{account.prenom} {account.nom}</strong> sera définitivement supprimé. Cette action est irréversible.
       </p>
+      {error && (
+        <div className="text-xs px-3 py-2 rounded-xl mb-4" style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
+          {error}
+        </div>
+      )}
       <div className="flex gap-3">
         <button className="btn-action flex-1" onClick={onClose}>Annuler</button>
-        <button className="btn-danger flex-1" onClick={() => api.delete(ENDPOINTS.schoolCompte(account.id)).then(onClose)}>Supprimer</button>
+        <button className="btn-danger flex-1" onClick={handleDelete} disabled={deleting}>
+          {deleting ? 'Suppression…' : 'Supprimer'}
+        </button>
       </div>
     </div>
   )
@@ -418,6 +458,13 @@ function generateLicence(type: AccountType): string {
   return `CUBI-${prefix}-${num}`
 }
 
+function generatePassword(): string {
+  const charset = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%'
+  let pwd = ''
+  for (let i = 0; i < 12; i++) pwd += charset[Math.floor(Math.random() * charset.length)]
+  return pwd
+}
+
 function PendingRow({ item, index, onRemove }: {
   item: FormData; index: number; onRemove: () => void
 }) {
@@ -452,10 +499,12 @@ function PendingRow({ item, index, onRemove }: {
   )
 }
 
-function ManualCreateView({ onBack }: { onBack: () => void }) {
-  const [form,    setForm]    = useState<FormData>(EMPTY_FORM)
-  const [pending, setPending] = useState<FormData[]>([])
-  const [errors,  setErrors]  = useState<Partial<Record<keyof FormData, string>>>({})
+function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
+  const [form,      setForm]      = useState<FormData>(EMPTY_FORM)
+  const [pending,   setPending]   = useState<FormData[]>([])
+  const [errors,    setErrors]    = useState<Partial<Record<keyof FormData, string>>>({})
+  const [saving,    setSaving]    = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const set = (key: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrors((prev) => ({ ...prev, [key]: undefined }))
@@ -555,7 +604,25 @@ function ManualCreateView({ onBack }: { onBack: () => void }) {
 
             {/* Mot de passe + force */}
             <div>
-              <Input label="Mot de passe temporaire" type="password" placeholder="••••••••" value={form.password} onChange={set('password')} />
+              <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(30,15,70,0.6)' }}>Mot de passe temporaire</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={form.password}
+                  onChange={set('password')}
+                  placeholder="Laisser vide pour générer automatiquement"
+                  className="flex-1 px-3 py-2.5 rounded-xl text-sm outline-none"
+                  style={{ background: 'rgba(107,79,224,0.04)', border: '1px solid rgba(107,79,224,0.15)', color: '#1a1040', fontFamily: 'monospace' }}
+                />
+                <button
+                  onClick={() => setForm((f) => ({ ...f, password: generatePassword() }))}
+                  title="Générer un mot de passe aléatoire"
+                  className="px-3 rounded-xl border-none cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0"
+                  style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
+                >
+                  <RefreshCw size={12} /> Générer
+                </button>
+              </div>
               <PasswordStrength password={form.password} />
             </div>
           </div>
@@ -595,14 +662,29 @@ function ManualCreateView({ onBack }: { onBack: () => void }) {
             </div>
           )}
 
+          {saveError && (
+            <div className="rounded-xl px-3 py-2.5 text-xs mt-4"
+              style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#dc2626' }}>
+              {saveError}
+            </div>
+          )}
+
           <div className="mt-5 pt-4" style={{ borderTop: '1px solid rgba(107,79,224,0.08)' }}>
             <button
               className="btn-primary w-full"
-              disabled={pending.length === 0}
-              style={{ opacity: pending.length === 0 ? 0.4 : 1 }}
-              onClick={() => api.post(ENDPOINTS.schoolComptes, { comptes: pending }).then(onBack)}
+              disabled={pending.length === 0 || saving}
+              style={{ opacity: pending.length === 0 || saving ? 0.4 : 1 }}
+              onClick={() => {
+                setSaving(true); setSaveError(null)
+                api.post(ENDPOINTS.schoolComptes, { comptes: pending })
+                  .then(() => { onSaved(); onBack() })
+                  .catch((e) => {
+                    setSaving(false)
+                    setSaveError(e instanceof Error ? e.message : "Erreur lors de la création des comptes.")
+                  })
+              }}
             >
-              Enregistrer {pending.length > 0 ? `${pending.length} compte${pending.length > 1 ? 's' : ''}` : 'les comptes'}
+              {saving ? 'Enregistrement…' : `Enregistrer ${pending.length > 0 ? `${pending.length} compte${pending.length > 1 ? 's' : ''}` : 'les comptes'}`}
             </button>
           </div>
         </div>
@@ -613,9 +695,10 @@ function ManualCreateView({ onBack }: { onBack: () => void }) {
 
 // ── ImportView ────────────────────────────────────────────────────────────────
 
-function ImportView({ onBack }: { onBack: () => void }) {
+function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
   const [dragging, setDragging] = useState(false)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [importError, setImportError] = useState<string | null>(null)
 
   return (
     <div>
@@ -671,9 +754,21 @@ function ImportView({ onBack }: { onBack: () => void }) {
             </button>
           </div>
 
+          {importError && (
+            <div className="rounded-xl px-3 py-2.5 text-xs mb-4"
+              style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#dc2626' }}>
+              {importError}
+            </div>
+          )}
+
           <div className="flex gap-3">
             <button className="btn-primary flex-1" disabled={!fileName} style={{ opacity: fileName ? 1 : 0.4 }}
-              onClick={() => { api.post(ENDPOINTS.schoolComptes, { fichier: fileName }); onBack() }}>
+              onClick={() => {
+                setImportError(null)
+                api.post(ENDPOINTS.schoolComptes, { fichier: fileName })
+                  .then(() => { onSaved(); onBack() })
+                  .catch((e) => setImportError(e instanceof Error ? e.message : "Erreur lors de l'import."))
+              }}>
               Importer le fichier
             </button>
             <button className="btn-action" style={{ width: 'auto', padding: '0 18px' }} onClick={onBack}>Annuler</button>
@@ -779,8 +874,8 @@ export function Comptes() {
   }
 
   // Modes création
-  if (createMode === 'manual') return <ManualCreateView onBack={() => setCreateMode(null)} />
-  if (createMode === 'import') return <ImportView onBack={() => setCreateMode(null)} />
+  if (createMode === 'manual') return <ManualCreateView onBack={() => setCreateMode(null)} onSaved={refetchAccounts} />
+  if (createMode === 'import') return <ImportView onBack={() => setCreateMode(null)} onSaved={refetchAccounts} />
 
   const allPageChecked = visible.length > 0 && visible.every((a) => checkedIds.has(a.id))
 
@@ -959,11 +1054,11 @@ export function Comptes() {
       </Modal>
 
       <Modal isOpen={showEdit && !!selected} onClose={() => setShowEdit(false)} title="Modifier le compte" size="md">
-        {selected && <EditModal account={selected} onClose={() => setShowEdit(false)} />}
+        {selected && <EditModal account={selected} onClose={() => setShowEdit(false)} onSaved={refetchAccounts} />}
       </Modal>
 
       <Modal isOpen={showDelete && !!selected} onClose={() => setShowDelete(false)} title="" size="md">
-        {selected && <DeleteModal account={selected} onClose={() => { setShowDelete(false); setDetailId(null) }} />}
+        {selected && <DeleteModal account={selected} onClose={() => { setShowDelete(false); setDetailId(null) }} onDeleted={refetchAccounts} />}
       </Modal>
 
       <Modal isOpen={showBulkDelete} onClose={() => setShowBulkDelete(false)} title="" size="md">

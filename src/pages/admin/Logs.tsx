@@ -4,8 +4,7 @@ import { PageHeader }  from '../../components/ui/PageHeader'
 import { ExportButton } from '../../components/ui/ExportButton'
 import { FilterPills } from '../../components/ui/FilterPills'
 import { SearchBar }   from '../../components/ui/SearchBar'
-import { useApi }        from '../../hooks/useApi'
-import { api, ENDPOINTS } from '../../api/client'
+import { mockLogs } from '../../mocks/data'
 import type { LogEntry, LogType } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -78,17 +77,6 @@ const FILTERS = [
 
 const INITIAL_COUNT = 8
 
-// ── Spinner ───────────────────────────────────────────────────────────────────
-
-function Spinner() {
-  return (
-    <div className="flex items-center justify-center py-16">
-      <div className="w-7 h-7 rounded-full border-2 animate-spin"
-        style={{ borderColor: 'rgba(107,79,224,0.2)', borderTopColor: '#6B4FE0' }} />
-    </div>
-  )
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Logs() {
@@ -97,11 +85,8 @@ export function Logs() {
   const [dateFilter, setDateFilter] = useState('')
   const [showAll,    setShowAll]    = useState(false)
 
-  const { data: logs, loading, error, refetch } = useApi<LogEntry[]>(
-    () => api.get<LogEntry[]>(ENDPOINTS.logs),
-    []
-  )
-  const allLogs = logs ?? []
+  // Données mockées pour l'MVP — pas encore branché sur log_activite en base.
+  const allLogs: LogEntry[] = mockLogs
 
   const handleType = (f: string) => { setTypeFilter(f); setShowAll(false) }
 
@@ -116,16 +101,6 @@ export function Logs() {
   const visible  = showAll ? filtered : filtered.slice(0, INITIAL_COUNT)
   const hasMore  = !showAll && filtered.length > INITIAL_COUNT
   const secCount = filtered.filter((l) => l.type === 'securite').length
-
-  if (loading) return <Spinner />
-  if (error) return (
-    <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
-      <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
-        style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
-    </div>
-  )
 
   return (
     <div>

@@ -11,6 +11,7 @@ import { DotsPagination } from '../../components/ui/DotsPagination'
 import { useApi }          from '../../hooks/useApi'
 import { api, ENDPOINTS }  from '../../api/client'
 import type { Organisation, OrgStatus, OrgType } from '../../mocks/data'
+import { withOrgListMockFallbacks } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -113,7 +114,7 @@ export function Organisations() {
   const handleFilter = (f: string) => { setFilter(f); setPage(0) }
   const handleSearch = (s: string) => { setSearch(s); setPage(0) }
 
-  const filtered = (orgs ?? []).filter((org) => {
+  const filtered = withOrgListMockFallbacks(orgs).filter((org) => {
     const matchFilter =
       filter === 'all'   ||
       org.type   === filter  ||

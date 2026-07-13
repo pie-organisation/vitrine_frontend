@@ -12,6 +12,7 @@ import { Logo }           from '../../components/ui/Logo'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import type { Facture, FactureStatut } from '../../mocks/data'
+import { withFacturesMockFallbacks } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -189,7 +190,7 @@ export function Facturation() {
     () => api.get<Facture[]>(ENDPOINTS.factures),
     []
   )
-  const allFactures = factures ?? []
+  const allFactures = withFacturesMockFallbacks(factures)
 
   const handleFilter = (f: string) => { setFilter(f); setPage(0) }
 

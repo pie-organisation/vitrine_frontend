@@ -1,14 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { DotGridBackground } from '../components/ui/DotGridBackground'
 import { DecorativeOrbs }   from '../components/ui/DecorativeOrbs'
 import { Logo }             from '../components/ui/Logo'
 import { Input }            from '../components/ui/Input'
+import { Select }           from '../components/ui/Select'
 import { Button }           from '../components/ui/Button'
 import { Card }             from '../components/ui/Card'
 import { Toggle }           from '../components/ui/Toggle'
 import { SectionTitle }     from '../components/ui/SectionTitle'
 import { api, ENDPOINTS }   from '../api/client'
+
+interface Licence {
+  id:  string
+  nom: string
+}
 
 type Mode = 'ecole' | 'groupe'
 
@@ -23,10 +29,17 @@ function Divider() {
 
 export function Registration() {
   const navigate = useNavigate()
-  const [mode,     setMode]     = useState<Mode>('ecole')
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState<string | null>(null)
-  const [success,  setSuccess]  = useState(false)
+  const [mode,      setMode]      = useState<Mode>('ecole')
+  const [loading,   setLoading]   = useState(false)
+  const [error,     setError]     = useState<string | null>(null)
+  const [success,   setSuccess]   = useState(false)
+  const [licences,  setLicences]  = useState<Licence[]>([])
+
+  useEffect(() => {
+    api.get<Licence[]>(ENDPOINTS.licences)
+      .then(setLicences)
+      .catch(() => setLicences([]))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -99,11 +112,9 @@ export function Registration() {
                   <Input label="Prénom DAF" name="prenom_daf" placeholder="Prénom" required />
                 </div>
                 <Input label="Nom complet de l'école" name="nom_ecole" placeholder="Ex : Lycée Jean Moulin" required />
-                <div className={`grid gap-4 ${mode === 'groupe' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input label="SIRET école" name="siret" placeholder="XXX XXX XXX XXXXX" required />
-                  {mode === 'groupe' && (
-                    <Input label="Visa école" name="visa_ecole" placeholder="N° de visa" />
-                  )}
+                  <Input label="Visa école (facultatif)" name="visa_ecole" placeholder="N° de visa" />
                 </div>
               </div>
             </section>
@@ -124,11 +135,13 @@ export function Registration() {
             <Divider />
 
             <section>
-              <SectionTitle>Plan</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input label="Plan initial"  name="plan_initial" placeholder="Étudiant, École, Entreprise…" />
-                <Input label="Durée du plan" name="duree_plan"   placeholder="Ex : 12 mois" />
-              </div>
+              <SectionTitle>Licence</SectionTitle>
+              <Select label="Licence souhaitée" name="type_licence_id" defaultValue="" required>
+                <option value="" disabled>Sélectionner une licence</option>
+                {licences.map((l) => (
+                  <option key={l.id} value={l.id}>{l.nom}</option>
+                ))}
+              </Select>
             </section>
 
             <Divider />

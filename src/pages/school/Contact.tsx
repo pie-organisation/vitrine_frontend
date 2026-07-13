@@ -5,6 +5,7 @@ import { Input }       from '../../components/ui/Input'
 import { useApi }      from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import type { SchoolContact } from '../../mocks/schoolData'
+import { withContactMockFallbacks } from '../../mocks/schoolData'
 
 // ── Read-only row ─────────────────────────────────────────────────────────────
 
@@ -43,8 +44,7 @@ export function Contact() {
     []
   )
 
-  const fallback: SchoolContact = { nom: '', prenom: '', email: '', boiteFacturation: '', telephone: '' }
-  const contact = data ?? fallback
+  const contact = withContactMockFallbacks(data)
 
   if (loading) return <Spinner />
   if (error) return (

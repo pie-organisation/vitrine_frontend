@@ -12,7 +12,7 @@ export function Login() {
   const { login, isLoading, loginError } = useAuth()
   const navigate  = useNavigate()
   const location  = useLocation()
-  const from      = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/admin'
+  const from      = (location.state as { from?: { pathname: string } })?.from?.pathname
 
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -20,8 +20,8 @@ export function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await login(email, password)
-      navigate(from, { replace: true })
+      const user = await login(email, password)
+      navigate(from ?? (user.type === 'cubi' ? '/admin' : '/school'), { replace: true })
     } catch {
       // loginError is set in context
     }
@@ -52,7 +52,7 @@ export function Login() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <Input
-              label="Email de facturation"
+              label="Email"
               name="email"
               type="email"
               placeholder="votre@email.fr"
@@ -100,13 +100,14 @@ export function Login() {
           </form>
 
           <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
-            Pas encore de compte ?{' '}
+            Pas encore de compte ?
+            <br />
             <Link
               to="/inscription"
               className="font-semibold transition-opacity hover:opacity-80"
               style={{ color: '#6B4FE0' }}
             >
-              Faire une demande d'inscription →
+              Faire une demande d'inscription
             </Link>
           </p>
         </Card>
