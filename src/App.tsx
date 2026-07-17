@@ -1,6 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { Home } from './pages/Home'
+import { Offres as HomeOffres } from './pages/Offres'
+import { FAQ } from './pages/FAQ'
+import { Contact as HomeContact } from './pages/Contact'
+import { CommentCaMarche } from './pages/CommentCaMarche'
+import { MentionsLegales } from './pages/MentionsLegales'
 import { Login }                    from './pages/Login'
 import { AdminLogin }               from './pages/AdminLogin'
 import { Registration }             from './pages/Registration'
@@ -34,6 +40,12 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public */}
+          <Route path="/" element={<Home />} />
+          <Route path="/offres" element={<HomeOffres />} />
+          <Route path="/comment-ca-marche" element={<CommentCaMarche />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<HomeContact />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/login"                       element={<Login />} />
           <Route path="/admin/login"                 element={<AdminLogin />} />
           <Route path="/inscription"                 element={<Registration />} />
