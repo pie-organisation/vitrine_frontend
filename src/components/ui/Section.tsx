@@ -6,6 +6,7 @@ interface SectionProps {
   background?: SectionBackground
   className?: string
   style?: React.CSSProperties
+  id?: string
 }
 
 const BG_CLASS: Record<SectionBackground, string> = {
@@ -23,9 +24,9 @@ const BG_CLASS: Record<SectionBackground, string> = {
  * carries ~1rem of its own padding. Nest a `container-page` div inside for the usual
  * centered, max-width content.
  */
-export function Section({ children, background = 'none', className = '', style }: SectionProps) {
+export function Section({ children, background = 'none', className = '', style, id }: SectionProps) {
   return (
-    <section className={`relative w-full p-4 ${BG_CLASS[background]} ${className}`} style={style}>
+    <section id={id} className={`relative w-full p-4 ${BG_CLASS[background]} ${className}`} style={style}>
       {children}
     </section>
   )

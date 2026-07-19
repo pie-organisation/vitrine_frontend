@@ -4,6 +4,7 @@ import { Layout } from '../../components/layout/Layout'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
+import { Section } from '../../components/ui/Section'
 
 const STEPS = [
   {
@@ -31,7 +32,7 @@ const STEPS = [
 export function CommentCaMarche() {
   return (
     <Layout>
-      <section className="container-page pt-16 pb-10 text-center section-top" style={{ paddingBottom: 'var(--big-padding-section)' }}>
+      <Section id="top" className="container-page pt-16 pb-10 text-center section-top" style={{ paddingBottom: 'var(--big-padding-section)' }}>
         <Badge variant="violet" dot>Comment ça marche</Badge>
         <h1
           className="font-display font-extrabold mt-6 mx-auto max-w-lg"
@@ -43,7 +44,7 @@ export function CommentCaMarche() {
           Pas d'installation, pas de jargon : voici exactement ce qui se passe entre votre réservation et la fin de
           votre session.
         </p>
-      </section>
+      </Section>
 
       <section className="container-page py-10 max-w-2xl mx-auto" style={{ background: 'radial-gradient(circle, rgba(232,121,249,.28), transparent 80%)' }}>
         <div className="flex flex-col gap-5">

@@ -53,7 +53,7 @@ export function Home() {
     <Layout airbrush>
       {/* Hero — background="none" lets the page-level airbrush glow show through.
           Swap the `background` prop on any <Section> below to band it differently. */}
-      <Section background="none" className="section-full">
+      <Section id="top" background="none" className="section-full">
         <div className={`container-page flex flex-col justify-center items-center text-center ${SECTION_PAD}`}>
           <Badge variant="violet" dot>SaaS B2B pour l'enseignement supérieur</Badge>
           <h1

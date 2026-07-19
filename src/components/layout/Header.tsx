@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { HashLink } from 'react-router-hash-link';
 import { Menu, X, User } from 'lucide-react'
 import { Logo } from '../ui/Logo'
 import { Button } from '../ui/Button'
@@ -20,9 +21,9 @@ export function Header() {
       <div className="container-page">
         {/* The whole header is one floating pill — logo, nav and CTA share the same background */}
         <div className="header-pill flex items-center justify-between h-[56px] px-3 sm:px-4">
-          <Link to="/" className="no-underline shrink-0 pl-2">
+          <HashLink smooth to="/" className="no-underline shrink-0 pl-2">
             <Logo size="sm" className="align-center" />
-          </Link>
+          </HashLink>
 
           {/* Desktop nav — only shown once there's enough room for every label.
               Visibility lives here, on its own element; the always-`display:flex`
@@ -34,6 +35,12 @@ export function Header() {
                 <NavLink
                   key={link.to}
                   to={link.to}
+                  onClick={() => window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: 'smooth',
+                    })
+                  }
                   end={link.to === '/'}
                   className={({ isActive }) => `nav-pill-item ${isActive ? 'active' : ''}`}
                 >
@@ -80,21 +87,32 @@ export function Header() {
               borderRadius: '11px',
           }}>
             {NAV_LINKS.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                onClick={() => setOpen(false)}
-                className="px-3.5 py-2.5 rounded-full text-sm font-semibold no-underline"
-                style={({ isActive }) => ({
-                  color: isActive ? '#fff' : 'color-mix(in srgb, var(--color-cubi-ink) 65%, transparent)',
-                  background: isActive ? 'linear-gradient(135deg, var(--color-cubi-ink), #3a2170)' : 'transparent',
-                  fontFamily: 'var(--font-sans)',
-                })}
-              >
-                {link.label}
-              </NavLink>
-            ))}
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.to === '/'}
+              onClick={() => {
+                setOpen(false);
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: 'smooth',
+                });
+              }}
+              className="px-3.5 py-2.5 rounded-full text-sm font-semibold no-underline"
+              style={({ isActive }) => ({
+                color: isActive
+                  ? '#fff'
+                  : 'color-mix(in srgb, var(--color-cubi-ink) 65%, transparent)',
+                background: isActive
+                  ? 'linear-gradient(135deg, var(--color-cubi-ink), #3a2170)'
+                  : 'transparent',
+                fontFamily: 'var(--font-sans)',
+              })}
+            >
+              {link.label}
+            </NavLink>
+          ))}
           </nav>
         )}
       </div>

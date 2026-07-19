@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { HashLink } from 'react-router-hash-link'
 import { Mail, Phone } from 'lucide-react'
 import { Logo } from '../ui/Logo'
 
@@ -26,10 +26,10 @@ export function Footer() {
             Navigation
           </h4>
           <ul className="flex flex-col gap-2.5 list-none p-0 m-0 text-sm">
-            <li><Link to="/" className="no-underline footer-link">Accueil</Link></li>
-            <li><Link to="/offres" className="no-underline footer-link">Offres</Link></li>
-            <li><Link to="/comment-ca-marche" className="no-underline footer-link">Comment ça marche</Link></li>
-            <li><Link to="/faq" className="no-underline footer-link">FAQ</Link></li>
+            <li><HashLink smooth to="/#top" className="no-underline footer-link">Accueil</HashLink></li>
+            <li><HashLink smooth to="/offres#top" className="no-underline footer-link">Offres</HashLink></li>
+            <li><HashLink smooth to="/comment-ca-marche#top" className="no-underline footer-link">Comment ça marche</HashLink></li>
+            <li><HashLink smooth to="/faq#top" className="no-underline footer-link">FAQ</HashLink></li>
           </ul>
         </div>
 
@@ -38,9 +38,9 @@ export function Footer() {
             Informations
           </h4>
           <ul className="flex flex-col gap-2.5 list-none p-0 m-0 text-sm">
-            <li><Link to="/contact" className="no-underline footer-link">Contact</Link></li>
-            <li><Link to="/mentions-legales" className="no-underline footer-link">Mentions légales</Link></li>
-            <li><Link to="/mentions-legales#cgv" className="no-underline footer-link">CGV</Link></li>
+            <li><HashLink smooth to="/contact#top" className="no-underline footer-link">Contact</HashLink></li>
+            <li><HashLink smooth to="/mentions-legales#top" className="no-underline footer-link">Mentions légales</HashLink></li>
+            <li><HashLink smooth to="/mentions-legales#cgv" className="no-underline footer-link">CGV</HashLink></li>
           </ul>
         </div>
 

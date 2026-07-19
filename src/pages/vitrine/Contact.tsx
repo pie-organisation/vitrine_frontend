@@ -18,7 +18,7 @@ export function Contact() {
 
   return (
     <Layout airbrush>
-        <Section className="container-page text-center section-top">
+        <Section id="top" className="container-page text-center section-top">
           <Badge variant="violet" dot>Contact</Badge>
           <h1
             className="font-display font-extrabold mt-6 mx-auto max-w-3xl"

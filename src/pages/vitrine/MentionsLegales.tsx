@@ -6,7 +6,7 @@ import { Section } from '../../components/ui/Section'
 export function MentionsLegales() {
   return (
     <Layout airbrush>
-      <Section className="container-page pt-16 pb-10 text-center section-top">
+      <Section id="top"className="container-page pt-16 pb-10 text-center section-top">
         <Badge variant="violet" dot>Informations légales</Badge>
         <h1
           className="font-display font-extrabold mt-6 mx-auto max-w-lg"
@@ -16,7 +16,7 @@ export function MentionsLegales() {
         </h1>
       </Section>
 
-      <Section className="flex flex-col gap-8 section-general">
+      <Section className="flex flex-col gap-8" style={{ paddingTop: 'var(--small-padding-section)', paddingLeft: '2rem ', paddingRight: '2rem ' }}>
         <Card className="!p-7 sm:!p-9">
           <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>Éditeur du site</h2>
           <br />

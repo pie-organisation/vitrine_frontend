@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Layout } from '../../components/layout/Layout'
 import { Card } from '../../components/ui/Card'
-import { SectionTitle } from '../../components/ui/SectionTitle'
+import { Section } from '../../components/ui/Section'
 import { Badge } from '../../components/ui/Badge'
 
 const FAQ_ITEMS: { category: string; items: { q: string; a: string }[] }[] = [
@@ -113,7 +113,7 @@ export function FAQ() {
 
   return (
     <Layout>
-      <section className="container-page pt-16 pb-10 text-center section-top">
+      <Section id="top" className="container-page pt-16 pb-10 text-center section-top">
         <Badge variant="violet" dot>Questions fréquentes</Badge>
         <h1
           className="font-display font-extrabold mt-6 mx-auto max-w-xl"
@@ -121,9 +121,9 @@ export function FAQ() {
         >
           Tout ce que vous voulez savoir avant de vous lancer
         </h1>
-      </section>
+      </Section>
 
-      <section className="mx-auto section-general">
+      <section className="mx-auto" style={{ paddingTop: 'var(--small-padding-section)', paddingLeft: '2rem ', paddingRight: '2rem ' }}>
         <Card className="!p-6 sm:!p-9">
           {FAQ_ITEMS.map((group, gi) => (
             <div key={group.category} className={gi > 0 ? 'mt-9' : ''}>

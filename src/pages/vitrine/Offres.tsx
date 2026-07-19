@@ -74,7 +74,7 @@ const REVIEWS = [
 export function Offres() {
   return (
     <Layout>
-      <section className="container-page pt-16 pb-10 text-center section-top">
+      <Section id="top"className="container-page pt-16 pb-10 text-center section-top" >
         <Badge variant="violet" dot>Nos licences</Badge>
         <h1
           className="font-display font-extrabold mt-6 mx-auto max-w-xl"
@@ -86,10 +86,10 @@ export function Offres() {
           Vos postes de travail cloud, facturés à la session, avec un tarif dégressif selon votre volume
           d'utilisation. Sans engagement, résiliable à tout moment.
         </p>
-      </section>
+      </Section>
 
       {/* Pricing cards */}
-      <section className="container-page py-12 section-general" style={{ background: 'radial-gradient(circle, rgba(232,121,249,.28), transparent 80%)' }}>
+      <section className="container-page py-12 section-full" style={{ background: 'radial-gradient(circle, rgba(232,121,249,.28), transparent 50%)' }}>
         <div className="grid md:grid-cols-3 gap-6 items-stretch">
           {PLANS.map((plan) => (
             <div
@@ -182,7 +182,7 @@ export function Offres() {
       </section>
 
       {/* Descriptive block */}
-      <section className="container-page py-16" section-general>
+      <Section className="container-page py-16 section-full">
         <Card className="flex flex-col sm:flex-row items-center gap-8">
           <div className="flex-1">
             <h2 className="font-display font-bold text-xl sm:text-2xl" style={{ color: 'var(--color-cubi-ink)' }}>
@@ -198,7 +198,7 @@ export function Offres() {
             style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--color-cubi-violet) 12%, transparent), color-mix(in srgb, var(--color-cubi-rose) 12%, transparent))', border: '1px solid color-mix(in srgb, var(--color-cubi-violet) 14.0%, transparent)' }}
           />
         </Card>
-      </section>
+      </Section>
 
           {/* Testimonial quote */}
           <section className="container-page py-14 section-top">

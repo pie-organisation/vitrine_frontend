@@ -17,9 +17,9 @@
   --font-sans:    'Space Grotesk', sans-serif;
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
-  --extra-big-padding-section: 10rem;
-  --big-padding-section: 8rem;
-  --small-padding-section: 6rem;
+  --extra-big-padding-section: clamp(5rem, 4vw, 10rem);
+  --big-padding-section: clamp(4rem, 4vw, 8rem);
+  --small-padding-section: clamp(3rem, 4vw, 6rem);
 }
 
 /* ── Global resets ── */
