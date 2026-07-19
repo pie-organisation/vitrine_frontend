@@ -31,7 +31,7 @@ const STEPS = [
 export function CommentCaMarche() {
   return (
     <Layout>
-      <section className="container-page pt-16 pb-10 text-center section-top">
+      <section className="container-page pt-16 pb-10 text-center section-top" style={{ paddingBottom: 'var(--big-padding-section)' }}>
         <Badge variant="violet" dot>Comment ça marche</Badge>
         <h1
           className="font-display font-extrabold mt-6 mx-auto max-w-lg"
@@ -45,7 +45,7 @@ export function CommentCaMarche() {
         </p>
       </section>
 
-      <section className="container-page py-10 max-w-2xl mx-auto section-general" style={{ background: 'radial-gradient(circle, rgba(232,121,249,.28), transparent 80%)' }}>
+      <section className="container-page py-10 max-w-2xl mx-auto" style={{ background: 'radial-gradient(circle, rgba(232,121,249,.28), transparent 80%)' }}>
         <div className="flex flex-col gap-5">
           {STEPS.map((step, i) => {
             const Icon = step.icon
