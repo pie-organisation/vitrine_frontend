@@ -19,28 +19,35 @@ export function Header() {
     <header className="sticky top-3 z-40 overflow-x-clip">
       <div className="container-page">
         {/* The whole header is one floating pill — logo, nav and CTA share the same background */}
-        <div className="header-pill flex items-center justify-between h-[64px] px-3 sm:px-4">
+        <div className="header-pill flex items-center justify-between h-[56px] px-3 sm:px-4">
           <Link to="/" className="no-underline shrink-0 pl-2">
-            <Logo size="sm" />
+            <Logo size="sm" className="align-center" />
           </Link>
 
-          {/* Desktop nav — only shown once there's enough room for every label */}
-          <nav className="hidden lg:flex nav-pill-group">
-            {NAV_LINKS.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                className={({ isActive }) => `nav-pill-item ${isActive ? 'active' : ''}`}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
+          {/* Desktop nav — only shown once there's enough room for every label.
+              Visibility lives here, on its own element; the always-`display:flex`
+              .nav-pill-group class lives on a child below so a `hidden` parent can
+              still hide everything regardless of cascade order in index.css. */}
+          <div className="hidden lg:flex">
+            <nav className="nav-pill-group">
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === '/'}
+                  className={({ isActive }) => `nav-pill-item ${isActive ? 'active' : ''}`}
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
 
           <div className="hidden lg:block shrink-0">
             <Link to="/login" className="no-underline">
-              <Button fullWidth={false}>Se connecter</Button>
+              <Button fullWidth={false} style={{ padding: '0.5rem 1.1rem' }}>
+                Se connecter
+              </Button>
             </Link>
           </div>
 
@@ -65,9 +72,13 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile/tablet nav dropdown — its own pill, right below the header */}
+        {/* Mobile/tablet nav dropdown — its own pill, right below the header.
+            Only ever rendered while `open` is true, so no cascade conflict here. */}
         {open && (
-          <nav className="header-pill lg:hidden flex flex-col gap-1 p-3 mt-2">
+          <nav className="header-pill lg:hidden flex flex-col gap-1 p-3 mt-2 max-w-xs ml-auto" 
+            style={{
+              borderRadius: '11px',
+          }}>
             {NAV_LINKS.map((link) => (
               <NavLink
                 key={link.to}
