@@ -16,16 +16,45 @@
   /* Fonts — available as font-display / font-sans */
   --font-sans:    'Space Grotesk', sans-serif;
   --font-display: 'Plus Jakarta Sans', sans-serif;
+
+  --extra-big-padding-section: 10rem;
+  --big-padding-section: 8rem;
+  --small-padding-section: 6rem;
 }
 
 /* ── Global resets ── */
 *, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.vitrine-body{
+  color: var(--color-cubi-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.container-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 /* ── Input ── */
@@ -78,6 +107,12 @@ body {
   color: rgba(232, 225, 255, 0.35);
 }
 
+.align-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── List card (admin) ── */
 .list-card {
   background: rgba(255, 255, 255, 0.72);
@@ -105,6 +140,24 @@ body {
   box-shadow: 0 4px 24px rgba(107, 79, 224, 0.07);
   border-radius: 18px;
   padding: 20px 22px;
+}
+
+.section-top{
+  padding-top: var(--big-padding-section);
+}
+
+.section-general{
+  padding: var(--small-padding-section);
+}
+
+.section-bottom{
+  padding-top: var(--small-padding-section);
+  padding-bottom: var(--big-padding-section);
+}
+
+.section-full{
+  padding-top: var(--extra-big-padding-section);
+  padding-bottom: var(--extra-big-padding-section);
 }
 
 /* ── Danger button ── */
@@ -166,4 +219,82 @@ body {
   transform: translateY(0);
   box-shadow: none;
   opacity: 1;
+}
+
+/* --- Reusable background layers --- */
+.bg-gradient-light {
+  background: linear-gradient(135deg, #F8F4FF 0%, #FDF0FF 40%, #F4EEFF 100%);
+}
+.bg-dot-grid-light {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-cubi-violet) 9%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.bg-dark-radial {
+  background: radial-gradient(circle at 50% 0%, #2a1968 0%, var(--color-cubi-ink) 55%, #100a2b 100%);
+}
+.bg-dot-grid-dark {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-cubi-mauve) 40%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.bg-gradient-fond {
+  background: radial-gradient(120% 100% at 50% 0%, #ffffff 0%, #fdf2ff 35%, #f6e9fe 70%, #f0e0fb 100%);
+}
+
+/* Segmented pill nav items (Header) — sit directly on .header-pill's background */
+.nav-pill-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-pill-item {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent);
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+
+.nav-pill-item.active {
+  background: linear-gradient(135deg, var(--color-cubi-ink), #3a2170);
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-cubi-ink) 25%, transparent);
+}
+
+/* The whole header is now one floating pill (inspi-header), logo + nav + CTA together */
+.header-pill {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--color-cubi-violet) 12%, transparent);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--color-cubi-violet) 12%, transparent);
+  border-radius: 999px;
+}
+
+/* Soft gradient card variant (Card.tsx `variant="soft"`) */
+.card-soft {
+  background: linear-gradient(160deg, #fdf7ff 0%, #f6eefe 55%, #f0e7fb 100%);
+  border: 1px solid color-mix(in srgb, var(--color-cubi-violet) 8%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--color-cubi-violet) 6%, transparent);
+}
+
+/* Airbrush hero background (Home page only) */
+.airbrush-bg {
+  background:
+    radial-gradient(60% 50% at 78% 0%, color-mix(in srgb, var(--color-cubi-rose) 35%, transparent), transparent 65%),
+    radial-gradient(50% 45% at 15% 8%, color-mix(in srgb, var(--color-cubi-violet) 28.0%, transparent), transparent 65%),
+    linear-gradient(160deg, #ffffff 0%, #fbf6ff 45%, #f6eefe 100%);
+}
+
+.airbrush-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-cubi-violet) 7.0%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-cubi-violet) 7.0%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
 }
