@@ -13,9 +13,10 @@ interface LayoutProps {
   background?: PageBackground
   /** Home only: layers stronger colour glows on top of a 'light' background. */
   airbrush?: boolean
+  grid?: boolean;
 }
 
-export function Layout({ children, background = 'light-grid', airbrush = false }: LayoutProps) {
+export function Layout({ children, background = 'light-grid', airbrush = false, grid = false }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
       {background === 'light' && <DotGridBackground grid={false} />}

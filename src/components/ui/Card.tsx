@@ -1,11 +1,13 @@
 interface CardProps {
   children: React.ReactNode
   className?: string
+  id?: string
 }
 
-export function Card({ children, className = '' }: CardProps) {
+export function Card({ children, className = '', id }: CardProps) {
   return (
     <div
+      id={id}
       className={`rounded-2xl p-8 sm:p-10 ${className}`}
       style={{
         background: 'rgba(255,255,255,0.75)',
