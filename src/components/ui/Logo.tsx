@@ -2,14 +2,15 @@ import logoSrc from '../../assets/logo_cubi.png'
 
 interface LogoProps {
   size?: 'sm' | 'md'
+  className?: string
 }
 
-export function Logo({ size = 'md' }: LogoProps) {
+export function Logo({ size = 'md', className }: LogoProps) {
   const h    = size === 'sm' ? '32px' : '36px'
   const word = size === 'sm' ? 'text-base' : 'text-lg'
 
   return (
-    <div className="flex items-end gap-2.5">
+    <div className={`flex items-end gap-2.5 ${className || ''}`}>
       <img
         src={logoSrc}
         alt="CUBI"
