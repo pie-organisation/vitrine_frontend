@@ -17,7 +17,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="text-sm mt-4 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
-            L'accompagnement informatique à distance, simple et humain, en visio avec un conseiller dédié.
+            Un poste de travail puissant pour chaque étudiant, sur n'importe quel ordinateur
           </p>
         </div>
 
