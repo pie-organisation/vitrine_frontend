@@ -93,7 +93,7 @@ export function Home() {
             Deux options s'offrent aujourd'hui aux établissements, toutes deux imparfaites.
           </p>
           <div className="grid sm:grid-cols-2 gap-6 mt-12">
-            <Card>
+            <Card background="light">
               <div
                 className="w-11 h-11 rounded-full flex items-center justify-center mb-4"
                 style={{ background: 'color-mix(in srgb, var(--color-cubi-violet) 12%, transparent)' }}
@@ -108,7 +108,7 @@ export function Home() {
                 environnemental lié au remplacement rapide des composants.
               </p>
             </Card>
-            <Card>
+            <Card background="light">
               <div
                 className="w-11 h-11 rounded-full flex items-center justify-center mb-4"
                 style={{ background: 'color-mix(in srgb, var(--color-cubi-mauve) 15%, transparent)' }}
@@ -190,7 +190,7 @@ export function Home() {
             {AUDIENCES.map((a) => {
               const Icon = a.icon
               return (
-                <Card key={a.title} className="!p-6 sm:!p-8">
+                <Card key={a.title} className="!p-6 sm:!p-8" background="light">
                   <div
                     className="w-11 h-11 rounded-full flex items-center justify-center mb-4"
                     style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--color-cubi-violet) 15%, transparent), color-mix(in srgb, var(--color-cubi-rose) 15%, transparent))' }}

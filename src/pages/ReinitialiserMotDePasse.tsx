@@ -16,7 +16,7 @@ export function ReinitialiserMotDePasse() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <DotGridBackground />
+      <DotGridBackground grid/>
       <DecorativeOrbs />
 
       <header className="relative z-10 px-8 py-6">
