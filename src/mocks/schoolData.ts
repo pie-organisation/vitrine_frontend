@@ -50,7 +50,7 @@ export interface SchoolActivity {
 
 export const mockSchoolOrg: SchoolOrg = {
   nom: 'Lycée Victor Hugo',
-  plan: 'Licence Établissement',
+  plan: 'Pack Académique',
   dateDebut: '01/09/2025',
   dateExpiration: '31/08/2026',
   montant: '249 €/mois',
@@ -65,6 +65,7 @@ export function withOrgMockFallbacks(org: SchoolOrg | null): SchoolOrg {
   if (!org) return mockSchoolOrg
   return {
     ...org,
+    plan:              mockSchoolOrg.plan,
     dateExpiration:    org.dateExpiration    || mockSchoolOrg.dateExpiration,
     nbLicences:        org.nbLicences        || mockSchoolOrg.nbLicences,
     licencesUtilisees: org.licencesUtilisees || mockSchoolOrg.licencesUtilisees,
