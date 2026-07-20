@@ -153,10 +153,10 @@ export function Dashboard() {
         <div className="flex flex-col gap-2 mb-5">
           {tauxLicences >= 80 && (
             <AlertBanner icon={<AlertCircle size={16} />} danger={tauxLicences >= 95}>
-              <strong>{org.licencesUtilisees}/{org.nbLicences} licences utilisées</strong> —{' '}
+              <strong>{org.licencesUtilisees}/{org.nbLicences} jetons utilisés</strong> —{' '}
               {tauxLicences >= 95
-                ? 'Vos licences sont presque épuisées. Contactez CUBI pour en acquérir davantage.'
-                : 'Vous approchez la limite de vos licences. Pensez à anticiper un renouvellement.'}
+                ? 'Vos jetons sont presque épuisés. Contactez CUBI pour en acquérir davantage.'
+                : 'Vous approchez la limite de vos jetons. Pensez à anticiper un renouvellement.'}
             </AlertBanner>
           )}
           <AlertBanner icon={<AlertTriangle size={16} />}>
@@ -168,7 +168,7 @@ export function Dashboard() {
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <KpiCard
-          label="Licences"
+          label="Jetons"
           value={`${org.licencesUtilisees}/${org.nbLicences}`}
           sub={`${tauxLicences}% utilisées`}
           icon={<Receipt size={16} />}
@@ -197,7 +197,7 @@ export function Dashboard() {
         />
       </div>
 
-      {/* Licence bar */}
+      {/* Jetons bar */}
       <div
         className="rounded-2xl p-5 mb-5"
         style={{
@@ -207,11 +207,11 @@ export function Dashboard() {
         }}
       >
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'rgba(107,79,224,0.5)' }}>
-          Utilisation des licences
+          Utilisation des jetons
         </p>
         <ProgressBar
           value={tauxLicences}
-          label={`${org.licencesUtilisees} licences attribuées sur ${org.nbLicences}`}
+          label={`${org.licencesUtilisees} jetons attribués sur ${org.nbLicences}`}
           valueLabel={`${tauxLicences} %`}
         />
         <div className="flex gap-3 mt-4">

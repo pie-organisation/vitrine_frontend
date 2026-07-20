@@ -89,7 +89,7 @@ export function SchoolLayout() {
 
   useEffect(() => {
     api.get<SchoolOrgMin>(ENDPOINTS.schoolOrg)
-      .then(setOrg)
+      .then((o) => setOrg({ ...o, plan: 'Pack Académique' }))
       .catch(() => { /* org non critique, le layout reste fonctionnel */ })
   }, [])
 

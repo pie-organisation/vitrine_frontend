@@ -172,9 +172,9 @@ export function FacturationEcole() {
           ))}
         </SectionCard>
 
-        {/* Licences overview */}
-        <SectionCard title="Overview licences">
-          {/* Licence count */}
+        {/* Jetons overview */}
+        <SectionCard title="Overview jetons">
+          {/* Jetons count */}
           <div className="flex gap-3 mb-4">
             {[
               { label: 'Admins',     value: nbAdmins,    color: '#6B4FE0' },
@@ -204,7 +204,7 @@ export function FacturationEcole() {
 
           <ProgressBar
             value={tauxLicences}
-            label={`${org.licencesUtilisees} / ${org.nbLicences} licences utilisées`}
+            label={`${org.licencesUtilisees} / ${org.nbLicences} jetons utilisés`}
             valueLabel={`${tauxLicences} %`}
           />
         </SectionCard>
