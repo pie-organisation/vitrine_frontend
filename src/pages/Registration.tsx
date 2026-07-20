@@ -7,7 +7,6 @@ import { Input }            from '../components/ui/Input'
 import { Select }           from '../components/ui/Select'
 import { Button }           from '../components/ui/Button'
 import { Card }             from '../components/ui/Card'
-import { Toggle }           from '../components/ui/Toggle'
 import { SectionTitle }     from '../components/ui/SectionTitle'
 import { api, ENDPOINTS }   from '../api/client'
 
@@ -16,11 +15,11 @@ interface Licence {
   nom: string
 }
 
-type Mode = 'ecole' | 'groupe'
-
-const TOGGLE_OPTIONS: [{ value: string; label: string }, { value: string; label: string }] = [
-  { value: 'ecole',  label: 'Demande pour une école'  },
-  { value: 'groupe', label: 'Demande pour un groupe'  },
+const MOCK_LICENCES: Licence[] = [
+  { id: 'pack-institut',   nom: 'Pack Institut'   },
+  { id: 'pack-campus',     nom: 'Pack Campus'     },
+  { id: 'pack-academique', nom: 'Pack Académique' },
+  { id: 'pack-sur-mesure', nom: 'Pack Sur-Mesure' },
 ]
 
 function Divider() {
@@ -29,7 +28,6 @@ function Divider() {
 
 export function Registration() {
   const navigate = useNavigate()
-  const [mode,      setMode]      = useState<Mode>('ecole')
   const [loading,   setLoading]   = useState(false)
   const [error,     setError]     = useState<string | null>(null)
   const [success,   setSuccess]   = useState(false)
@@ -37,8 +35,8 @@ export function Registration() {
 
   useEffect(() => {
     api.get<Licence[]>(ENDPOINTS.licences)
-      .then(setLicences)
-      .catch(() => setLicences([]))
+      .then((data) => setLicences(data && data.length > 0 ? data : MOCK_LICENCES))
+      .catch(() => setLicences(MOCK_LICENCES))
   }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,7 +45,7 @@ export function Registration() {
     setLoading(true)
     const raw = Object.fromEntries(new FormData(e.currentTarget))
     try {
-      await api.post(ENDPOINTS.inscription, { type: mode, ...raw })
+      await api.post(ENDPOINTS.inscription, { type: 'ecole', ...raw })
       setSuccess(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la demande.")
@@ -99,7 +97,6 @@ export function Registration() {
             <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
               Complétez le formulaire ci-dessous pour créer votre compte CUBI.
             </p>
-            <Toggle options={TOGGLE_OPTIONS} value={mode} onChange={(v) => setMode(v as Mode)} />
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-7">
