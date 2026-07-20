@@ -59,7 +59,7 @@ export function Registration() {
   if (success) {
     return (
       <div className="min-h-screen flex flex-col">
-        <DotGridBackground />
+        <DotGridBackground grid/>
         <DecorativeOrbs />
         <header className="relative z-10 px-8 py-6"><Logo /></header>
         <main className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
@@ -83,7 +83,7 @@ export function Registration() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <DotGridBackground />
+      <DotGridBackground grid/>
       <DecorativeOrbs />
 
       <header className="relative z-10 px-8 py-6">
