@@ -244,7 +244,7 @@ export function Offres() {
         <h2 className="font-display font-bold text-2xl sm:text-3xl text-center" style={{ color: '#fff', letterSpacing: '-0.6px' }}>
           CUBI face aux solutions VDI classiques
         </h2>
-        <Card className="!p-0 overflow-hidden mt-10 max-w-4xl mx-auto">
+        <Card className="!p-0 overflow-hidden mt-10 max-w-4xl mx-auto" background="light">
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>

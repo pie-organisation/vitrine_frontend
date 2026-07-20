@@ -1,16 +1,32 @@
+
+export type SectionBackground = 'none' | 'light' | 'gradient'
+
 interface CardProps {
   children: React.ReactNode
   className?: string
   id?: string
+  background?: SectionBackground
 }
 
-export function Card({ children, className = '', id }: CardProps) {
+const BG_CLASS: Record<SectionBackground, string> = {
+  none: '',
+  light: 'bg-gradient-light',
+  gradient: 'bg-gradient-fond',
+}
+
+
+
+export function Card({children, className = '', id, background = 'none',}: CardProps) {
   return (
     <div
       id={id}
-      className={`rounded-2xl p-8 sm:p-10 ${className}`}
+      className={`rounded-2xl p-8 sm:p-10 ${className} ${BG_CLASS[background]}`}
       style={{
-        background: 'rgba(255,255,255,0.75)',
+        background:
+          background === 'none'
+            ? 'rgba(255,255,255,0.75)'
+            : undefined,
+
         backdropFilter: 'blur(18px)',
         WebkitBackdropFilter: 'blur(18px)',
         border: '1px solid rgba(107,79,224,0.14)',
@@ -19,5 +35,5 @@ export function Card({ children, className = '', id }: CardProps) {
     >
       {children}
     </div>
-  )
+  );
 }

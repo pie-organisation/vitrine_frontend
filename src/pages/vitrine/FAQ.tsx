@@ -127,7 +127,17 @@ export function FAQ() {
         <Card className="!p-6 sm:!p-9">
           {FAQ_ITEMS.map((group, gi) => (
             <div key={group.category} className={gi > 0 ? 'mt-9' : ''}>
-              <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>{group.category}</h2>
+              <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" 
+                style={{
+                  background:
+                    'linear-gradient(135deg, #6B4FE0 0%, #C084FC 50%, #E879F9 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                  WebkitTextFillColor: 'transparent',
+                  letterSpacing: '-0.6px',
+                }}
+              >{group.category}</h2>
               <br />
               <div>
                 {group.items.map((item, ii) => {
