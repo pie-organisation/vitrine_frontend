@@ -11,6 +11,7 @@ import { Login }                    from './pages/Login'
 import { AdminLogin }               from './pages/AdminLogin'
 import { Registration }             from './pages/Registration'
 import { MotDePasseOublie }         from './pages/MotDePasseOublie'
+import { AdminMotDePasseOublie }    from './pages/AdminMotDePasseOublie'
 import { ReinitialiserMotDePasse }  from './pages/ReinitialiserMotDePasse'
 import { ResetPassword }            from './pages/ResetPassword'
 import { NotFound }                 from './pages/NotFound'
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/admin/login"                 element={<AdminLogin />} />
           <Route path="/inscription"                 element={<Registration />} />
           <Route path="/mot-de-passe-oublie"         element={<MotDePasseOublie />} />
+          <Route path="/admin/mot-de-passe-oublie"   element={<AdminMotDePasseOublie />} />
           <Route path="/reinitialiser-mot-de-passe"  element={<ReinitialiserMotDePasse />} />
           <Route path="/reset-password"              element={<ResetPassword />} />
 
