@@ -22,7 +22,7 @@ const STATUS_BADGE: Record<OrgStatus, { label: string; variant: 'green' | 'yello
 }
 
 const TYPE_BADGE: Record<OrgType, { label: string; variant: 'blue' | 'violet' }> = {
-  ecole:  { label: 'École',  variant: 'blue'   },
+  ecole:  { label: 'Organisation',  variant: 'blue'   },
   groupe: { label: 'Groupe', variant: 'violet' },
 }
 
@@ -79,7 +79,7 @@ function OrgRow({ org, onClick }: { org: Organisation; onClick: () => void }) {
 
 const FILTERS = [
   { value: 'all',       label: 'Toutes'     },
-  { value: 'ecole',     label: 'Écoles'     },
+  { value: 'ecole',     label: 'Organisations'     },
   { value: 'groupe',    label: 'Groupes'    },
   { value: 'actif',     label: 'Actives'    },
   { value: 'suspendu',  label: 'Suspendues' },

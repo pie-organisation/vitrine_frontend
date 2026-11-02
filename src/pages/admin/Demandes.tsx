@@ -20,7 +20,7 @@ const STATUT_BADGE: Record<DemandeStatut, { label: string; variant: 'yellow' | '
 }
 
 const TYPE_BADGE: Record<OrgType, { label: string; variant: 'blue' | 'violet' }> = {
-  ecole:  { label: 'École',  variant: 'blue'   },
+  ecole:  { label: 'Organisation',  variant: 'blue'   },
   groupe: { label: 'Groupe', variant: 'violet' },
 }
 
@@ -28,7 +28,7 @@ const TYPE_BADGE: Record<OrgType, { label: string; variant: 'blue' | 'violet' }>
 
 const FILTERS = [
   { value: 'all',        label: 'Toutes'     },
-  { value: 'ecole',      label: 'Écoles'     },
+  { value: 'ecole',      label: 'Organisations'     },
   { value: 'groupe',     label: 'Groupes'    },
   { value: 'en_attente', label: 'En attente' },
   { value: 'validee',    label: 'Validées'   },
@@ -188,7 +188,7 @@ function DemandeDetailModal({
 
       <SectionCard title="Entité">
         <InfoRow label="Nom du siège" value={demande.nomSiege} />
-        <InfoRow label="Nom école"    value={demande.nomEcole} />
+        <InfoRow label="Nom de l'organisation" value={demande.nomEcole} />
         <InfoRow label="DAF"          value={`${demande.prenomDaf} ${demande.nomDaf}`} />
         <InfoRow
           label="SIRET"
@@ -201,7 +201,7 @@ function DemandeDetailModal({
             </div>
           }
         />
-        {demande.visaEcole && <InfoRow label="Visa école" value={demande.visaEcole} />}
+        {demande.visaEcole && <InfoRow label="Visa de l'organisation" value={demande.visaEcole} />}
       </SectionCard>
 
       <SectionCard title="Adresse" className="mt-4">
