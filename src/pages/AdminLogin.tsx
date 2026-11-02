@@ -4,7 +4,7 @@ import { Logo }    from '../components/ui/Logo'
 import { Button }  from '../components/ui/Button'
 import { useAuth } from '../contexts/AuthContext'
 
-function DarkDotGrid() {
+export function DarkDotGrid() {
   return (
     <div className="fixed inset-0 -z-20 pointer-events-none">
       <div
@@ -22,7 +22,7 @@ function DarkDotGrid() {
   )
 }
 
-function DarkInput({ label, ...props }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+export function DarkInput({ label, ...props }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   const id = useId()
   return (
     <div className="flex flex-col gap-1.5">
@@ -127,7 +127,7 @@ export function AdminLogin() {
               />
               <div className="text-right mt-1.5">
                 <Link
-                  to="/mot-de-passe-oublie"
+                  to="/admin/mot-de-passe-oublie"
                   className="text-xs font-semibold no-underline transition-opacity hover:opacity-80"
                   style={{ color: '#C084FC' }}
                 >
