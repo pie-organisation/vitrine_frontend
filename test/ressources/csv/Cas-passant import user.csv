@@ -1,0 +1,22 @@
+﻿nom_complet_ecole;nom_classe;nom;prenom;email;mot_de_passe_temporaire;role
+IIM Digital School;Lead Developpement Fullstack;Cartier;thomas;thomas.cartier@exemple.com;;enseignant
+IIM Digital School;Lead Developpement Fullstack;DIALLO;Konte;konte.DIALLO@exemple.com;;enseignant
+IIM Digital School;;bugne;Rose;Rose.bugne@exemple.com;;admin
+IIM Digital School;;Lila;Maddie;Maddie.lila@exemple.com;;admin
+IIM Digital School;Lead Developpement Fullstack;Alvarez;Sam;Sam.alvarez@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;mystère;Martin;Martin.mystère@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;Morales;Miles;Miles.morales@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;Parker;Peter;Peter.parker@exemple.com;;enseignant
+IIM Digital School;Lead Developpement Fullstack;watson;Lily;Lily.watson@exemple.com;;enseignant
+IIM Digital School;;Slivanken;Margo;Margo.slivanken@exemple.com;;admin
+IIM Digital School;;da silva;Sebastien;sebastien.dasilva@exemple.com;;admin
+IIM Digital School;Lead Developpement Fullstack;Johnson;Suzanne;Suzanne.johnson@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;WILLIAMS;Donovan;donovan.WILLIAMS@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;Martinez;David;David.martinez@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;sante;Emily;Emily.sante@exemple.com;;enseignant
+IIM Digital School;Lead Developpement Fullstack;guillard;Romain;Romain.guillard@exemple.com;;enseignant
+IIM Digital School;;da silva;Alexandre;alexandre.dasilva@exemple.com;;admin
+IIM Digital School;;DAWSON;Olivia;olivia.DAWSON@exemple.com;;admin
+IIM Digital School;Lead Developpement Fullstack;martin;Roger;Roger.martin@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;hunter;Emilien;Emilien.hunter@exemple.com;;eleve
+IIM Digital School;Lead Developpement Fullstack;Camara;Silla;Silla.camara@exemple.com;;eleve
