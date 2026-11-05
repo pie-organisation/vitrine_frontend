@@ -10,7 +10,7 @@ const STEPS = [
   {
     icon: FileText,
     title: 'Demandez un devis',
-    text: "Indiquez votre volume de sessions simultanées estimé. Notre équipe qualifie votre besoin et vous transmet un devis au format PDF, à partir duquel votre établissement édite son propre bon de commande.",
+    text: "Indiquez votre volume de sessions simultanées estimé. Notre équipe qualifie votre besoin et vous transmet un devis au format PDF, à partir duquel votre organisation édite son propre bon de commande.",
   },
   {
     icon: KeyRound,
