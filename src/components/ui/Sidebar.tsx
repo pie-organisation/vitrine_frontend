@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import { Logo }             from './Logo'
 import { NotificationBell } from './NotificationBell'
-import { mockMessages }     from '../../mocks/data'
 import { useAuth }          from '../../contexts/AuthContext'
 import { api, ENDPOINTS }   from '../../api/client'
 
@@ -19,13 +18,11 @@ interface NavItemDef {
   badge?: number
 }
 
-const MSG_BADGE = mockMessages.filter((m) => m.statut === 'non_lu').length
-
-function navMain(demandesEnAttente: number): NavItemDef[] {
+function navMain(demandesEnAttente: number, messagesNonLus: number): NavItemDef[] {
   return [
     { to: '/admin/overview',      icon: LayoutDashboard, label: "Vue d'ensemble" },
     { to: '/admin/demandes',      icon: ClipboardList,   label: 'Demandes',       badge: demandesEnAttente || undefined },
-    { to: '/admin/messages',      icon: Mail,            label: 'Messages',       badge: MSG_BADGE },
+    { to: '/admin/messages',      icon: Mail,            label: 'Messages',       badge: messagesNonLus || undefined },
     { to: '/admin/organisations', icon: Building2,       label: 'Organisations'   },
     { to: '/admin/analytics',     icon: BarChart2,       label: 'Analytics'       },
     { to: '/admin/facturation',   icon: Receipt,         label: 'Facturation'     },
@@ -85,12 +82,17 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
   const navigate     = useNavigate()
   const isProfileActive = pathname.startsWith('/admin/profil')
   const [demandesEnAttente, setDemandesEnAttente] = useState(0)
+  const [messagesNonLus,    setMessagesNonLus]    = useState(0)
 
+  // Rechargé à chaque navigation pour que le badge Messages suive les lectures.
   useEffect(() => {
-    api.get<{ nb_demandes_en_attente: number }>(ENDPOINTS.metriques)
-      .then((m) => setDemandesEnAttente(m.nb_demandes_en_attente))
+    api.get<{ nb_demandes_en_attente: number; nb_messages_non_lus?: number }>(ENDPOINTS.metriques)
+      .then((m) => {
+        setDemandesEnAttente(m.nb_demandes_en_attente)
+        setMessagesNonLus(m.nb_messages_non_lus ?? 0)
+      })
       .catch(() => {})
-  }, [])
+  }, [pathname])
 
   const handleLogout = () => {
     logout()
@@ -141,7 +143,7 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
 
         {/* Main nav — scrollable if content overflows */}
         <nav className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
-          {navMain(demandesEnAttente).map((item) => (
+          {navMain(demandesEnAttente, messagesNonLus).map((item) => (
             <NavItem key={item.to} {...item} />
           ))}
         </nav>
