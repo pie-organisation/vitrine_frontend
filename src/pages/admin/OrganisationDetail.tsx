@@ -138,7 +138,7 @@ function ModifyModal({ org, onClose }: { org: Organisation; onClose: () => void 
           <>
             <Input label="Nom de l'organisation" defaultValue={org.nom} />
             <div className="grid grid-cols-2 gap-3">
-              <Input label="Type" defaultValue={org.type === 'ecole' ? 'École' : 'Groupe'} />
+              <Input label="Type" defaultValue={org.type === 'ecole' ? 'Organisation' : 'Groupe'} />
               <Input label="Ville" defaultValue={org.ville} />
             </div>
             <Input label="SIRET" defaultValue={org.siret} />
@@ -267,7 +267,7 @@ export function OrganisationDetail() {
       {/* Header */}
       <PageHeader
         title={org.nom}
-        subtitle={`${org.type === 'ecole' ? 'École' : 'Groupe'} · ${org.ville}`}
+        subtitle={`${org.type === 'ecole' ? 'Organisation' : 'Groupe'} · ${org.ville}`}
         actions={
           <div className="flex flex-wrap gap-2">
             <button

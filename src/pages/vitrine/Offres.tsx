@@ -37,7 +37,7 @@ const PLANS: Plan[] = [
   },
   {
     name: 'Pack Campus',
-    tagline: 'Le bon équilibre pour un établissement en croissance',
+    tagline: 'Le bon équilibre pour une organisation en croissance',
     volume: 'Jusqu\u2019à 150 sessions simultanées',
     price: '155 000 €',
     priceSuffix: '~1 033 €/session',
@@ -87,8 +87,8 @@ const PLANS: Plan[] = [
 ]
 
 const REVIEWS = [
-  { initials: 'MF', name: 'Michèle F.', role: 'Directrice, école d\u2019ingénieurs', text: "Le déploiement des sessions s'est fait sans friction pour nos étudiants, et le support répond vraiment vite." },
-  { initials: 'JD', name: 'Jean D.', role: 'DSI, établissement partenaire', text: 'La console centralisée nous fait gagner un temps fou pour gérer les promotions et le parc de plusieurs filières.' },
+  { initials: 'MF', name: 'Michèle F.', role: 'Directrice, organisation d\u2019enseignement supérieur', text: "Le déploiement des sessions s'est fait sans friction pour nos étudiants, et le support répond vraiment vite." },
+  { initials: 'JD', name: 'Jean D.', role: 'DSI, organisation partenaire', text: 'La console centralisée nous fait gagner un temps fou pour gérer les promotions et le parc de plusieurs filières.' },
   { initials: 'SL', name: 'Sophie L.', role: 'Responsable des systèmes d\u2019information', text: 'Hébergement en France, tarification par palier claire, support réactif : exactement ce qu\u2019il nous fallait.' },
 ]
 
@@ -219,7 +219,7 @@ export function Offres() {
             </h2>
             <p className="mt-3 text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
               Renseignez votre volume de sessions simultanées souhaité : notre équipe qualifie votre besoin et
-              vous transmet un devis au format PDF. Votre établissement édite ensuite son propre bon de commande,
+              vous transmet un devis au format PDF. Votre organisation édite ensuite son propre bon de commande,
               selon votre processus d'achat habituel.
             </p>
           </div>

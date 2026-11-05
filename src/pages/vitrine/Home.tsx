@@ -17,7 +17,7 @@ const REASONS = [
   {
     icon: ShieldCheck,
     title: 'Sécurisé par conception',
-    text: 'Connexion chiffrée de bout en bout, conformité RGPD incluse et isolation complète des comptes entre établissements.',
+    text: 'Connexion chiffrée de bout en bout, conformité RGPD incluse et isolation complète des comptes entre organisations.',
   },
   {
     icon: Gauge,
@@ -27,7 +27,7 @@ const REASONS = [
   {
     icon: Layers,
     title: 'Multi-classes et multi-comptes',
-    text: 'Gérez plusieurs établissements, classes et comptes depuis un même tableau de bord administrateur.',
+    text: 'Gérez plusieurs organisations, classes et comptes depuis un même tableau de bord administrateur.',
   },
 ]
 
@@ -90,7 +90,7 @@ export function Home() {
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-center text-sm sm:text-base" style={{ color: 'color-mix(in srgb, #fff 55%, transparent)' }}>
             Des cursus comme le développement, game design, animation 3D, data science ou IA exigent des configurations techniques exigeantes.
-            Deux options s'offrent aujourd'hui aux établissements, toutes deux imparfaites.
+            Deux options s'offrent aujourd'hui aux organisations, toutes deux imparfaites.
           </p>
           <div className="grid sm:grid-cols-2 gap-6 mt-12">
             <Card background="light">
@@ -144,7 +144,7 @@ export function Home() {
               <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
                 L'affichage est transmis par un protocole de streaming basse latence qui n'envoie que les pixels
                 modifiés à l'écran, pas un flux vidéo constant — ce qui allège fortement la bande passante de
-                l'école et la charge sur le poste de l'étudiant, même ancien.
+                l'organisation et la charge sur le poste de l'étudiant, même ancien.
               </p>
             </div>
             <Card className="!p-6 sm:!p-10">
@@ -217,7 +217,7 @@ export function Home() {
                   Hébergé en France, conforme RGPD, pensé pour la confidentialité académique
                 </h2>
                 <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
-                  L'établissement reste responsable de traitement au sens du RGPD pour l'ensemble des données
+                  L'organisation reste responsable de traitement au sens du RGPD pour l'ensemble des données
                   étudiantes et enseignantes. CUBI intervient strictement comme sous-traitant : aucune donnée
                   n'est monétisée ni exploitée par la plateforme.
                 </p>
@@ -225,7 +225,7 @@ export function Home() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { icon: MapPin, label: '100% France', text: 'Hébergement souverain, imperméable aux lois extraterritoriales.' },
-                  { icon: Lock, label: 'Mode Confidentiel', text: 'Connexion restreinte au réseau ou VPN de l\u2019établissement sur demande.' },
+                  { icon: Lock, label: 'Mode Confidentiel', text: 'Connexion restreinte au réseau ou VPN de l\u2019organisation sur demande.' },
                   { icon: ShieldCheck, label: 'Compte unique', text: 'Aucune double connexion simultanée sur un même compte.' },
                   { icon: Gauge, label: 'SLA 99,5%', text: 'Disponibilité garantie du lundi au samedi, 7h–22h.' },
                 ].map((f) => (

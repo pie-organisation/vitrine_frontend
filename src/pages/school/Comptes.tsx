@@ -576,7 +576,7 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
               </div>
             </div>
             <div>
-              <Input label="Email de facturation (contact)" placeholder="marie@ecole.fr" type="email" value={form.email} onChange={set('email')} />
+              <Input label="Email de facturation (contact)" placeholder="marie@organisation.fr" type="email" value={form.email} onChange={set('email')} />
               {errors.email && <p className="text-[10px] mt-1" style={{ color: '#EF4444' }}>{errors.email}</p>}
             </div>
 
