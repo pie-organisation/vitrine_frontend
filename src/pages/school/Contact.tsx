@@ -64,7 +64,7 @@ export function Contact() {
           Contact
         </h1>
         <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
-          Informations du référent de votre établissement
+          Informations du référent de votre organisation
         </p>
       </div>
 

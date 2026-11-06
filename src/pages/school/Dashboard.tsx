@@ -144,7 +144,7 @@ export function Dashboard() {
           Bonjour, {firstAccount?.prenom ?? ''} 👋
         </h1>
         <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
-          Voici l'état actuel de votre établissement — {org.nom}
+          Voici l'état actuel de votre organisation — {org.nom}
         </p>
       </div>
 

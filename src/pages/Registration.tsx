@@ -108,10 +108,10 @@ export function Registration() {
                   <Input label="Nom DAF"    name="nom_daf"    placeholder="Nom"    required />
                   <Input label="Prénom DAF" name="prenom_daf" placeholder="Prénom" required />
                 </div>
-                <Input label="Nom complet de l'école" name="nom_ecole" placeholder="Ex : Lycée Jean Moulin" required />
+                <Input label="Nom complet de l'organisation" name="nom_ecole" placeholder="Ex : Lycée Jean Moulin" required />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input label="SIRET école" name="siret" placeholder="XXX XXX XXX XXXXX" required />
-                  <Input label="Visa école (facultatif)" name="visa_ecole" placeholder="N° de visa" />
+                  <Input label="SIRET de l'organisation" name="siret" placeholder="XXX XXX XXX XXXXX" required />
+                  <Input label="Visa de l'organisation (facultatif)" name="visa_ecole" placeholder="N° de visa" />
                 </div>
               </div>
             </section>
@@ -150,7 +150,7 @@ export function Registration() {
                   <Input label="Nom du contact"    name="nom_contact"    placeholder="Nom"    required />
                   <Input label="Prénom du contact" name="prenom_contact" placeholder="Prénom" required />
                 </div>
-                <Input label="Email de facturation" name="email" type="email" placeholder="facturation@ecole.fr" autoComplete="email" required />
+                <Input label="Email de facturation" name="email" type="email" placeholder="facturation@organisation.fr" autoComplete="email" required />
                 <Input label="Mot de passe"          name="mot_de_passe"        type="password" placeholder="••••••••" autoComplete="new-password" required />
                 <Input label="Confirmation du mot de passe" name="mot_de_passe_confirm" type="password" placeholder="••••••••" autoComplete="new-password" required />
               </div>
