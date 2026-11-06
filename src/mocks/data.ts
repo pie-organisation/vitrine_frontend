@@ -618,78 +618,34 @@ export const mockOffres: Offre[] = [
   },
 ]
 
-// ── Messages de contact ───────────────────────────────────────────────────────
+// ── Messagerie organisations <-> équipe Cubi ──────────────────────────────────
 
-export type MessageStatut = 'non_lu' | 'traite'
+export type ConversationStatut = 'ouverte' | 'traitee'
+export type AuteurType = 'cubi' | 'ecole'
 
-export interface Message {
+export interface Conversation {
   id: string
-  expediteur: string
-  email: string
+  organisationId: string
+  organisation: string
   objet: string
-  contenu: string
+  statut: ConversationStatut
+  nonLu: boolean
+  dernierMessage: string
+  dernierAuteur: AuteurType
+  nbMessages: number
   date: string
-  statut: MessageStatut
 }
 
-export const mockMessages: Message[] = [
-  {
-    id: 'msg1',
-    expediteur: 'Pierre Gautier',
-    email: 'p.gautier@lycee-pasteur.fr',
-    objet: 'Demande de démonstration CUBI',
-    contenu:
-      "Bonjour,\n\nJe suis directeur administratif au Lycée Pasteur de Strasbourg et nous cherchons une plateforme IA conforme RGPD pour nos 280 élèves.\n\nPouvez-vous organiser une démonstration ?\n\nCordialement,\nPierre Gautier",
-    date: '28/11/2024 14h22',
-    statut: 'non_lu',
-  },
-  {
-    id: 'msg2',
-    expediteur: 'Camille Roux',
-    email: 'c.roux@esgi.fr',
-    objet: 'Question sur le plan Groupe',
-    contenu:
-      'Bonjour,\n\nNous sommes un groupe de 3 organisations (ESGI, ECE, ISEP) et souhaitons une licence groupée. Avez-vous des tarifs spécifiques pour les consortiums scolaires ?\n\nMerci,\nCamille Roux',
-    date: '27/11/2024 09h15',
-    statut: 'non_lu',
-  },
-  {
-    id: 'msg3',
-    expediteur: 'Laurent Morin',
-    email: 'l.morin@cfamorin.fr',
-    objet: 'Bug — téléchargement de rapport impossible',
-    contenu:
-      "Bonjour,\n\nNous rencontrons un problème avec le téléchargement des rapports d'usage mensuel. Le bouton ne répond plus depuis la mise à jour du 20/11.\n\nLaurent Morin, responsable IT",
-    date: '26/11/2024 16h40',
-    statut: 'traite',
-  },
-  {
-    id: 'msg4',
-    expediteur: 'Aurélie Chassaing',
-    email: 'a.chassaing@sfa-formation.com',
-    objet: 'Intérêt pour CUBI — tarif personnalisé',
-    contenu:
-      'Bonjour,\n\nNotre organisme compte 450 apprenants sur 4 sites. Votre offre Groupe nous intéresse mais nous aimerions discuter un tarif adapté à notre structure.\n\nAurélie Chassaing, DAF',
-    date: '25/11/2024 11h05',
-    statut: 'traite',
-  },
-  {
-    id: 'msg5',
-    expediteur: 'Romain Berthier',
-    email: 'r.berthier@univ-poitiers.fr',
-    objet: 'Documentation RGPD requise par notre DPO',
-    contenu:
-      "Bonjour,\n\nNotre DPO exige une documentation complète sur la conformité RGPD de CUBI avant toute décision d'achat. Pouvez-vous nous transmettre votre registre de traitement ?\n\nRomain Berthier, Université de Poitiers",
-    date: '24/11/2024 08h30',
-    statut: 'non_lu',
-  },
-]
+export interface ConversationMessage {
+  id: string
+  auteurType: AuteurType
+  auteurNom: string
+  contenu: string
+  date: string
+}
 
-// Les messages de contact ne sont pas encore stockés côté backend (le stub
-// renvoie toujours []) : on retombe sur des messages de démonstration tant
-// que l'API n'a rien de réel à montrer.
-export function withMessagesMockFallbacks(messages: Message[] | null): Message[] {
-  return messages && messages.length > 0 ? messages : mockMessages
+export interface ConversationThread extends Conversation {
+  messages: ConversationMessage[]
 }
 
 // ── Analytics ─────────────────────────────────────────────────────────────────

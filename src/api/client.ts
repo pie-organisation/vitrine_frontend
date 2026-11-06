@@ -113,6 +113,8 @@ export const ENDPOINTS = {
   membreEquipe:        (id: string) => `/admin/equipe/${id}`,
   messages:            '/admin/messages',
   message:             (id: string) => `/admin/messages/${id}`,
+  messageReponse:      (id: string) => `/admin/messages/${id}/reponses`,
+  messageClients:      '/admin/messages/clients',
   offres:              '/admin/offres',
   offre:               (id: string) => `/admin/offres/${id}`,
   plans:               '/admin/plans',
@@ -127,4 +129,7 @@ export const ENDPOINTS = {
   schoolContact:       '/school/contact',
   schoolSessions:      '/school/sessions',
   schoolSession:       (id: string) => `/school/sessions/${id}`,
+  schoolMessages:      '/school/messages',
+  schoolMessage:       (id: string) => `/school/messages/${id}`,
+  schoolMessageReponse:(id: string) => `/school/messages/${id}/reponses`,
 } as const

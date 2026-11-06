@@ -33,6 +33,7 @@ import { Comptes }            from './pages/school/Comptes'
 import { Sessions }           from './pages/school/Sessions'
 import { FacturationEcole }   from './pages/school/FacturationEcole'
 import { Contact }            from './pages/school/Contact'
+import { Messages as SchoolMessages } from './pages/school/Messages'
 
 export default function App() {
   return (
@@ -77,6 +78,7 @@ export default function App() {
             <Route path="comptes"     element={<Comptes />}          />
             <Route path="sessions"    element={<Sessions />}         />
             <Route path="facturation" element={<FacturationEcole />} />
+            <Route path="messages"    element={<SchoolMessages />}   />
             <Route path="contact"     element={<Contact />}          />
           </Route>
 
