@@ -16,7 +16,7 @@ const ACTIVITY_ICON: Record<SchoolActivity['type'], React.ReactNode> = {
 }
 
 const ACTIVITY_COLOR: Record<SchoolActivity['type'], string> = {
-  compte_cree:    'linear-gradient(135deg, #6B4FE0, #C084FC)',
+  compte_cree:    'linear-gradient(135deg, #6B4FE0, #9333EA)',
   compte_modifie: 'linear-gradient(135deg, #0284c7, #38BDF8)',
   compte_supprime:'linear-gradient(135deg, #EF4444, #F97316)',
   connexion:      'linear-gradient(135deg, #10B981, #34D399)',
@@ -45,14 +45,14 @@ function KpiCard({ label, value, sub, icon, gradient }: {
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(107,79,224,0.5)' }}>
+        <p className="text-[11px] font-bold uppercase tracking-widest mb-1" style={{ color: '#6B4FE0' }}>
           {label}
         </p>
         <p className="font-display font-extrabold text-xl leading-tight" style={{ color: '#1a1040' }}>
           {value}
         </p>
         {sub && (
-          <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>{sub}</p>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{sub}</p>
         )}
       </div>
     </div>
@@ -72,7 +72,7 @@ function AlertBanner({ icon, children, danger }: {
         border: `1px solid ${danger ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)'}`,
       }}
     >
-      <span style={{ color: danger ? '#EF4444' : '#F59E0B', flexShrink: 0 }}>{icon}</span>
+      <span style={{ color: danger ? '#dc2626' : '#b45309', flexShrink: 0 }}>{icon}</span>
       <p className="text-sm" style={{ color: danger ? '#991B1B' : '#92400E' }}>{children}</p>
     </div>
   )
@@ -143,7 +143,7 @@ export function Dashboard() {
         >
           Bonjour, {firstAccount?.prenom ?? ''} 👋
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           Voici l'état actuel de votre organisation — {org.nom}
         </p>
       </div>
@@ -172,7 +172,7 @@ export function Dashboard() {
           value={`${org.licencesUtilisees}/${org.nbLicences}`}
           sub={`${tauxLicences}% utilisées`}
           icon={<Receipt size={16} />}
-          gradient="linear-gradient(135deg, #6B4FE0, #C084FC)"
+          gradient="linear-gradient(135deg, #6B4FE0, #9333EA)"
         />
         <KpiCard
           label="Comptes actifs"
@@ -206,7 +206,7 @@ export function Dashboard() {
           boxShadow: '0 2px 16px rgba(107,79,224,0.06)',
         }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'rgba(107,79,224,0.5)' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#6B4FE0' }}>
           Utilisation des jetons
         </p>
         <ProgressBar
@@ -217,7 +217,7 @@ export function Dashboard() {
         <div className="flex gap-3 mt-4">
           {[
             { label: 'Admins',    value: nbAdmins,    color: '#6B4FE0' },
-            { label: 'Scolarité', value: nbScolarite, color: '#0284c7' },
+            { label: 'Scolarité', value: nbScolarite, color: '#0369a1' },
             { label: 'Élèves',    value: nbEleves,    color: '#C084FC' },
           ].map(({ label, value, color }) => (
             <div
@@ -236,7 +236,7 @@ export function Dashboard() {
               >
                 {value}
               </div>
-              <div className="text-[10px] font-medium mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>
+              <div className="text-[10px] font-medium mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 {label}
               </div>
             </div>
@@ -248,7 +248,7 @@ export function Dashboard() {
             <div
               className="font-display font-extrabold text-lg"
               style={{
-                background: 'linear-gradient(135deg, #6B4FE0, #E879F9)',
+                background: 'linear-gradient(135deg, #6B4FE0, #B42FC4)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -256,7 +256,7 @@ export function Dashboard() {
             >
               {org.nbLicences - org.licencesUtilisees}
             </div>
-            <div className="text-[10px] font-medium mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>
+            <div className="text-[10px] font-medium mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Disponibles
             </div>
           </div>
@@ -272,7 +272,7 @@ export function Dashboard() {
           boxShadow: '0 2px 16px rgba(107,79,224,0.06)',
         }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: 'rgba(107,79,224,0.5)' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#6B4FE0' }}>
           Activité récente
         </p>
         <div className="flex flex-col gap-0">
@@ -293,12 +293,12 @@ export function Dashboard() {
                   {act.description}
                 </p>
                 {act.actor && (
-                  <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>
+                  <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
                     par {act.actor}
                   </p>
                 )}
               </div>
-              <span className="text-[10px] font-medium shrink-0 mt-1" style={{ color: 'rgba(30,15,70,0.35)' }}>
+              <span className="text-[10px] font-medium shrink-0 mt-1" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 {act.date}
               </span>
             </div>

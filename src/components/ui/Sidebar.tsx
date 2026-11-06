@@ -168,7 +168,7 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
             >
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0"
-                style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
+                style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff' }}
               >
                 {CURRENT_ADMIN.initials}
               </div>

@@ -26,7 +26,7 @@ export function Contact() {
           >
             Une question ? Besoin d'aide ? <br />Contactez-nous
           </h1>
-          <p className="mt-4 mx-auto max-w-3xl text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>
+          <p className="mt-4 mx-auto max-w-3xl text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             Échangez par mail avec un membre de notre équipe pour recevoir une réponse sous 24h ouvrées. Sinon, pour toute question ne figurant pas dans la FAQ ou recevoir une assistance urgente, n'hésitez pas à nous contacter directement par téléphone afin d'avoir une réponse encore plus rapide !
           </p>
         </Section>
@@ -42,7 +42,7 @@ export function Contact() {
                     <h2 className="font-display font-bold text-xl" style={{ color: 'var(--color-cubi-ink)' }}>
                       Message envoyé
                     </h2>
-                    <p className="text-sm mt-2" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>
+                    <p className="text-sm mt-2" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                       Merci, nous revenons vers vous très vite.
                     </p>
                   </div>
@@ -74,21 +74,21 @@ export function Contact() {
                     <Mail size={17} color="var(--color-cubi-violet)" className="mt-0.5 shrink-0" />
                     <div>
                       <div className="text-sm font-semibold" style={{ color: 'var(--color-cubi-ink)' }}>E-mail</div>
-                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>contact@cubi.fr</div>
+                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>contact@cubi.fr</div>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
                     <Phone size={17} color="var(--color-cubi-violet)" className="mt-0.5 shrink-0" />
                     <div>
                       <div className="text-sm font-semibold" style={{ color: 'var(--color-cubi-ink)' }}>Téléphone</div>
-                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>01 23 45 67 89</div>
+                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>01 23 45 67 89</div>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
                     <Clock size={17} color="var(--color-cubi-violet)" className="mt-0.5 shrink-0" />
                     <div>
                       <div className="text-sm font-semibold" style={{ color: 'var(--color-cubi-ink)' }}>Disponibilité</div>
-                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>Du lundi au samedi, 9h – 19h</div>
+                      <div className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>Du lundi au samedi, 9h – 19h</div>
                     </div>
                   </li>
                 </ul>

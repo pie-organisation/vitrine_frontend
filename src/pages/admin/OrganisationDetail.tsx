@@ -47,7 +47,7 @@ function AdminCard({ admin }: { admin: AdminUser }) {
       <div
         className="w-11 h-11 rounded-full flex items-center justify-center font-display font-bold text-sm mx-auto mb-2.5"
         style={{
-          background: 'linear-gradient(135deg, #6B4FE0, #C084FC)',
+          background: 'linear-gradient(135deg, #6B4FE0, #9333EA)',
           color: '#fff',
         }}
       >
@@ -56,10 +56,10 @@ function AdminCard({ admin }: { admin: AdminUser }) {
       <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>
         {admin.prenom} {admin.nom}
       </div>
-      <div className="text-xs mt-0.5 font-semibold" style={{ color: '#8B6FF0' }}>{admin.role}</div>
+      <div className="text-xs mt-0.5 font-semibold" style={{ color: '#6B4FE0' }}>{admin.role}</div>
       <div
         className="text-xs mt-1 truncate"
-        style={{ color: 'rgba(30,15,70,0.4)' }}
+        style={{ color: 'rgba(30,15,70,0.62)' }}
         title={admin.email}
       >
         {admin.email}
@@ -71,8 +71,8 @@ function AdminCard({ admin }: { admin: AdminUser }) {
 // ── Historique row ────────────────────────────────────────────────────────────
 
 const HISTO_ICONS: Record<HistoType, React.ReactNode> = {
-  success: <CheckCircle2 size={13} style={{ color: '#16a34a' }} />,
-  info:    <Info          size={13} style={{ color: '#0284c7' }} />,
+  success: <CheckCircle2 size={13} style={{ color: '#15803d' }} />,
+  info:    <Info          size={13} style={{ color: '#0369a1' }} />,
   warning: <AlertTriangle size={13} style={{ color: '#b45309' }} />,
 }
 
@@ -96,7 +96,7 @@ function HistoRow({ item }: { item: HistoriqueItem }) {
       </div>
       <div className="flex-1">
         <p className="text-sm" style={{ color: '#1a1040' }}>{item.evenement}</p>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.38)' }}>{item.date}</p>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{item.date}</p>
       </div>
     </div>
   )
@@ -110,7 +110,7 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
       className="flex items-start justify-between gap-4 py-2.5"
       style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}
     >
-      <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.45)', minWidth: '120px' }}>
+      <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.62)', minWidth: '120px' }}>
         {label}
       </span>
       <span className="text-sm text-right" style={{ color: '#1a1040' }}>{value}</span>
@@ -213,7 +213,7 @@ export function OrganisationDetail() {
   if (errorOrg || !rawOrg) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{errorOrg ?? 'Organisation introuvable'}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{errorOrg ?? 'Organisation introuvable'}</p>
       <button onClick={() => navigate('/admin/organisations')} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Retour</button>
     </div>
@@ -233,7 +233,7 @@ export function OrganisationDetail() {
         <div
           className="flex items-center gap-3 px-4 py-3 rounded-xl mb-5"
           style={{
-            background: 'linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%)',
+            background: 'linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%)',
             boxShadow: '0 4px 20px rgba(107,79,224,0.3)',
           }}
         >
@@ -252,7 +252,7 @@ export function OrganisationDetail() {
       )}
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 text-xs mb-4" style={{ color: 'rgba(30,15,70,0.45)' }}>
+      <div className="flex items-center gap-1.5 text-xs mb-4" style={{ color: 'rgba(30,15,70,0.62)' }}>
         <button
           className="border-none bg-transparent cursor-pointer font-medium transition-colors hover:underline p-0"
           style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)', fontSize: '12px' }}
@@ -261,7 +261,7 @@ export function OrganisationDetail() {
           Organisations
         </button>
         <ChevronRight size={12} />
-        <span style={{ color: 'rgba(30,15,70,0.6)' }}>{org.nom}</span>
+        <span style={{ color: 'rgba(30,15,70,0.7)' }}>{org.nom}</span>
       </div>
 
       {/* Header */}
@@ -302,7 +302,7 @@ export function OrganisationDetail() {
           <InfoRow label="Date de début"     value={org.dateDebut} />
           <InfoRow label="Expiration"        value={org.dateExpiration} />
           <InfoRow label="Montant"           value={<span className="font-semibold" style={{ color: '#6B4FE0' }}>{org.montant}</span>} />
-          <InfoRow label="SIRET"             value={<code className="text-xs" style={{ color: 'rgba(30,15,70,0.55)' }}>{org.siret}</code>} />
+          <InfoRow label="SIRET"             value={<code className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{org.siret}</code>} />
           <div className="pt-2.5">
             <Badge variant={st.variant} dot>{st.label}</Badge>
           </div>
@@ -324,7 +324,7 @@ export function OrganisationDetail() {
                 <div
                   className="font-display font-extrabold text-xl leading-none"
                   style={{
-                    background: 'linear-gradient(135deg, #6B4FE0, #C084FC)',
+                    background: 'linear-gradient(135deg, #6B4FE0, #9333EA)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -332,7 +332,7 @@ export function OrganisationDetail() {
                 >
                   {n}
                 </div>
-                <div className="text-[10px] mt-1.5 font-medium" style={{ color: 'rgba(30,15,70,0.4)' }}>{l}</div>
+                <div className="text-[10px] mt-1.5 font-medium" style={{ color: 'rgba(30,15,70,0.62)' }}>{l}</div>
               </div>
             ))}
           </div>
@@ -384,7 +384,7 @@ export function OrganisationDetail() {
             </div>
           )
           : (
-            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.38)' }}>
+            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {org.historique.length} événement{org.historique.length !== 1 ? 's' : ''} enregistré{org.historique.length !== 1 ? 's' : ''} — cliquez sur "Afficher" pour consulter.
             </p>
           )}
@@ -402,7 +402,7 @@ export function OrganisationDetail() {
               >
                 <div>
                   <span className="text-sm font-medium" style={{ color: '#1a1040' }}>{f.reference}</span>
-                  <span className="text-xs ml-2" style={{ color: 'rgba(30,15,70,0.38)' }}>Éch. {f.echeance}</span>
+                  <span className="text-xs ml-2" style={{ color: 'rgba(30,15,70,0.62)' }}>Éch. {f.echeance}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-semibold" style={{ color: '#1a1040' }}>{f.montant}</span>
@@ -417,7 +417,7 @@ export function OrganisationDetail() {
             ))}
           </div>
         ) : (
-          <p className="text-sm" style={{ color: 'rgba(30,15,70,0.35)' }}>
+          <p className="text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Aucune facture pour cette organisation.
           </p>
         )}

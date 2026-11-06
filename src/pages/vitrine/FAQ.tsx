@@ -99,7 +99,7 @@ function FAQRow({ q, a, isOpen, onToggle, isLast }: FAQRowProps) {
         }}
       >
         <div className="overflow-hidden">
-          <p className="text-sm pt-3 pr-6" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>
+          <p className="text-sm pt-3 pr-6" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             {a}
           </p>
         </div>
@@ -130,7 +130,7 @@ export function FAQ() {
               <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" 
                 style={{
                   background:
-                    'linear-gradient(135deg, #6B4FE0 0%, #C084FC 50%, #E879F9 100%)',
+                    'linear-gradient(135deg, #6B4FE0 0%, #9333EA 50%, #B42FC4 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   color: 'transparent',

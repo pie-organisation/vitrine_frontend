@@ -29,7 +29,7 @@ function OffreRow({ offre, onEdit, onDelete }: { offre: Offre; onEdit: () => voi
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-extrabold text-base shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%)',
+              background: 'linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%)',
               color: '#fff',
             }}
           >
@@ -41,11 +41,11 @@ function OffreRow({ offre, onEdit, onDelete }: { offre: Offre; onEdit: () => voi
               {offre.populaire && <Badge variant="violet">Populaire</Badge>}
               <Badge variant={st.variant}>{st.label}</Badge>
             </div>
-            <p className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>{offre.tagline}</p>
+            <p className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>{offre.tagline}</p>
             <div className="flex flex-wrap gap-3 mt-2">
               <span className="text-xs font-semibold" style={{ color: '#6B4FE0' }}>{offre.prix}</span>
-              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>·</span>
-              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>
+              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>·</span>
+              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 {offre.features.length} fonctionnalités
               </span>
             </div>
@@ -138,7 +138,7 @@ function OffreFormModal({
       <Input label="Prix affiché"    value={prix}    onChange={(e) => setPrix(e.target.value)}    />
 
       <div>
-        <p className="text-xs font-semibold mb-2.5" style={{ color: 'rgba(30,15,70,0.6)', fontFamily: 'var(--font-sans)' }}>
+        <p className="text-xs font-semibold mb-2.5" style={{ color: 'rgba(30,15,70,0.7)', fontFamily: 'var(--font-sans)' }}>
           Fonctionnalités incluses
         </p>
         <div className="flex flex-col gap-2">
@@ -176,7 +176,7 @@ function OffreFormModal({
         <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
           <div>
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Publiée sur le site</div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {publiee ? "Visible par tous les visiteurs" : "Masquée du site vitrine"}
             </div>
           </div>
@@ -184,7 +184,7 @@ function OffreFormModal({
             role="switch"
             aria-checked={publiee}
             className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
-            style={{ width: '36px', height: '20px', background: publiee ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            style={{ width: '36px', height: '20px', background: publiee ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.15)' }}
             onClick={() => setPubliee((v) => !v)}
           >
             <span
@@ -197,7 +197,7 @@ function OffreFormModal({
         <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
           <div>
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Offre populaire</div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Mise en avant avec un badge "★ Populaire"
             </div>
           </div>
@@ -205,7 +205,7 @@ function OffreFormModal({
             role="switch"
             aria-checked={populaire}
             className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
-            style={{ width: '36px', height: '20px', background: populaire ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            style={{ width: '36px', height: '20px', background: populaire ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.15)' }}
             onClick={() => setPopulaire((v) => !v)}
           >
             <span
@@ -243,7 +243,7 @@ function PricingCard({ offre }: { offre: Offre }) {
       style={
         isHighlight
           ? {
-              background: 'linear-gradient(135deg, #6B4FE0 0%, #8B6FF0 40%, #C084FC 80%, #E879F9 100%)',
+              background: 'linear-gradient(135deg, #6B4FE0 0%, #8B6FF0 40%, #9333EA 80%, #B42FC4 100%)',
               boxShadow: '0 20px 60px rgba(107,79,224,0.3)',
               minWidth: '220px',
             }
@@ -272,7 +272,7 @@ function PricingCard({ offre }: { offre: Offre }) {
       </h3>
       <p
         className="text-xs mb-4 leading-relaxed"
-        style={{ color: isHighlight ? 'rgba(255,255,255,0.75)' : 'rgba(30,15,70,0.5)' }}
+        style={{ color: isHighlight ? 'rgba(255,255,255,0.75)' : 'rgba(30,15,70,0.7)' }}
       >
         {offre.tagline}
       </p>
@@ -282,7 +282,7 @@ function PricingCard({ offre }: { offre: Offre }) {
           isHighlight
             ? { color: '#fff' }
             : {
-                background: 'linear-gradient(135deg, #6B4FE0, #C084FC)',
+                background: 'linear-gradient(135deg, #6B4FE0, #9333EA)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -300,7 +300,7 @@ function PricingCard({ offre }: { offre: Offre }) {
           >
             <CheckCircle2
               size={13}
-              style={{ color: isHighlight ? '#fff' : '#22C55E', flexShrink: 0 }}
+              style={{ color: isHighlight ? '#fff' : '#15803d', flexShrink: 0 }}
             />
             {f}
           </li>
@@ -391,7 +391,7 @@ export function Offres() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -426,7 +426,7 @@ export function Offres() {
           Lecture seule
         </span>
       }>
-        <p className="text-xs mb-5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+        <p className="text-xs mb-5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           Rendu tel qu'affiché sur le site vitrine CUBI pour les visiteurs.
         </p>
         <div className="flex gap-4 flex-wrap">

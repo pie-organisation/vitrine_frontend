@@ -40,7 +40,7 @@ export function CommentCaMarche() {
         >
           Quatre étapes, du premier clic à la solution
         </h1>
-        <p className="mt-4 mx-auto max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>
+        <p className="mt-4 mx-auto max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
           Pas d'installation, pas de jargon : voici exactement ce qui se passe entre votre réservation et la fin de
           votre session.
         </p>
@@ -68,7 +68,7 @@ export function CommentCaMarche() {
                     <Icon size={17} color="var(--color-cubi-violet)" />
                     <h3 className="font-display font-bold text-base" style={{ color: 'var(--color-cubi-ink)' }}>{step.title}</h3>
                   </div>
-                  <p className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>{step.text}</p>
+                  <p className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>{step.text}</p>
                 </div>
               </Card>
             )

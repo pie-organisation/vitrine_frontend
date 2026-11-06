@@ -15,7 +15,7 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm mt-1" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="text-sm mt-1" style={{ color: 'rgba(30,15,70,0.62)' }}>
             {subtitle}
           </p>
         )}

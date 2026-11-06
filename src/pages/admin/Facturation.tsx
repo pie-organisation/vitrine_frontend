@@ -55,7 +55,7 @@ function FactureRow({ facture, onView }: { facture: Facture; onView: () => void 
             <div className="font-display font-bold text-sm truncate" style={{ color: '#1a1040' }}>
               {facture.organisation}
             </div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.42)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {facture.reference} · {facture.plan}
             </div>
           </div>
@@ -63,7 +63,7 @@ function FactureRow({ facture, onView }: { facture: Facture; onView: () => void 
         <div className="flex items-center gap-3 flex-wrap justify-end shrink-0">
           <div className="text-right">
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>{facture.montant}</div>
-            <div className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>Éch. {facture.echeance}</div>
+            <div className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Éch. {facture.echeance}</div>
           </div>
           <Badge variant={st.variant} dot>{st.label}</Badge>
           <button
@@ -92,11 +92,11 @@ function InvoiceModal({ facture }: { facture: Facture }) {
       >
         <Logo size="md" />
         <div className="text-right">
-          <div className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.45)' }}>FACTURE</div>
+          <div className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.62)' }}>FACTURE</div>
           <div className="font-display font-bold text-lg" style={{ color: '#1a1040' }}>
             {facture.reference}
           </div>
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>
+          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Échéance : {facture.echeance}
           </div>
         </div>
@@ -104,7 +104,7 @@ function InvoiceModal({ facture }: { facture: Facture }) {
 
       {/* Recipient */}
       <div className="mb-5">
-        <div className="text-xs font-semibold mb-1" style={{ color: 'rgba(30,15,70,0.45)' }}>FACTURÉ À</div>
+        <div className="text-xs font-semibold mb-1" style={{ color: 'rgba(30,15,70,0.62)' }}>FACTURÉ À</div>
         <div className="font-semibold text-sm" style={{ color: '#1a1040' }}>{facture.organisation}</div>
       </div>
 
@@ -115,7 +115,7 @@ function InvoiceModal({ facture }: { facture: Facture }) {
       >
         <div
           className="grid grid-cols-3 gap-2 px-4 py-2.5 text-xs font-semibold"
-          style={{ background: 'rgba(107,79,224,0.05)', color: 'rgba(30,15,70,0.5)' }}
+          style={{ background: 'rgba(107,79,224,0.05)', color: 'rgba(30,15,70,0.7)' }}
         >
           <span>Description</span>
           <span className="text-center">Durée</span>
@@ -131,11 +131,11 @@ function InvoiceModal({ facture }: { facture: Facture }) {
       {/* Totals */}
       <div className="flex flex-col gap-1.5 items-end">
         <div className="flex justify-between w-52">
-          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>Sous-total HT</span>
+          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>Sous-total HT</span>
           <span className="text-xs font-medium" style={{ color: '#1a1040' }}>{facture.montant}</span>
         </div>
         <div className="flex justify-between w-52">
-          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>TVA (20 %)</span>
+          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>TVA (20 %)</span>
           <span className="text-xs font-medium" style={{ color: '#1a1040' }}>calculée</span>
         </div>
         <div
@@ -146,7 +146,7 @@ function InvoiceModal({ facture }: { facture: Facture }) {
           <span
             className="text-sm font-bold"
             style={{
-              background: 'linear-gradient(135deg, #6B4FE0, #C084FC)',
+              background: 'linear-gradient(135deg, #6B4FE0, #9333EA)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -160,7 +160,7 @@ function InvoiceModal({ facture }: { facture: Facture }) {
       {/* Footer */}
       <div
         className="mt-6 pt-4 text-center text-xs"
-        style={{ borderTop: '1px solid rgba(107,79,224,0.1)', color: 'rgba(30,15,70,0.35)' }}
+        style={{ borderTop: '1px solid rgba(107,79,224,0.1)', color: 'rgba(30,15,70,0.62)' }}
       >
         CUBI SAS · 75001 Paris · SIRET 832 000 001 00014 · contact@cubi.fr
       </div>
@@ -210,7 +210,7 @@ export function Facturation() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -236,7 +236,7 @@ export function Facturation() {
       <FilterPills options={FILTERS} value={filter} onChange={handleFilter} />
 
       <div className="flex items-center mt-5 mb-4">
-        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.6)' }}>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
           {filtered.length} facture{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>

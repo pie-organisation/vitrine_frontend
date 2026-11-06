@@ -28,7 +28,7 @@ const TABS: { value: AccountType; label: string }[] = [
 ]
 
 const TYPE_COLOR: Record<AccountType, string> = {
-  admin:     'linear-gradient(135deg, #6B4FE0, #C084FC)',
+  admin:     'linear-gradient(135deg, #6B4FE0, #9333EA)',
   scolarite: 'linear-gradient(135deg, #0284c7, #38BDF8)',
   eleve:     'linear-gradient(135deg, #C084FC, #E879F9)',
 }
@@ -59,10 +59,10 @@ function PasswordStrength({ password }: { password: string }) {
   if (/[^A-Za-z0-9]/.test(password)) score++
 
   const level =
-    score <= 1 ? { label: 'Très faible', color: '#EF4444', pct: 20  } :
-    score <= 2 ? { label: 'Faible',      color: '#F97316', pct: 40  } :
-    score <= 3 ? { label: 'Moyen',       color: '#F59E0B', pct: 60  } :
-    score <= 4 ? { label: 'Fort',        color: '#10B981', pct: 80  } :
+    score <= 1 ? { label: 'Très faible', color: '#dc2626', pct: 20  } :
+    score <= 2 ? { label: 'Faible',      color: '#c2410c', pct: 40  } :
+    score <= 3 ? { label: 'Moyen',       color: '#b45309', pct: 60  } :
+    score <= 4 ? { label: 'Fort',        color: '#047857', pct: 80  } :
                  { label: 'Très fort',   color: '#6B4FE0', pct: 100 }
 
   return (
@@ -90,7 +90,7 @@ function StatusToggle({ statut, onChange }: { statut: AccountStatut; onChange: (
       className="relative flex-shrink-0 border-none cursor-pointer transition-colors duration-200"
       style={{
         width: 36, height: 20, borderRadius: 10,
-        background: on ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(30,15,70,0.18)',
+        background: on ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(30,15,70,0.18)',
         boxShadow: on ? '0 2px 8px rgba(107,79,224,0.35)' : 'none',
         padding: 0,
       }}
@@ -161,11 +161,11 @@ function AccountRow({ account, selected, checked, statut, onSelect, onCheck }: {
         <div className="flex-1 min-w-0">
           <div
             className="font-display font-bold text-sm truncate"
-            style={{ color: isActif ? '#1a1040' : 'rgba(30,15,70,0.4)' }}
+            style={{ color: isActif ? '#1a1040' : 'rgba(30,15,70,0.62)' }}
           >
             {account.prenom} {account.nom}
           </div>
-          <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.42)' }}>
+          <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
             {account.email}
           </div>
         </div>
@@ -173,13 +173,13 @@ function AccountRow({ account, selected, checked, statut, onSelect, onCheck }: {
         {!isActif && (
           <span
             className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
-            style={{ background: 'rgba(30,15,70,0.07)', color: 'rgba(30,15,70,0.4)' }}
+            style={{ background: 'rgba(30,15,70,0.07)', color: 'rgba(30,15,70,0.62)' }}
           >
             Inactif
           </span>
         )}
 
-        <ChevronRight size={14} style={{ color: 'rgba(107,79,224,0.35)', flexShrink: 0 }} />
+        <ChevronRight size={14} style={{ color: 'rgba(107,79,224,0.7)', flexShrink: 0 }} />
       </button>
     </div>
   )
@@ -232,8 +232,8 @@ function DetailPanel({ account, statut, onEdit, onDelete, onClose, onToggleStatu
         {/* Statut toggle */}
         <div className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}>
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'rgba(107,79,224,0.5)' }}>Statut</div>
-            <div className="text-sm font-semibold" style={{ color: isActif ? '#10B981' : 'rgba(30,15,70,0.4)' }}>
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: '#6B4FE0' }}>Statut</div>
+            <div className="text-sm font-semibold" style={{ color: isActif ? '#047857' : 'rgba(30,15,70,0.62)' }}>
               {isActif ? 'Actif' : 'Inactif'}
             </div>
           </div>
@@ -246,7 +246,7 @@ function DetailPanel({ account, statut, onEdit, onDelete, onClose, onToggleStatu
           { label: 'Dernière connexion',  value: account.derniereConnexion, mono: false },
         ].map(({ label, value, mono }) => (
           <div key={label} className="py-3" style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}>
-            <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(107,79,224,0.5)' }}>{label}</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#6B4FE0' }}>{label}</div>
             <div className="text-sm font-medium break-all" style={{ color: '#1a1040', fontFamily: mono ? 'monospace' : 'inherit' }}>{value}</div>
           </div>
         ))}
@@ -284,12 +284,12 @@ function EditModal({ account, onClose, onSaved }: { account: SchoolAccount; onCl
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'rgba(107,79,224,0.5)' }}>Rôle</p>
+        <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#6B4FE0' }}>Rôle</p>
         <div className="flex gap-2">
           {ROLE_TABS.map((r) => (
             <button key={r.value} onClick={() => setRole(r.value)}
               className="flex-1 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all"
-              style={{ background: role === r.value ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.07)', color: role === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
+              style={{ background: role === r.value ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.07)', color: role === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
               {r.label}
             </button>
           ))}
@@ -336,10 +336,10 @@ function DeleteModal({ account, onClose, onDeleted }: { account: SchoolAccount; 
   return (
     <div className="text-center">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239,68,68,0.08)' }}>
-        <Trash2 size={22} style={{ color: '#EF4444' }} />
+        <Trash2 size={22} style={{ color: '#dc2626' }} />
       </div>
       <h3 className="font-display font-bold text-lg mb-2" style={{ color: '#1a1040' }}>Supprimer ce compte ?</h3>
-      <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
+      <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
         Le compte de <strong>{account.prenom} {account.nom}</strong> sera définitivement supprimé. Cette action est irréversible.
       </p>
       {error && (
@@ -363,12 +363,12 @@ function BulkDeleteModal({ count, onClose }: { count: number; onClose: () => voi
   return (
     <div className="text-center">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239,68,68,0.08)' }}>
-        <Trash2 size={22} style={{ color: '#EF4444' }} />
+        <Trash2 size={22} style={{ color: '#dc2626' }} />
       </div>
       <h3 className="font-display font-bold text-lg mb-2" style={{ color: '#1a1040' }}>
         Supprimer {count} compte{count > 1 ? 's' : ''} ?
       </h3>
-      <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
+      <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
         Cette action est irréversible. Les comptes sélectionnés seront définitivement supprimés.
       </p>
       <div className="flex gap-3">
@@ -387,14 +387,14 @@ function BulkRoleModal({ count, onClose }: { count: number; onClose: () => void 
   const [role, setRole] = useState<AccountType>('eleve')
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+      <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
         Choisissez le nouveau rôle pour les {count} compte{count > 1 ? 's' : ''} sélectionné{count > 1 ? 's' : ''}.
       </p>
       <div className="flex gap-2">
         {ROLE_TABS.map((r) => (
           <button key={r.value} onClick={() => setRole(r.value)}
             className="flex-1 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer"
-            style={{ background: role === r.value ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.07)', color: role === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
+            style={{ background: role === r.value ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.07)', color: role === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
             {r.label}
           </button>
         ))}
@@ -414,18 +414,18 @@ function ChoiceModal({ onManual, onImport, onClose }: {
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm mb-2" style={{ color: 'rgba(30,15,70,0.5)' }}>
+      <p className="text-sm mb-2" style={{ color: 'rgba(30,15,70,0.7)' }}>
         Choisissez la méthode d'ajout des comptes.
       </p>
       <button onClick={onManual}
         className="flex items-start gap-4 p-4 rounded-2xl text-left border-none cursor-pointer"
         style={{ background: 'linear-gradient(135deg, rgba(107,79,224,0.06), rgba(232,121,249,0.06))', border: '1px solid rgba(107,79,224,0.15)' }}>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)' }}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)' }}>
           <UserPlus size={18} color="#fff" />
         </div>
         <div>
           <div className="font-display font-bold text-sm mb-0.5" style={{ color: '#1a1040' }}>Création manuelle</div>
-          <div className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>Ajoutez plusieurs comptes individuellement avec prévisualisation en temps réel.</div>
+          <div className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Ajoutez plusieurs comptes individuellement avec prévisualisation en temps réel.</div>
         </div>
       </button>
       <button onClick={onImport}
@@ -436,7 +436,7 @@ function ChoiceModal({ onManual, onImport, onClose }: {
         </div>
         <div>
           <div className="font-display font-bold text-sm mb-0.5" style={{ color: '#1a1040' }}>Import de fichier</div>
-          <div className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>Importez un fichier CSV ou Excel pour créer plusieurs comptes en une seule opération.</div>
+          <div className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Importez un fichier CSV ou Excel pour créer plusieurs comptes en une seule opération.</div>
         </div>
       </button>
       <button className="btn-action !py-2.5 mt-1" onClick={onClose}>Annuler</button>
@@ -489,10 +489,10 @@ function PendingRow({ item, index, onRemove }: {
           <span className="text-sm font-semibold truncate" style={{ color: '#1a1040' }}>{item.prenom} {item.nom}</span>
           <Badge variant={tb.variant}>{tb.label}</Badge>
         </div>
-        <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>{item.email || '—'}</div>
+        <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{item.email || '—'}</div>
       </div>
       <button onClick={onRemove} className="w-6 h-6 flex items-center justify-center rounded-lg border-none cursor-pointer shrink-0"
-        style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444' }}>
+        style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626' }}>
         <X size={12} />
       </button>
     </div>
@@ -536,8 +536,8 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
         <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-semibold border-none bg-transparent cursor-pointer p-0" style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
           <ArrowLeft size={13} /> Retour
         </button>
-        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.3)' }}>/</span>
-        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.5)' }}>Nouveau compte individuel</span>
+        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>/</span>
+        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>Nouveau compte individuel</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
@@ -551,12 +551,12 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
 
           {/* Rôle */}
           <div className="mb-4">
-            <p className="text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'rgba(107,79,224,0.5)' }}>Rôle</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: '#6B4FE0' }}>Rôle</p>
             <div className="flex gap-2">
               {ROLE_TABS.map((r) => (
                 <button key={r.value} onClick={() => setForm((f) => ({ ...f, type: r.value }))}
                   className="flex-1 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all"
-                  style={{ background: form.type === r.value ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.07)', color: form.type === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)', boxShadow: form.type === r.value ? '0 4px 12px rgba(107,79,224,0.25)' : 'none' }}>
+                  style={{ background: form.type === r.value ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.07)', color: form.type === r.value ? '#fff' : '#6B4FE0', fontFamily: 'var(--font-sans)', boxShadow: form.type === r.value ? '0 4px 12px rgba(107,79,224,0.25)' : 'none' }}>
                   {r.label}
                 </button>
               ))}
@@ -568,21 +568,21 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Input label="NOM" placeholder="Dupont" value={form.nom} onChange={set('nom')} />
-                {errors.nom && <p className="text-[10px] mt-1" style={{ color: '#EF4444' }}>{errors.nom}</p>}
+                {errors.nom && <p className="text-[10px] mt-1" style={{ color: '#dc2626' }}>{errors.nom}</p>}
               </div>
               <div>
                 <Input label="Prénom" placeholder="Marie" value={form.prenom} onChange={set('prenom')} />
-                {errors.prenom && <p className="text-[10px] mt-1" style={{ color: '#EF4444' }}>{errors.prenom}</p>}
+                {errors.prenom && <p className="text-[10px] mt-1" style={{ color: '#dc2626' }}>{errors.prenom}</p>}
               </div>
             </div>
             <div>
               <Input label="Email de facturation (contact)" placeholder="marie@organisation.fr" type="email" value={form.email} onChange={set('email')} />
-              {errors.email && <p className="text-[10px] mt-1" style={{ color: '#EF4444' }}>{errors.email}</p>}
+              {errors.email && <p className="text-[10px] mt-1" style={{ color: '#dc2626' }}>{errors.email}</p>}
             </div>
 
             {/* Licence avec générateur */}
             <div>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(30,15,70,0.6)' }}>Licence Cubi</p>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(30,15,70,0.7)' }}>Licence Cubi</p>
               <div className="flex gap-2">
                 <input
                   value={form.licence}
@@ -604,7 +604,7 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
 
             {/* Mot de passe + force */}
             <div>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(30,15,70,0.6)' }}>Mot de passe temporaire</p>
+              <p className="text-xs font-semibold mb-1.5" style={{ color: 'rgba(30,15,70,0.7)' }}>Mot de passe temporaire</p>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -641,7 +641,7 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display font-extrabold text-base" style={{ color: '#1a1040' }}>Comptes à ajouter</h2>
             {pending.length > 0 && (
-              <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff' }}>
                 {pending.length}
               </span>
             )}
@@ -650,7 +650,7 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
           {pending.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-10">
               <User size={36} strokeWidth={1.2} style={{ color: 'rgba(107,79,224,0.2)' }} />
-              <p className="text-xs mt-3 font-medium text-center" style={{ color: 'rgba(30,15,70,0.3)' }}>
+              <p className="text-xs mt-3 font-medium text-center" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 Remplissez le formulaire et cliquez<br />sur "Ajouter" pour prévisualiser les comptes
               </p>
             </div>
@@ -706,14 +706,14 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
         <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-semibold border-none bg-transparent cursor-pointer p-0" style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
           <ArrowLeft size={13} /> Retour
         </button>
-        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.3)' }}>/</span>
-        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.5)' }}>Import de fichier</span>
+        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>/</span>
+        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>Import de fichier</span>
       </div>
 
       <div className="max-w-2xl">
         <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid rgba(107,79,224,0.12)', boxShadow: '0 4px 24px rgba(107,79,224,0.07)' }}>
           <h2 className="font-display font-extrabold text-base mb-1" style={{ color: '#1a1040' }}>Import de fichier</h2>
-          <p className="text-xs mb-5" style={{ color: 'rgba(30,15,70,0.45)' }}>Importez un fichier CSV ou Excel (.xlsx) pour créer plusieurs comptes simultanément.</p>
+          <p className="text-xs mb-5" style={{ color: 'rgba(30,15,70,0.62)' }}>Importez un fichier CSV ou Excel (.xlsx) pour créer plusieurs comptes simultanément.</p>
 
           <div className="rounded-2xl flex flex-col items-center justify-center py-12 px-6 text-center cursor-pointer transition-all duration-200 mb-5"
             style={{ border: `2px dashed ${dragging ? '#6B4FE0' : 'rgba(107,79,224,0.25)'}`, background: dragging ? 'rgba(107,79,224,0.06)' : 'rgba(107,79,224,0.02)' }}
@@ -722,19 +722,19 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) setFileName(f.name) }}
             onClick={() => document.getElementById('file-input-import')?.click()}
           >
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: dragging ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.1)' }}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: dragging ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.1)' }}>
               <FileSpreadsheet size={22} style={{ color: dragging ? '#fff' : '#6B4FE0' }} />
             </div>
             {fileName ? (
               <>
                 <p className="font-display font-bold text-sm mb-1" style={{ color: '#6B4FE0' }}>{fileName}</p>
-                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>Fichier prêt à être importé</p>
+                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Fichier prêt à être importé</p>
               </>
             ) : (
               <>
                 <p className="font-display font-semibold text-sm mb-1" style={{ color: '#1a1040' }}>Glissez-déposez votre fichier ici</p>
-                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>ou <span style={{ color: '#6B4FE0', fontWeight: 600 }}>cliquez pour parcourir</span></p>
-                <p className="text-[10px] mt-2" style={{ color: 'rgba(30,15,70,0.3)' }}>CSV ou Excel (.xlsx) — max 500 lignes</p>
+                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>ou <span style={{ color: '#6B4FE0', fontWeight: 600 }}>cliquez pour parcourir</span></p>
+                <p className="text-[10px] mt-2" style={{ color: 'rgba(30,15,70,0.62)' }}>CSV ou Excel (.xlsx) — max 500 lignes</p>
               </>
             )}
             <input id="file-input-import" type="file" accept=".csv,.xlsx,.xls" className="hidden"
@@ -745,7 +745,7 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             style={{ background: 'rgba(107,79,224,0.04)', border: '1px solid rgba(107,79,224,0.1)' }}>
             <div>
               <div className="text-xs font-semibold" style={{ color: '#1a1040' }}>Modèle de fichier</div>
-              <div className="text-[10px]" style={{ color: 'rgba(30,15,70,0.4)' }}>Téléchargez notre template avec les colonnes requises</div>
+              <div className="text-[10px]" style={{ color: 'rgba(30,15,70,0.62)' }}>Téléchargez notre template avec les colonnes requises</div>
             </div>
             <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
               style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
@@ -886,7 +886,7 @@ export function Comptes() {
         <h1 className="font-display font-extrabold text-2xl" style={{ color: '#1a1040', letterSpacing: '-0.5px' }}>
           {orgData?.nom ?? ''}
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>Gestion des comptes utilisateurs</p>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>Gestion des comptes utilisateurs</p>
       </div>
 
       {/* Tabs */}
@@ -896,7 +896,7 @@ export function Comptes() {
           return (
             <button key={t.value} onClick={() => handleTab(t.value)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all"
-              style={{ background: tab === t.value ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(255,255,255,0.85)', color: tab === t.value ? '#fff' : 'rgba(30,15,70,0.55)', border: tab === t.value ? 'none' : '1px solid rgba(107,79,224,0.12)', fontFamily: 'var(--font-sans)', boxShadow: tab === t.value ? '0 4px 16px rgba(107,79,224,0.25)' : 'none' }}>
+              style={{ background: tab === t.value ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(255,255,255,0.85)', color: tab === t.value ? '#fff' : 'rgba(30,15,70,0.7)', border: tab === t.value ? 'none' : '1px solid rgba(107,79,224,0.12)', fontFamily: 'var(--font-sans)', boxShadow: tab === t.value ? '0 4px 16px rgba(107,79,224,0.25)' : 'none' }}>
               {t.label}
               <span className="text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center"
                 style={{ background: tab === t.value ? 'rgba(255,255,255,0.25)' : 'rgba(107,79,224,0.1)', color: tab === t.value ? '#fff' : '#6B4FE0' }}>
@@ -912,7 +912,7 @@ export function Comptes() {
         {/* Recherche */}
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 min-w-[180px]"
           style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(107,79,224,0.12)' }}>
-          <Search size={14} style={{ color: 'rgba(107,79,224,0.4)', flexShrink: 0 }} />
+          <Search size={14} style={{ color: 'rgba(107,79,224,0.7)', flexShrink: 0 }} />
           <input
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
@@ -921,7 +921,7 @@ export function Comptes() {
             style={{ color: '#1a1040', fontFamily: 'var(--font-sans)' }}
           />
           {search && (
-            <button onClick={() => handleSearch('')} className="border-none bg-transparent cursor-pointer p-0" style={{ color: 'rgba(107,79,224,0.4)' }}>
+            <button onClick={() => handleSearch('')} className="border-none bg-transparent cursor-pointer p-0" style={{ color: 'rgba(107,79,224,0.7)' }}>
               <X size={12} />
             </button>
           )}
@@ -931,7 +931,7 @@ export function Comptes() {
         {(['all', 'actif', 'inactif'] as const).map((f) => (
           <button key={f} onClick={() => handleStatusFilter(f)}
             className="text-xs font-semibold px-3 py-2 rounded-xl border-none cursor-pointer"
-            style={{ background: statusFilter === f ? 'rgba(107,79,224,0.12)' : 'rgba(255,255,255,0.8)', color: statusFilter === f ? '#6B4FE0' : 'rgba(30,15,70,0.5)', border: `1px solid ${statusFilter === f ? 'rgba(107,79,224,0.2)' : 'rgba(107,79,224,0.08)'}`, fontFamily: 'var(--font-sans)' }}>
+            style={{ background: statusFilter === f ? 'rgba(107,79,224,0.12)' : 'rgba(255,255,255,0.8)', color: statusFilter === f ? '#6B4FE0' : 'rgba(30,15,70,0.7)', border: `1px solid ${statusFilter === f ? 'rgba(107,79,224,0.2)' : 'rgba(107,79,224,0.08)'}`, fontFamily: 'var(--font-sans)' }}>
             {f === 'all' ? 'Tous' : f === 'actif' ? 'Actifs' : 'Inactifs'}
           </button>
         ))}
@@ -946,7 +946,7 @@ export function Comptes() {
         {/* Ajouter */}
         <button onClick={() => setCreateMode('choice')}
           className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl border-none cursor-pointer"
-          style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff', fontFamily: 'var(--font-sans)', boxShadow: '0 4px 12px rgba(107,79,224,0.3)' }}>
+          style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff', fontFamily: 'var(--font-sans)', boxShadow: '0 4px 12px rgba(107,79,224,0.3)' }}>
           <Plus size={13} /> Ajouter
         </button>
       </div>
@@ -965,7 +965,7 @@ export function Comptes() {
           </button>
           <button onClick={() => setShowBulkDelete(true)}
             className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
-            style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444', fontFamily: 'var(--font-sans)' }}>
+            style={{ background: 'rgba(239,68,68,0.08)', color: '#dc2626', fontFamily: 'var(--font-sans)' }}>
             <Trash2 size={12} /> Supprimer
           </button>
           <button onClick={() => setCheckedIds(new Set())}
@@ -981,11 +981,11 @@ export function Comptes() {
         <div className="flex items-center gap-2 mb-2">
           <button onClick={toggleAll}
             className="flex items-center gap-1.5 text-xs font-semibold border-none bg-transparent cursor-pointer p-0"
-            style={{ color: 'rgba(107,79,224,0.5)', fontFamily: 'var(--font-sans)' }}>
+            style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}>
             {allPageChecked ? <CheckSquare size={14} style={{ color: '#6B4FE0' }} /> : <Square size={14} />}
             {allPageChecked ? 'Tout désélectionner' : 'Tout sélectionner'}
           </button>
-          <span className="text-xs ml-auto" style={{ color: 'rgba(30,15,70,0.4)' }}>
+          <span className="text-xs ml-auto" style={{ color: 'rgba(30,15,70,0.62)' }}>
             {accounts.length} résultat{accounts.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -1008,7 +1008,7 @@ export function Comptes() {
             ))}
             {visible.length === 0 && (
               <div className="rounded-2xl py-10 text-center text-sm"
-                style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.35)' }}>
+                style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}>
                 {search ? `Aucun résultat pour "${search}"` : 'Aucun compte dans cette catégorie.'}
               </div>
             )}

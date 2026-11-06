@@ -11,7 +11,7 @@ export function DotsPagination({ total, current, onChange, showLabel }: DotsPagi
   return (
     <div className="flex items-center justify-center gap-3">
       {showLabel && (
-        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.35)' }}>
+        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
           {current + 1} sur {total}
         </span>
       )}

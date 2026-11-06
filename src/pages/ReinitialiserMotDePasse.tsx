@@ -41,7 +41,7 @@ export function ReinitialiserMotDePasse() {
             >
               Nouveau mot de passe
             </h1>
-            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Choisissez un mot de passe fort d'au moins 8 caractères.
             </p>
           </div>
@@ -67,7 +67,7 @@ export function ReinitialiserMotDePasse() {
             </div>
           </form>
 
-          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
             <Link
               to="/login"
               className="font-semibold transition-opacity hover:opacity-80"
