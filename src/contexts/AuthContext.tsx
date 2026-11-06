@@ -1,10 +1,11 @@
 'use client'
 
 import {
-  createContext, useContext, useState, useCallback,
+  createContext, useContext, useState, useCallback, useEffect,
   type ReactNode,
 } from 'react'
 import { api, ENDPOINTS, TOKEN_KEY, USER_KEY, clearAuth, ApiError } from '../api/client'
+import posthog, { posthogLogger } from '../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -61,6 +62,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading,  setIsLoading]  = useState(false)
   const [loginError, setLoginError] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (!user) return
+
+    posthog.identify(user.id, {
+      email: user.email,
+      name: `${user.prenom} ${user.nom}`.trim(),
+      role: user.role,
+      account_type: user.type,
+    })
+    posthogLogger.info('authenticated_session_available', {
+      role: user.role,
+      account_type: user.type,
+    })
+  }, [user])
+
   const login = useCallback(async (email: string, mot_de_passe: string) => {
     setIsLoading(true)
     setLoginError(null)
@@ -109,6 +125,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const logout = useCallback(() => {
+    posthogLogger.info('authenticated_session_ended')
+    posthog.reset()
     clearAuth()
     setToken(null)
     setUser(null)

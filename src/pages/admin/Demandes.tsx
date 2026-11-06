@@ -9,6 +9,7 @@ import { Modal }          from '../../components/ui/Modal'
 import { SectionCard }    from '../../components/ui/SectionCard'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 import type { Demande, DemandeStatut, OrgType } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -270,7 +271,10 @@ export function Demandes() {
   const handleAction = (id: string, statut: 'validee' | 'refusee') => {
     setActionError(null)
     api.patch(ENDPOINTS.demande(id), { statut })
-      .then(refetch)
+      .then(() => {
+        posthog.capture('registration_application_reviewed', { decision: statut })
+        refetch()
+      })
       .catch((e) => setActionError(e instanceof Error ? e.message : 'Erreur lors du traitement de la demande.'))
   }
 

@@ -11,6 +11,7 @@ import { ConversationRow, ConversationThreadView } from '../../components/ui/Con
 import { useApi }        from '../../hooks/useApi'
 import { useAuth }       from '../../contexts/AuthContext'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 import type { Conversation, ConversationThread } from '../../mocks/data'
 
 // ── Filter options ─────────────────────────────────────────────────────────────
@@ -68,6 +69,7 @@ function NewConversationForm({ initialEcoleId, onCreated }: { initialEcoleId: st
     setError(null)
     try {
       const { id } = await api.post<{ id: string }>(ENDPOINTS.messages, { ecoleId, objet, contenu })
+      posthog.capture('admin_conversation_started')
       onCreated(id)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Le message n'a pas pu être envoyé.")

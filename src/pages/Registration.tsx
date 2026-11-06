@@ -9,6 +9,7 @@ import { Button }           from '../components/ui/Button'
 import { Card }             from '../components/ui/Card'
 import { SectionTitle }     from '../components/ui/SectionTitle'
 import { api, ENDPOINTS }   from '../api/client'
+import posthog               from '../posthog'
 
 interface Licence {
   id:  string
@@ -46,6 +47,7 @@ export function Registration() {
     const raw = Object.fromEntries(new FormData(e.currentTarget))
     try {
       await api.post(ENDPOINTS.inscription, { type: 'ecole', ...raw })
+      posthog.capture('registration_application_submitted')
       setSuccess(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la demande.")
