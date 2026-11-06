@@ -749,27 +749,42 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
               onChange={(e) => { const f = e.target.files?.[0]; if (f) setFileName(f.name) }} />
           </div>
 
-          <div className="flex items-center justify-between px-4 py-3 rounded-xl mb-5"
+          <div className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl mb-5"
             style={{ background: 'rgba(107,79,224,0.04)', border: '1px solid rgba(107,79,224,0.1)' }}>
-            <div>
+            <div className="min-w-0">
               <div className="text-xs font-semibold" style={{ color: '#1a1040' }}>Modèle de fichier</div>
-                <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
-                    style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
-                    onClick={handleXlsx} disabled={loading}>
-                    {loading ? "Génération…" : "Télécharger en Excel"}
-                </button>
-                <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
-                    style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
-                    onClick={handleCsv}>
-                    Télécharger en CSV
-                </button>
-              <div className="text-[10px]" style={{ color: 'rgba(30,15,70,0.4)' }}>Téléchargez notre template avec les colonnes requises</div>
+              <div className="text-[10px]" style={{ color: 'rgba(30,15,70,0.4)' }}>
+                Téléchargez notre template avec les colonnes requises
+              </div>
             </div>
-            <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
-              style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
-              onClick={() => console.log('download-template')}>
-              Télécharger
-            </button>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Bouton secondaire */}
+              <button
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer whitespace-nowrap"
+                style={{
+                  background: 'transparent',
+                  color: '#6B4FE0',
+                  border: '1px solid rgba(107,79,224,0.25)',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                onClick={handleCsv}>
+                Télécharger en CSV
+              </button>
+
+              {/* Bouton principal */}
+              <button
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer whitespace-nowrap"
+                style={{
+                  background: 'rgba(107,79,224,0.1)',
+                  color: '#6B4FE0',
+                  border: '1px solid transparent',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                onClick={handleXlsx} disabled={loading}>
+                {loading ? "Génération…" : "Télécharger en Excel"}
+              </button>
+            </div>
           </div>
 
           {importError && (
