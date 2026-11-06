@@ -1,8 +1,6 @@
-export type ColumnKey = "nom_complet_ecole" | "nom_classe" | "nom" | "prenom" | "email" | "mot_de_passe_temporaire" | "role";
+export type ColumnKey = "nom" | "prenom" | "email" | "mot_de_passe_temporaire" | "role";
 
 export interface UserChoices {
-  ecoles: string[];
-  classes: string[];
   roles: string[];
 }
 

@@ -2,7 +2,7 @@ import type { GenerateXlsxOptions, TemplateColumn } from "./Types";
 
 export async function generateXlsx(
   columns: TemplateColumn[],
-  { maxRows = 1000 }: GenerateXlsxOptions = {}
+  { maxRows = 500 }: GenerateXlsxOptions = {}
 ): Promise<Blob> {
   const { default: ExcelJS } = await import("exceljs"); // chargé à la demande
 
@@ -46,7 +46,8 @@ export async function generateXlsx(
   });
 
   ref.state = "hidden";
-  ws.addRow({ nom: "Dupont", email: "dupont@exemple.fr" });
+  //ws.addRow({ nom: "Dupont", email: "dupont@exemple.fr" });
+  console.log(columns.map((c) => ({ key: c.key, options: c.options })));
 
   const buffer = await wb.xlsx.writeBuffer();
   return new Blob([buffer], {

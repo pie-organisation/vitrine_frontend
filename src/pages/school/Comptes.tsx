@@ -10,6 +10,8 @@ import { Badge }          from '../../components/ui/Badge'
 import { DotsPagination } from '../../components/ui/DotsPagination'
 import { useApi }         from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import { useTemplateDownload } from "../../hooks/useTemplateDownload";
+import type { UserChoices } from "../../features/import_template/Types";
 import type {
   SchoolAccount,
   SchoolOrg,
@@ -700,6 +702,12 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
   const [fileName, setFileName] = useState<string | null>(null)
   const [importError, setImportError] = useState<string | null>(null)
 
+  const userChoices: UserChoices = {
+    roles: ["admin", "scolarite", "eleve"],
+  };
+  
+  const { handleXlsx, handleCsv, loading } = useTemplateDownload(userChoices);
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-6">
@@ -745,6 +753,16 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             style={{ background: 'rgba(107,79,224,0.04)', border: '1px solid rgba(107,79,224,0.1)' }}>
             <div>
               <div className="text-xs font-semibold" style={{ color: '#1a1040' }}>Modèle de fichier</div>
+                <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
+                    style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
+                    onClick={handleXlsx} disabled={loading}>
+                    {loading ? "Génération…" : "Télécharger en Excel"}
+                </button>
+                <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
+                    style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
+                    onClick={handleCsv}>
+                    Télécharger en CSV
+                </button>
               <div className="text-[10px]" style={{ color: 'rgba(30,15,70,0.4)' }}>Téléchargez notre template avec les colonnes requises</div>
             </div>
             <button className="text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
