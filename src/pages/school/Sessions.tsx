@@ -4,6 +4,7 @@ import { PageHeader } from '../../components/ui/PageHeader'
 import { Badge }      from '../../components/ui/Badge'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -126,7 +127,10 @@ export function Sessions() {
   const handleTerminate = (id: string) => {
     setActionError(null)
     api.delete(ENDPOINTS.schoolSession(id))
-      .then(refetch)
+      .then(() => {
+        posthog.capture('session_terminated')
+        refetch()
+      })
       .catch((e) => setActionError(e instanceof Error ? e.message : 'Erreur lors de la fermeture de la session.'))
   }
 

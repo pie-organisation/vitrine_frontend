@@ -7,6 +7,7 @@ import { Modal }      from '../../components/ui/Modal'
 import { Input }      from '../../components/ui/Input'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -116,6 +117,11 @@ function LicenceFormModal({
       } else {
         await api.post(ENDPOINTS.plans, payload)
       }
+      posthog.capture('license_saved', {
+        action: licence ? 'updated' : 'created',
+        is_active: actif,
+        is_customizable: personnalisable,
+      })
       onSaved()
       onClose()
     } catch (e) {
@@ -218,6 +224,7 @@ function ConfirmDeleteLicenceModal({ licence, onClose, onDeleted }: { licence: L
     setDeleting(true); setError(null)
     try {
       await api.delete(ENDPOINTS.plan(licence.id))
+      posthog.capture('license_deleted')
       onDeleted()
       onClose()
     } catch (e) {

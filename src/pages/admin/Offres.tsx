@@ -8,6 +8,7 @@ import { Input }       from '../../components/ui/Input'
 import { SectionCard } from '../../components/ui/SectionCard'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 import type { Offre, OffreStatut } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -116,6 +117,12 @@ function OffreFormModal({
       } else {
         await api.post(ENDPOINTS.offres, payload)
       }
+      posthog.capture('offer_saved', {
+        action: offre ? 'updated' : 'created',
+        status: payload.statut,
+        is_popular: populaire,
+        feature_count: payload.features.length,
+      })
       onSaved()
       onClose()
     } catch (e) {
@@ -335,6 +342,7 @@ function ConfirmDeleteOffreModal({ offre, onClose, onDeleted }: { offre: Offre; 
     setDeleting(true); setError(null)
     try {
       await api.delete(ENDPOINTS.offre(offre.id))
+      posthog.capture('offer_deleted')
       onDeleted()
       onClose()
     } catch (e) {

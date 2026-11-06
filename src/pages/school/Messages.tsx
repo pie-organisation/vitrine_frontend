@@ -6,6 +6,7 @@ import { Textarea } from '../../components/ui/Textarea'
 import { ConversationRow, ConversationThreadView } from '../../components/ui/Conversation'
 import { useApi }   from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 import type { Conversation, ConversationThread } from '../../mocks/data'
 
 // ── Spinner ───────────────────────────────────────────────────────────────────
@@ -33,6 +34,7 @@ function NewConversationForm({ onCreated }: { onCreated: (id: string) => void })
     setError(null)
     try {
       const { id } = await api.post<{ id: string }>(ENDPOINTS.schoolMessages, { objet, contenu })
+      posthog.capture('school_conversation_started')
       onCreated(id)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Le message n'a pas pu être envoyé.")
