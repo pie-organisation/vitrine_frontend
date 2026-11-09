@@ -1,6 +1,6 @@
 import { useState }      from 'react'
 import { useNavigate }   from 'react-router-dom'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { PageHeader }    from '../../components/ui/PageHeader'
 import { ExportButton }  from '../../components/ui/ExportButton'
 import { FilterPills }   from '../../components/ui/FilterPills'
@@ -146,18 +146,7 @@ export function Organisations() {
       <PageHeader
         title="Organisations"
         subtitle="Gestion des structures clientes CUBI"
-        actions={
-          <div className="flex gap-2 items-center">
-            <ExportButton filename="organisations" />
-            <button
-              className="btn-primary !w-auto flex items-center gap-1.5 text-sm !py-2.5 !px-4"
-              onClick={() => console.log('nouvelle organisation')}
-            >
-              <Plus size={15} />
-              Nouvelle organisation
-            </button>
-          </div>
-        }
+        actions={<ExportButton filename="organisations" />}
       />
 
       {/* Filters */}
