@@ -13,6 +13,7 @@ import { Modal }          from '../../components/ui/Modal'
 import { FilterPills }    from '../../components/ui/FilterPills'
 import { Input }          from '../../components/ui/Input'
 import { useApi }         from '../../hooks/useApi'
+import { useAuth }        from '../../contexts/AuthContext'
 import { api, ENDPOINTS } from '../../api/client'
 import type {
   Organisation,
@@ -187,6 +188,70 @@ function Spinner() {
   )
 }
 
+// ── Suppression définitive (confirmation par saisie du nom) ──────────────────
+
+function DeleteOrgConfirm({ org, onCancel, onDeleted }: { org: Organisation; onCancel: () => void; onDeleted: () => void }) {
+  const [confirmText, setConfirmText] = useState('')
+  const [deleting,    setDeleting]    = useState(false)
+  const [error,       setError]       = useState<string | null>(null)
+  const isGroupe = org.type === 'groupe'
+  const nbEtab   = org.nbEtablissements ?? 1
+  const matches  = confirmText.trim() === org.nom.trim()
+
+  const handleDelete = async () => {
+    setDeleting(true)
+    setError(null)
+    try {
+      await api.delete(ENDPOINTS.organisation(org.id))
+      onDeleted()
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'La suppression a échoué.')
+      setDeleting(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-3 rounded-xl p-3.5"
+        style={{ background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.25)' }}>
+        <AlertTriangle size={18} className="shrink-0 mt-0.5" style={{ color: '#dc2626' }} />
+        <div className="text-sm leading-relaxed" style={{ color: '#1a1040' }}>
+          <p className="font-semibold mb-1">Cette action est définitive.</p>
+          <p style={{ color: 'rgba(30,15,70,0.75)' }}>
+            {isGroupe
+              ? <>Le groupe <strong>{org.nom}</strong> et ses <strong>{nbEtab} établissement{nbEtab > 1 ? 's' : ''}</strong> seront supprimés, </>
+              : <>L'organisation <strong>{org.nom}</strong> sera supprimée, </>}
+            avec tous leurs comptes utilisateurs, licences, sessions, journaux d'activité et conversations.
+          </p>
+        </div>
+      </div>
+
+      <Input
+        label={`Pour confirmer, tapez « ${org.nom} »`}
+        value={confirmText}
+        onChange={(e) => setConfirmText(e.target.value)}
+        placeholder={org.nom}
+        autoComplete="off"
+      />
+
+      {error && <p className="text-xs" style={{ color: '#dc2626' }}>{error}</p>}
+
+      <div className="flex gap-3">
+        <button type="button" className="btn-action flex-1" onClick={onCancel} disabled={deleting}>Annuler</button>
+        <button
+          type="button"
+          className="btn-danger flex-1 !py-2.5"
+          onClick={handleDelete}
+          disabled={!matches || deleting}
+          style={!matches || deleting ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
+        >
+          {deleting ? 'Suppression…' : 'Supprimer définitivement'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const ADMINS_PER_PAGE = 2
@@ -208,6 +273,9 @@ export function OrganisationDetail() {
   const [showModal,      setShowModal]      = useState(false)
   const [adminPage,      setAdminPage]      = useState(0)
   const [isImpersonating, setIsImpersonating] = useState(false)
+  const [showDelete,     setShowDelete]     = useState(false)
+  const { user } = useAuth()
+  const canDelete = user?.role === 'super_admin'
 
   if (loadingOrg) return <Spinner />
   if (errorOrg || !rawOrg) return (
@@ -286,9 +354,11 @@ export function OrganisationDetail() {
             <button className="btn-action text-xs !py-2 !px-3.5" onClick={() => console.log('renew', id)}>
               Renouveler
             </button>
-            <button className="btn-danger text-xs !py-2 !px-3.5" onClick={() => api.delete(ENDPOINTS.organisation(id ?? ''))}>
-              Supprimer
-            </button>
+            {canDelete && (
+              <button className="btn-danger text-xs !py-2 !px-3.5" onClick={() => setShowDelete(true)}>
+                Supprimer
+              </button>
+            )}
           </div>
         }
       />
@@ -432,6 +502,18 @@ export function OrganisationDetail() {
         size="lg"
       >
         <ModifyModal org={org} onClose={() => setShowModal(false)} />
+      </Modal>
+
+      <Modal
+        isOpen={showDelete}
+        onClose={() => setShowDelete(false)}
+        title={org.type === 'groupe' ? 'Supprimer le groupe' : "Supprimer l'organisation"}
+      >
+        <DeleteOrgConfirm
+          org={org}
+          onCancel={() => setShowDelete(false)}
+          onDeleted={() => navigate('/admin/organisations', { replace: true })}
+        />
       </Modal>
     </div>
   )

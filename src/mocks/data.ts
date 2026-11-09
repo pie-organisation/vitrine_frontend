@@ -36,6 +36,8 @@ export interface Organisation {
   admins: AdminUser[]
   historique: HistoriqueItem[]
   usage: { sessionsMois: number; heuresCumulees: number; tauxUtilisation: number }
+  /** Détail uniquement : nombre d'établissements (1 pour un établissement seul) */
+  nbEtablissements?: number
 }
 
 export interface Plan {
