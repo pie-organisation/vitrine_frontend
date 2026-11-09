@@ -337,6 +337,20 @@ export interface Demande {
   prenomContact: string
   emailContact: string
   visaEcole?: string
+  /** Demande de groupe : un établissement + son responsable par élément */
+  etablissements?: DemandeEtablissement[]
+}
+
+export interface DemandeEtablissement {
+  nom: string
+  siret: string
+  visa?: string
+  adresse: string
+  codePostal: string
+  ville: string
+  nomResponsable: string
+  prenomResponsable: string
+  emailResponsable: string
 }
 
 export const mockDemandes: Demande[] = [

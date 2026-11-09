@@ -179,6 +179,7 @@ function DemandeDetailModal({
 }) {
   const st = STATUT_BADGE[demande.statut]
   const ty = TYPE_BADGE[demande.type]
+  const etablissements = demande.etablissements ?? []
 
   return (
     <>
@@ -187,6 +188,43 @@ function DemandeDetailModal({
         <Badge variant={st.variant} dot>{st.label}</Badge>
       </div>
 
+      {etablissements.length > 0 ? (
+        <>
+          <SectionCard title="Groupe">
+            <InfoRow label="Nom du siège" value={demande.nomSiege} />
+            <InfoRow label="DAF"          value={`${demande.prenomDaf} ${demande.nomDaf}`} />
+          </SectionCard>
+
+          <SectionCard title={`Établissements (${etablissements.length})`} className="mt-4">
+            <div className="flex flex-col gap-3">
+              {etablissements.map((e) => (
+                <div key={e.siret} className="rounded-xl p-3"
+                  style={{ background: 'rgba(107,79,224,0.04)', border: '1px solid rgba(107,79,224,0.12)' }}>
+                  <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>{e.nom}</div>
+                  <div className="text-xs mt-1" style={{ color: 'rgba(30,15,70,0.7)' }}>
+                    SIRET <code>{e.siret}</code>{e.visa ? ` · Visa ${e.visa}` : ''}
+                  </div>
+                  <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.7)' }}>
+                    {e.adresse}, {e.codePostal} {e.ville}
+                  </div>
+                  <div className="text-xs mt-1.5" style={{ color: 'rgba(30,15,70,0.7)' }}>
+                    Responsable : {e.prenomResponsable} {e.nomResponsable} ·{' '}
+                    <a href={`mailto:${e.emailResponsable}`} className="no-underline" style={{ color: '#6B4FE0' }}>
+                      {e.emailResponsable}
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {demande.statut === 'en_attente' && (
+              <p className="text-xs mt-3" style={{ color: 'rgba(30,15,70,0.62)' }}>
+                À la validation, chaque responsable recevra un email pour définir son mot de passe.
+              </p>
+            )}
+          </SectionCard>
+        </>
+      ) : (
+      <>
       <SectionCard title="Entité">
         <InfoRow label="Nom du siège" value={demande.nomSiege} />
         <InfoRow label="Nom de l'organisation" value={demande.nomEcole} />
@@ -210,6 +248,8 @@ function DemandeDetailModal({
         <InfoRow label="Code postal" value={demande.codePostal} />
         <InfoRow label="Ville"       value={demande.ville}      />
       </SectionCard>
+      </>
+      )}
 
       <SectionCard title="Licence souhaitée" className="mt-4">
         <InfoRow
