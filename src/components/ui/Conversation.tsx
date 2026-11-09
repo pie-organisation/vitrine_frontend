@@ -41,18 +41,18 @@ export function ConversationRow({ conv, viewer, onClick }: { conv: Conversation;
               >
                 {title}
               </div>
-              <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+              <div className="text-xs truncate mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 {subtitle}
               </div>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
-              <span className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.35)' }}>{conv.date}</span>
+              <span className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{conv.date}</span>
               {conv.statut === 'traitee' && <Badge variant="green">Traitée</Badge>}
             </div>
           </div>
           <div
             className="text-xs mt-1.5 truncate"
-            style={{ color: conv.nonLu ? '#1a1040' : 'rgba(30,15,70,0.38)', fontWeight: conv.nonLu ? 600 : 400 }}
+            style={{ color: conv.nonLu ? '#1a1040' : 'rgba(30,15,70,0.62)', fontWeight: conv.nonLu ? 600 : 400 }}
           >
             {prefix}{conv.dernierMessage.split('\n')[0]}
           </div>
@@ -123,7 +123,7 @@ export function ConversationThreadView({ viewer, fetchThread, sendReply, onChang
       <div className="mb-4">
         <div className="font-display font-bold text-base" style={{ color: '#1a1040' }}>{thread.objet}</div>
         {viewer === 'cubi' && (
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>{thread.organisation}</div>
+          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{thread.organisation}</div>
         )}
       </div>
 
@@ -136,7 +136,7 @@ export function ConversationThreadView({ viewer, fetchThread, sendReply, onChang
           const mine = m.auteurType === viewer
           return (
             <div key={m.id} className={`flex flex-col max-w-[85%] ${mine ? 'self-end items-end' : 'self-start items-start'}`}>
-              <div className="text-[10px] mb-1 px-1" style={{ color: 'rgba(30,15,70,0.4)' }}>
+              <div className="text-[10px] mb-1 px-1" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 {mine ? 'Vous' : m.auteurNom}{m.auteurType === 'cubi' && !mine ? ' · Équipe Cubi' : ''} · {m.date}
               </div>
               <div

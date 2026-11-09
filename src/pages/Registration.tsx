@@ -9,6 +9,7 @@ import { Button }           from '../components/ui/Button'
 import { Card }             from '../components/ui/Card'
 import { SectionTitle }     from '../components/ui/SectionTitle'
 import { api, ENDPOINTS }   from '../api/client'
+import posthog               from '../posthog'
 
 interface Licence {
   id:  string
@@ -46,6 +47,7 @@ export function Registration() {
     const raw = Object.fromEntries(new FormData(e.currentTarget))
     try {
       await api.post(ENDPOINTS.inscription, { type: 'ecole', ...raw })
+      posthog.capture('registration_application_submitted')
       setSuccess(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'envoi de la demande.")
@@ -69,7 +71,7 @@ export function Registration() {
             <h2 className="font-display font-extrabold text-2xl mb-2" style={{ color: '#1a1040' }}>
               Demande envoyée !
             </h2>
-            <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
+            <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Votre demande d'inscription a bien été reçue. L'équipe CUBI vous contactera sous 24–48h.
             </p>
             <Button onClick={() => navigate('/login')}>Retour à la connexion</Button>
@@ -94,7 +96,7 @@ export function Registration() {
             <h1 className="font-display font-extrabold text-4xl mb-2" style={{ color: '#1a1040', letterSpacing: '-1.5px' }}>
               Demande d'inscription
             </h1>
-            <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.5)' }}>
+            <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Complétez le formulaire ci-dessous pour créer votre compte CUBI.
             </p>
           </div>
@@ -170,7 +172,7 @@ export function Registration() {
             </div>
           </form>
 
-          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Déjà un compte ?{' '}
             <Link to="/login" className="font-semibold transition-opacity hover:opacity-80" style={{ color: '#6B4FE0' }}>
               Se connecter →

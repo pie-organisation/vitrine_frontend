@@ -42,7 +42,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', dismissab
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-none"
-              style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.5)' }}
+              style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.7)' }}
             >
               <X size={15} />
             </button>

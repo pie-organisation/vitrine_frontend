@@ -45,7 +45,7 @@ export function Login() {
             >
               Connexion
             </h1>
-            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Accédez à votre espace CUBI
             </p>
           </div>
@@ -99,7 +99,7 @@ export function Login() {
             </div>
           </form>
 
-          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Pas encore de compte ?
             <br />
             <Link

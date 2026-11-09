@@ -29,7 +29,7 @@ export function Toggle({ options, value, onChange }: ToggleProps) {
             style={{
               fontFamily: 'var(--font-sans)',
               background: active ? '#fff' : 'transparent',
-              color: active ? '#6B4FE0' : 'rgba(30,15,70,0.4)',
+              color: active ? '#6B4FE0' : 'rgba(30,15,70,0.62)',
               boxShadow: active ? '0 2px 8px rgba(107,79,224,0.12)' : 'none',
             }}
           >

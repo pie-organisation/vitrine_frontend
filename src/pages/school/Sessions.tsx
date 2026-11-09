@@ -4,6 +4,7 @@ import { PageHeader } from '../../components/ui/PageHeader'
 import { Badge }      from '../../components/ui/Badge'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -40,7 +41,7 @@ const MOCK_SESSIONS: Session[] = [
 function SessionRow({ session, onTerminate }: { session: Session; onTerminate: () => void }) {
   const isActive  = session.statut === 'active'
   const isMockRow = session.id.startsWith('mock-')
-  const iconColor = session.anomalie ? '#EF4444' : isActive ? '#22C55E' : 'rgba(30,15,70,0.35)'
+  const iconColor = session.anomalie ? '#dc2626' : isActive ? '#15803d' : 'rgba(30,15,70,0.62)'
 
   return (
     <div
@@ -68,7 +69,7 @@ function SessionRow({ session, onTerminate }: { session: Session; onTerminate: (
           {isActive && !session.anomalie && <Badge variant="green" dot>En cours</Badge>}
           {!isActive && <Badge variant="neutral">Terminée</Badge>}
         </div>
-        <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
           <span>Début {session.heureDebut}</span>
           <span>· Durée {session.duree}</span>
           <span className="flex items-center gap-1"><Monitor size={11} /> {session.appareilOs}</span>
@@ -126,7 +127,10 @@ export function Sessions() {
   const handleTerminate = (id: string) => {
     setActionError(null)
     api.delete(ENDPOINTS.schoolSession(id))
-      .then(refetch)
+      .then(() => {
+        posthog.capture('session_terminated')
+        refetch()
+      })
       .catch((e) => setActionError(e instanceof Error ? e.message : 'Erreur lors de la fermeture de la session.'))
   }
 
@@ -134,7 +138,7 @@ export function Sessions() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -192,8 +196,8 @@ export function Sessions() {
           <button key={f.value} onClick={() => setFilter(f.value)}
             className="px-3.5 py-2 rounded-xl text-xs font-semibold border-none cursor-pointer transition-all"
             style={{
-              background: filter === f.value ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(255,255,255,0.85)',
-              color: filter === f.value ? '#fff' : 'rgba(30,15,70,0.55)',
+              background: filter === f.value ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(255,255,255,0.85)',
+              color: filter === f.value ? '#fff' : 'rgba(30,15,70,0.7)',
               border: filter === f.value ? 'none' : '1px solid rgba(107,79,224,0.12)',
               fontFamily: 'var(--font-sans)',
             }}
@@ -212,7 +216,7 @@ export function Sessions() {
               <SessionRow key={s.id} session={s} onTerminate={() => handleTerminate(s.id)} />
             ))
           : (
-            <p className="text-sm text-center py-8" style={{ color: 'rgba(30,15,70,0.35)' }}>
+            <p className="text-sm text-center py-8" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Aucune session ne correspond aux filtres appliqués.
             </p>
           )}

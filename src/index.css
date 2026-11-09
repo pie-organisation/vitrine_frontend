@@ -60,7 +60,7 @@ body {
 /* ── Input ── */
 .cubi-input {
   background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(107, 79, 224, 0.25);
+  border: 1px solid rgba(107, 79, 224, 0.42);
   border-radius: 12px;
   padding: 12px 16px;
   font-family: var(--font-sans);
@@ -74,12 +74,13 @@ body {
 }
 
 .cubi-input:focus {
-  border-color: #8B6FF0;
-  box-shadow: 0 0 0 3px rgba(139, 111, 240, 0.15);
+  border-color: #6B4FE0;
+  box-shadow: 0 0 0 3px rgba(107, 79, 224, 0.2);
 }
 
+/* Plus pâle que le texte saisi, mais lisible */
 .cubi-input::placeholder {
-  color: rgba(30, 15, 70, 0.35);
+  color: rgba(30, 15, 70, 0.5);
 }
 
 /* ── Admin login input (dark theme) ── */
@@ -116,7 +117,7 @@ body {
 /* ── List card (admin) ── */
 .list-card {
   background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(107, 79, 224, 0.1);
+  border: 1px solid rgba(107, 79, 224, 0.16);
   box-shadow: 0 2px 12px rgba(107, 79, 224, 0.05);
   border-radius: 14px;
   padding: 14px 18px;
@@ -125,7 +126,7 @@ body {
 }
 .list-card.clickable:hover {
   background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(107, 79, 224, 0.22);
+  border-color: rgba(107, 79, 224, 0.32);
   box-shadow: 0 4px 20px rgba(107, 79, 224, 0.1);
   transform: translateY(-1px);
   cursor: pointer;
@@ -136,7 +137,7 @@ body {
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(107, 79, 224, 0.1);
+  border: 1px solid rgba(107, 79, 224, 0.16);
   box-shadow: 0 4px 24px rgba(107, 79, 224, 0.07);
   border-radius: 18px;
   padding: 20px 22px;
@@ -178,7 +179,7 @@ body {
 /* ── Sm action button ── */
 .btn-action {
   background: transparent;
-  border: 1.5px solid rgba(107, 79, 224, 0.3);
+  border: 1.5px solid rgba(107, 79, 224, 0.5);
   color: #6B4FE0;
   border-radius: 9px;
   padding: 7px 14px;
@@ -190,12 +191,13 @@ body {
 }
 .btn-action:hover {
   background: rgba(107, 79, 224, 0.07);
-  border-color: rgba(107, 79, 224, 0.45);
+  border-color: rgba(107, 79, 224, 0.7);
 }
 
 /* ── Primary button ── */
+/* Dégradé foncé pour garder le texte blanc au-dessus de 4.5:1 sur toute la largeur */
 .btn-primary {
-  background: linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%);
+  background: linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%);
   color: #fff;
   font-family: var(--font-display);
   font-weight: 700;
@@ -253,7 +255,7 @@ body {
   font-size: 0.84rem;
   font-weight: 600;
   font-family: var(--font-sans);
-  color: color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent);
+  color: color-mix(in srgb, var(--color-cubi-ink) 70%, transparent);
   text-decoration: none;
   transition: background 0.25s ease, color 0.25s ease;
   white-space: nowrap;
@@ -278,7 +280,7 @@ body {
 /* Soft gradient card variant (Card.tsx `variant="soft"`) */
 .card-soft {
   background: linear-gradient(160deg, #fdf7ff 0%, #f6eefe 55%, #f0e7fb 100%);
-  border: 1px solid color-mix(in srgb, var(--color-cubi-violet) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-cubi-violet) 14%, transparent);
   box-shadow: 0 8px 32px color-mix(in srgb, var(--color-cubi-violet) 6%, transparent);
 }
 

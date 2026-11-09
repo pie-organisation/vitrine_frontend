@@ -7,6 +7,7 @@ import { Modal }      from '../../components/ui/Modal'
 import { Input }      from '../../components/ui/Input'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -31,7 +32,7 @@ function LicenceRow({ licence, onEdit, onDelete }: { licence: Licence; onEdit: (
         <div className="flex items-start gap-4 min-w-0">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-extrabold text-base shrink-0"
-            style={{ background: 'linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%)', color: '#fff' }}
+            style={{ background: 'linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%)', color: '#fff' }}
           >
             {licence.nom[0]}
           </div>
@@ -41,7 +42,7 @@ function LicenceRow({ licence, onEdit, onDelete }: { licence: Licence; onEdit: (
               {licence.personnalisable && <Badge variant="violet">Personnalisable</Badge>}
               <Badge variant={licence.actif ? 'green' : 'neutral'}>{licence.actif ? 'Active' : 'Inactive'}</Badge>
             </div>
-            <p className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <p className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {licence.sessionsMin}–{licence.sessionsMax ?? '∞'} sessions/mois · {licence.ressourcesCpu} vCPU · {licence.ressourcesRamGo} Go RAM
             </p>
             <div className="flex flex-wrap gap-3 mt-2">
@@ -116,6 +117,11 @@ function LicenceFormModal({
       } else {
         await api.post(ENDPOINTS.plans, payload)
       }
+      posthog.capture('license_saved', {
+        action: licence ? 'updated' : 'created',
+        is_active: actif,
+        is_customizable: personnalisable,
+      })
       onSaved()
       onClose()
     } catch (e) {
@@ -145,7 +151,7 @@ function LicenceFormModal({
         <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
           <div>
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Active</div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {actif ? "Sélectionnable à l'inscription" : 'Masquée du formulaire d\'inscription'}
             </div>
           </div>
@@ -153,7 +159,7 @@ function LicenceFormModal({
             role="switch"
             aria-checked={actif}
             className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
-            style={{ width: '36px', height: '20px', background: actif ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            style={{ width: '36px', height: '20px', background: actif ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.15)' }}
             onClick={() => setActif((v) => !v)}
           >
             <span className="absolute rounded-full bg-white transition-all duration-200"
@@ -164,7 +170,7 @@ function LicenceFormModal({
         <div className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.1)' }}>
           <div>
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>Personnalisable</div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Ressources ajustables au cas par cas pour l'organisation
             </div>
           </div>
@@ -172,7 +178,7 @@ function LicenceFormModal({
             role="switch"
             aria-checked={personnalisable}
             className="relative inline-flex items-center rounded-full border-none cursor-pointer transition-all duration-200 shrink-0"
-            style={{ width: '36px', height: '20px', background: personnalisable ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)' }}
+            style={{ width: '36px', height: '20px', background: personnalisable ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.15)' }}
             onClick={() => setPersonnalisable((v) => !v)}
           >
             <span className="absolute rounded-full bg-white transition-all duration-200"
@@ -218,6 +224,7 @@ function ConfirmDeleteLicenceModal({ licence, onClose, onDeleted }: { licence: L
     setDeleting(true); setError(null)
     try {
       await api.delete(ENDPOINTS.plan(licence.id))
+      posthog.capture('license_deleted')
       onDeleted()
       onClose()
     } catch (e) {
@@ -266,7 +273,7 @@ export function Licences() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>

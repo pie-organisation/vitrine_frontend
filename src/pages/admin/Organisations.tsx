@@ -55,7 +55,7 @@ function OrgRow({ org, onClick }: { org: Organisation; onClick: () => void }) {
             </div>
             <div
               className="text-xs mt-0.5"
-              style={{ color: 'rgba(30,15,70,0.42)' }}
+              style={{ color: 'rgba(30,15,70,0.62)' }}
             >
               {ty.label} · {org.ville}
             </div>
@@ -68,7 +68,7 @@ function OrgRow({ org, onClick }: { org: Organisation; onClick: () => void }) {
           <Badge variant={ty.variant}>{org.plan.split(' — ')[0]}</Badge>
           <Badge variant="neutral">{org.nbUtilisateurs} utilis.</Badge>
           <Badge variant="neutral">Exp. {org.dateExpiration}</Badge>
-          <ChevronRight size={15} style={{ color: 'rgba(107,79,224,0.3)' }} />
+          <ChevronRight size={15} style={{ color: 'rgba(107,79,224,0.7)' }} />
         </div>
       </div>
     </ListCard>
@@ -135,7 +135,7 @@ export function Organisations() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -167,7 +167,7 @@ export function Organisations() {
       <div className="flex items-center justify-between mt-5 mb-3">
         <span
           className="text-sm font-semibold"
-          style={{ color: 'rgba(30,15,70,0.6)' }}
+          style={{ color: 'rgba(30,15,70,0.7)' }}
         >
           {filtered.length} organisation{filtered.length !== 1 ? 's' : ''}
         </span>
@@ -194,7 +194,7 @@ export function Organisations() {
           : (
             <div
               className="rounded-2xl py-12 text-center text-sm"
-              style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.35)' }}
+              style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}
             >
               Aucune organisation ne correspond à votre recherche.
             </div>

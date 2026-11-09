@@ -6,6 +6,7 @@ import { Textarea } from '../../components/ui/Textarea'
 import { ConversationRow, ConversationThreadView } from '../../components/ui/Conversation'
 import { useApi }   from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 import type { Conversation, ConversationThread } from '../../mocks/data'
 
 // ── Spinner ───────────────────────────────────────────────────────────────────
@@ -33,6 +34,7 @@ function NewConversationForm({ onCreated }: { onCreated: (id: string) => void })
     setError(null)
     try {
       const { id } = await api.post<{ id: string }>(ENDPOINTS.schoolMessages, { objet, contenu })
+      posthog.capture('school_conversation_started')
       onCreated(id)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Le message n'a pas pu être envoyé.")
@@ -84,7 +86,7 @@ export function Messages() {
   if (error && !data) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -97,7 +99,7 @@ export function Messages() {
           <h1 className="font-display font-extrabold text-2xl" style={{ color: '#1a1040', letterSpacing: '-0.5px' }}>
             Messages
           </h1>
-          <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Échangez avec l'équipe Cubi
             {unreadCount > 0 && ` · ${unreadCount} réponse${unreadCount !== 1 ? 's' : ''} non lue${unreadCount !== 1 ? 's' : ''}`}
           </p>
@@ -118,7 +120,7 @@ export function Messages() {
         {conversations.length === 0 && (
           <div
             className="rounded-2xl py-12 px-6 text-center text-sm"
-            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.45)' }}
+            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}
           >
             Aucune conversation pour l'instant. Une question ? Écrivez à l'équipe Cubi avec « Nouveau message ».
           </div>

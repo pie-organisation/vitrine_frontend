@@ -114,6 +114,7 @@ export const ENDPOINTS = {
   messages:            '/admin/messages',
   message:             (id: string) => `/admin/messages/${id}`,
   messageReponse:      (id: string) => `/admin/messages/${id}/reponses`,
+  messageClients:      '/admin/messages/clients',
   offres:              '/admin/offres',
   offre:               (id: string) => `/admin/offres/${id}`,
   plans:               '/admin/plans',

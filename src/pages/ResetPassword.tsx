@@ -76,7 +76,7 @@ export function ResetPassword() {
               <h2 className="font-display font-bold text-xl mb-2" style={{ color: '#1a1040' }}>
                 Mot de passe défini !
               </h2>
-              <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+              <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
                 Redirection vers la connexion dans 3 secondes…
               </p>
             </div>
@@ -86,7 +86,7 @@ export function ResetPassword() {
                 <h1 className="font-display font-extrabold text-3xl mb-2" style={{ color: '#1a1040', letterSpacing: '-1px' }}>
                   Définir mon mot de passe
                 </h1>
-                <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+                <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
                   Créez votre mot de passe définitif pour accéder à CUBI.
                 </p>
               </div>
@@ -138,7 +138,7 @@ export function ResetPassword() {
                 </div>
               </form>
 
-              <p className="mt-6 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
+              <p className="mt-6 text-center text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 <Link to="/login" className="font-semibold hover:opacity-80" style={{ color: '#6B4FE0' }}>
                   ← Retour à la connexion
                 </Link>
