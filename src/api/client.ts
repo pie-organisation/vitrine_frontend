@@ -42,11 +42,20 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   const res = await fetch(`${API_BASE}${path}`, { ...init, headers })
 
-  // 401 → session expirée, on vide le storage et on redirige
+  // 401 sur le login = identifiants incorrects : on laisse le formulaire afficher
+  // l'erreur, sans vider le storage ni rediriger.
+  if (res.status === 401 && path === ENDPOINTS.login) {
+    const body = await res.json().catch(() => ({})) as { error?: string; message?: string }
+    throw new ApiError(401, body.error ?? 'UNAUTHORIZED', body.message ?? 'Email ou mot de passe incorrect.')
+  }
+
+  // 401 ailleurs → session expirée, on vide le storage et on redirige vers la
+  // connexion de l'espace courant (admin Cubi ou client).
   if (res.status === 401) {
     clearAuth()
-    if (window.location.pathname !== '/login') {
-      window.location.href = '/login'
+    const loginPage = window.location.pathname.startsWith('/admin') ? '/admin/login' : '/login'
+    if (window.location.pathname !== loginPage) {
+      window.location.href = loginPage
     }
     const body = await res.json().catch(() => ({})) as { error?: string; message?: string }
     throw new ApiError(401, body.error ?? 'UNAUTHORIZED', body.message ?? 'Session expirée, veuillez vous reconnecter.')
