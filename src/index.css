@@ -223,6 +223,38 @@ body {
   opacity: 1;
 }
 
+/* ── Calendrier (react-day-picker) aux couleurs Cubi ── */
+.cubi-rdp {
+  --rdp-accent-color: #6B4FE0;
+  --rdp-accent-background-color: rgba(107, 79, 224, 0.12);
+  --rdp-range_middle-background-color: rgba(107, 79, 224, 0.12);
+  --rdp-range_middle-color: #1a1040;
+  --rdp-range_start-date-background-color: #6B4FE0;
+  --rdp-range_end-date-background-color: #6B4FE0;
+  --rdp-today-color: #6B4FE0;
+  --rdp-day-height: 36px;
+  --rdp-day-width: 36px;
+  --rdp-day_button-height: 34px;
+  --rdp-day_button-width: 34px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #1a1040;
+  margin: 0;
+}
+.cubi-rdp .rdp-caption_label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.cubi-rdp .rdp-weekday {
+  color: rgba(30, 15, 70, 0.62);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.cubi-rdp .rdp-disabled {
+  opacity: 0.35;
+}
+
 /* --- Reusable background layers --- */
 .bg-gradient-light {
   background: linear-gradient(135deg, #F8F4FF 0%, #FDF0FF 40%, #F4EEFF 100%);

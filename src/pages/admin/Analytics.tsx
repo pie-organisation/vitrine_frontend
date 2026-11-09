@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ResponsiveContainer,
   LineChart,  Line,
@@ -10,16 +10,30 @@ import { PageHeader }  from '../../components/ui/PageHeader'
 import { SectionCard } from '../../components/ui/SectionCard'
 import { FilterPills } from '../../components/ui/FilterPills'
 import { MetricCard }  from '../../components/ui/MetricCard'
+import { DateRangePicker, DEFAULT_PRESETS, formatRange, sameRange, type DateRange } from '../../components/ui/DateRangePicker'
 import { mockAnalytics } from '../../mocks/data'
 
 // ── Period filter ─────────────────────────────────────────────────────────────
 
+// Raccourcis rapides, alignés sur les raccourcis du calendrier (même ordre)
 const PERIODS = [
   { value: '7j',        label: '7 jours'       },
   { value: '30j',       label: '30 jours'      },
   { value: 'trimestre', label: 'Ce trimestre'  },
   { value: 'annee',     label: 'Cette année'   },
 ]
+const presetRange = (value: string) => DEFAULT_PRESETS[PERIODS.findIndex((p) => p.value === value)].range()
+
+// Les mocks sont exprimés en mois ("Jan"…) et en semaines ISO ("S38"…) de l'année en cours :
+// on les convertit en intervalles de dates pour ne garder que ceux qui recoupent la période.
+const overlaps = (start: Date, end: Date, r: DateRange) => start <= r.to && end >= r.from
+
+function isoWeekStart(year: number, week: number) {
+  const jan4 = new Date(year, 0, 4)
+  const monday = new Date(jan4)
+  monday.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (week - 1) * 7)
+  return monday
+}
 
 // ── Recharts styling helpers ──────────────────────────────────────────────────
 
@@ -40,14 +54,38 @@ const TOOLTIP_STYLE = {
 
 const AXIS_TICK = { fontSize: 10, fill: 'rgba(30,15,70,0.62)', fontFamily: 'var(--font-sans)' }
 
+function EmptyChart() {
+  return (
+    <div className="h-[200px] flex items-center justify-center text-sm text-center px-6"
+      style={{ color: 'rgba(30,15,70,0.62)' }}>
+      Aucune donnée sur cette période.
+    </div>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Analytics() {
-  const [period, setPeriod] = useState('annee')
+  const [range, setRange] = useState<DateRange>(() => presetRange('annee'))
+  const period = PERIODS.find((p) => sameRange(presetRange(p.value), range))?.value ?? 'custom'
 
   // Données mockées pour l'MVP — pas encore branché sur de vraies métriques agrégées.
-  const evolutionOrgs      = mockAnalytics.evolutionOrgs
-  const usageSessions      = mockAnalytics.usageSessions
+  // Seules les séries temporelles suivent la période choisie.
+  const year = new Date().getFullYear()
+  const evolutionOrgs = useMemo(
+    () => mockAnalytics.evolutionOrgs.filter((_, i) => overlaps(new Date(year, i, 1), new Date(year, i + 1, 0), range)),
+    [range, year]
+  )
+  const usageSessions = useMemo(
+    () => mockAnalytics.usageSessions.filter((s) => {
+      const start = isoWeekStart(year, Number(s.semaine.slice(1)))
+      const end = new Date(start)
+      end.setDate(start.getDate() + 6)
+      return overlaps(start, end, range)
+    }),
+    [range, year]
+  )
+  const heuresPeriode      = usageSessions.reduce((sum, s) => sum + s.heures, 0)
   const repartitionPlans   = mockAnalytics.repartitionPlans
   const tauxRenouvellement = mockAnalytics.tauxRenouvellement
   const churn              = mockAnalytics.churn
@@ -77,20 +115,26 @@ export function Analytics() {
         subtitle="Statistiques globales et évolution de la plateforme"
       />
 
-      {/* Period selector */}
-      <FilterPills options={PERIODS} value={period} onChange={setPeriod} />
+      {/* Period selector : raccourcis + calendrier */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <FilterPills options={PERIODS} value={period} onChange={(v) => setRange(presetRange(v))} />
+        <DateRangePicker value={range} onChange={setRange} />
+      </div>
+      <p className="text-xs mt-2" style={{ color: 'rgba(30,15,70,0.62)' }}>
+        Période : {formatRange(range)}
+      </p>
 
       {/* Quick KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-7">
         <MetricCard
           label="Organisations actives"
-          value={evolutionOrgs.length > 0 ? evolutionOrgs[evolutionOrgs.length - 1].orgs : 0}
-          sublabel="+11 depuis janvier"
+          value={evolutionOrgs.length > 0 ? evolutionOrgs[evolutionOrgs.length - 1].orgs : '—'}
+          sublabel="en fin de période"
         />
         <MetricCard
           label="Heures de session"
-          value="1 158"
-          sublabel="dernière semaine"
+          value={usageSessions.length > 0 ? heuresPeriode.toLocaleString('fr-FR') : '—'}
+          sublabel="sur la période"
         />
         <MetricCard
           label="Taux de renouvellement"
@@ -109,6 +153,7 @@ export function Analytics() {
 
         {/* 1. Evolution organisations */}
         <SectionCard title="Évolution des organisations actives">
+          {evolutionOrgs.length === 0 ? <EmptyChart /> : (
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={evolutionOrgs} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(107,79,224,0.07)" vertical={false} />
@@ -126,10 +171,12 @@ export function Analytics() {
               />
             </LineChart>
           </ResponsiveContainer>
+          )}
         </SectionCard>
 
         {/* 2. Usage sessions (heures) */}
         <SectionCard title="Usage cumulé (heures de session / semaine)">
+          {usageSessions.length === 0 ? <EmptyChart /> : (
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={usageSessions} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(107,79,224,0.07)" vertical={false} />
@@ -146,6 +193,7 @@ export function Analytics() {
               />
             </AreaChart>
           </ResponsiveContainer>
+          )}
         </SectionCard>
 
         {/* 3. Répartition par plan (donut) */}
