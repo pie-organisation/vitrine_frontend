@@ -362,6 +362,7 @@ export function OrganisationDetail() {
       {/* Historique */}
       <SectionCard
         title="Historique"
+        className="mb-5"
         action={
           <button
             className="flex items-center gap-1.5 text-xs font-semibold cursor-pointer border-none bg-transparent transition-colors"
