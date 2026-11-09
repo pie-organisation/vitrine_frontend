@@ -103,7 +103,7 @@ export function Offres() {
         >
           Une tarification qui s'adapte à votre pic d'usage réel
         </h1>
-        <p className="mt-4 mx-auto max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>
+        <p className="mt-4 mx-auto max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
           Vos postes de travail facturés à la session et non par compte, avec un tarif dégressif selon votre volume
           d'utilisation. Sans engagement et résiliable à tout moment.
         </p>
@@ -146,7 +146,7 @@ export function Offres() {
               </h3>
               <p
                 className="text-xs mt-1.5"
-                style={{ color: plan.highlighted ? 'rgba(255,255,255,0.8)' : 'color-mix(in srgb, var(--color-cubi-ink) 50%, transparent)' }}
+                style={{ color: plan.highlighted ? 'rgba(255,255,255,0.8)' : 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}
               >
                 {plan.tagline}
               </p>
@@ -167,7 +167,7 @@ export function Offres() {
                 {plan.priceSuffix && (
                   <div
                     className="text-xs mt-0.5"
-                    style={{ color: plan.highlighted ? 'rgba(255,255,255,0.75)' : 'color-mix(in srgb, var(--color-cubi-ink) 40%, transparent)' }}
+                    style={{ color: plan.highlighted ? 'rgba(255,255,255,0.75)' : 'color-mix(in srgb, var(--color-cubi-ink) 62%, transparent)' }}
                   >
                     {plan.priceSuffix}
                   </div>
@@ -195,7 +195,7 @@ export function Offres() {
                 <Button
                   className="w-full py-3.5 rounded-full font-semibold text-sm border-none cursor-pointer transition-transform duration-200 hover:-translate-y-0.5"
                   style={{
-                    background: plan.highlighted ? '#ffffff' : 'linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%)',
+                    background: plan.highlighted ? '#ffffff' : 'linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%)',
                     color: plan.highlighted ? 'var(--color-cubi-violet)' : '#ffffff',
                   }}
                 >
@@ -205,7 +205,7 @@ export function Offres() {
             </div>
           ))}
         </div>
-        <p className="text-xs text-center mt-6" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 40%, transparent)' }}>
+        <p className="text-xs text-center mt-6" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 62%, transparent)' }}>
           Grille indicative. Chaque devis est établi sur mesure selon votre volume réel de sessions simultanées.
         </p>
       </section>
@@ -217,7 +217,7 @@ export function Offres() {
             <h2 className="font-display font-bold text-xl sm:text-2xl" style={{ color: 'var(--color-cubi-ink)' }}>
               Un devis personnalisé, pas un abonnement en ligne
             </h2>
-            <p className="mt-3 text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+            <p className="mt-3 text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
               Renseignez votre volume de sessions simultanées souhaité : notre équipe qualifie votre besoin et
               vous transmet un devis au format PDF. Votre organisation édite ensuite son propre bon de commande,
               selon votre processus d'achat habituel.
@@ -250,7 +250,7 @@ export function Offres() {
               <thead>
                 <tr style={{ borderBottom: '1px solid color-mix(in srgb, var(--color-cubi-violet) 12%, transparent)' }}>
                   <th className="text-left p-4 sm:p-5 font-display font-bold" style={{ color: 'var(--color-cubi-ink)' }}>Critère</th>
-                  <th className="text-left p-4 sm:p-5 font-display font-bold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+                  <th className="text-left p-4 sm:p-5 font-display font-bold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                     VDI / Cloud PC (VMware Horizon, Shadow Pro, AWS)
                   </th>
                   <th className="text-left p-4 sm:p-5 font-display font-bold" style={{ color: 'var(--color-cubi-violet)' }}>CUBI</th>
@@ -265,7 +265,7 @@ export function Offres() {
                 ].map((row, i) => (
                   <tr key={row[0]} style={i < 3 ? { borderBottom: '1px solid color-mix(in srgb, var(--color-cubi-violet) 8%, transparent)' } : undefined}>
                     <td className="p-4 sm:p-5 font-semibold" style={{ color: 'var(--color-cubi-ink)' }}>{row[0]}</td>
-                    <td className="p-4 sm:p-5" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>{row[1]}</td>
+                    <td className="p-4 sm:p-5" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>{row[1]}</td>
                     <td className="p-4 sm:p-5" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 75%, transparent)' }}>{row[2]}</td>
                   </tr>
                 ))}
@@ -301,10 +301,10 @@ export function Offres() {
                     </div>
                     <div>
                       <div className="text-sm font-semibold leading-tight" style={{ color: 'var(--color-cubi-ink)' }}>{r.name}</div>
-                      <div className="text-xs" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 45%, transparent)' }}>{r.role}</div>
+                      <div className="text-xs" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 62%, transparent)' }}>{r.role}</div>
                     </div>
                   </div>
-                  <p className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>{r.text}</p>
+                  <p className="text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>{r.text}</p>
                 </Card>
               ))}
             </div>

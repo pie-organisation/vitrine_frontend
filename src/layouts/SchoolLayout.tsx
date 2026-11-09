@@ -25,7 +25,7 @@ function NavItem({ to, icon: Icon, label }: { to: string; icon: LucideIcon; labe
         className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] transition-all duration-200"
         style={{
           background: active ? 'rgba(107,79,224,0.08)' : 'transparent',
-          color:      active ? '#6B4FE0' : 'rgba(30,15,70,0.5)',
+          color:      active ? '#6B4FE0' : 'rgba(30,15,70,0.7)',
         }}
       >
         <Icon size={17} strokeWidth={active ? 2.2 : 1.8} className="shrink-0" />
@@ -53,7 +53,7 @@ function Sidebar({ org, isMobile, onClose }: { org: SchoolOrgMin | null; isMobil
           <button
             onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-lg border-none cursor-pointer"
-            style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.5)' }}
+            style={{ background: 'rgba(107,79,224,0.07)', color: 'rgba(30,15,70,0.7)' }}
           >
             <X size={14} />
           </button>
@@ -69,11 +69,11 @@ function Sidebar({ org, isMobile, onClose }: { org: SchoolOrgMin | null; isMobil
       <div className="pt-3 mt-2 flex flex-col gap-1" style={{ borderTop: '1px solid rgba(107,79,224,0.08)' }}>
         <div className="px-3 py-2">
           <div className="text-xs font-bold truncate" style={{ color: '#1a1040' }}>{org?.nom ?? '…'}</div>
-          <div className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.4)' }}>{org?.plan ?? ''}</div>
+          <div className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{org?.plan ?? ''}</div>
         </div>
         <button
           className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] w-full border-none cursor-pointer"
-          style={{ background: 'transparent', color: 'rgba(30,15,70,0.4)', fontFamily: 'var(--font-sans)' }}
+          style={{ background: 'transparent', color: 'rgba(30,15,70,0.62)', fontFamily: 'var(--font-sans)' }}
           onClick={logout}
         >
           <LogOut size={17} strokeWidth={1.8} />

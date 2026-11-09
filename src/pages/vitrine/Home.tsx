@@ -62,7 +62,7 @@ export function Home() {
           >
             Un poste de travail puissant pour chaque étudiant, sur n'importe quel ordinateur
           </h1>
-          <p className="mt-5 mx-auto max-w-xl text-base sm:text-lg" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55.0%, transparent)' }}>
+          <p className="mt-5 mx-auto max-w-xl text-base sm:text-lg" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             CUBI déporte le calcul de vos environnements de développement, data et IA sur une infrastructure
             mutualisée hébergée en France. Vos étudiants gardent leur propre ordinateur comme simple terminal
             d'affichage — sans achat de matériel, sans inégalité de puissance entre étudiants.
@@ -103,7 +103,7 @@ export function Home() {
               <h3 className="font-display font-bold text-lg" style={{ color: 'var(--color-cubi-ink)' }}>
                 Acheter et renouveler un parc de machines
               </h3>
-              <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+              <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                 Un investissement lourd (CAPEX), une charge de maintenance continue pour la DSI, et un impact
                 environnemental lié au remplacement rapide des composants.
               </p>
@@ -118,7 +118,7 @@ export function Home() {
               <h3 className="font-display font-bold text-lg" style={{ color: 'var(--color-cubi-ink)' }}>
                 S'en remettre au matériel personnel (BYOD)
               </h3>
-              <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+              <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                 Une inégalité de fait entre les étudiants bien équipés et ceux dont l'ordinateur ne supporte pas
                 les outils demandés.
               </p>
@@ -136,12 +136,12 @@ export function Home() {
               <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'var(--color-cubi-ink)', letterSpacing: '-0.6px' }}>
                 Des conteneurs applicatifs légers, pas des machines virtuelles
               </h2>
-              <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+              <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                 Contrairement aux solutions VDI classiques qui allouent une machine virtuelle entière par
                 utilisateur, CUBI repose sur des conteneurs Linux isolés : plusieurs sessions partagent le même
                 noyau, pour une empreinte infrastructure minimale et un coût soutenable à l'échelle d'un campus.
               </p>
-              <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+              <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                 L'affichage est transmis par un protocole de streaming basse latence qui n'envoie que les pixels
                 modifiés à l'écran, pas un flux vidéo constant — ce qui allège fortement la bande passante de
                 l'organisation et la charge sur le poste de l'étudiant, même ancien.
@@ -156,7 +156,7 @@ export function Home() {
                   >
                     <Monitor size={26} color="var(--color-cubi-violet)" />
                   </div>
-                  <span className="text-xs font-semibold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 50%, transparent)' }}>Poste étudiant</span>
+                  <span className="text-xs font-semibold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>Poste étudiant</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-1">
@@ -172,7 +172,7 @@ export function Home() {
                   >
                     <Boxes size={26} color="var(--color-cubi-mauve)" />
                   </div>
-                  <span className="text-xs font-semibold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 50%, transparent)' }}>Conteneurs (France)</span>
+                  <span className="text-xs font-semibold" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>Conteneurs (France)</span>
                 </div>
               </div>
             </Card>
@@ -198,7 +198,7 @@ export function Home() {
                     <Icon size={20} color="var(--color-cubi-violet)" />
                   </div>
                   <h3 className="font-display font-bold text-lg" style={{ color: 'var(--color-cubi-ink)' }}>{a.title}</h3>
-                  <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>{a.text}</p>
+                  <p className="mt-2 text-sm" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>{a.text}</p>
                 </Card>
               )
             })}
@@ -216,7 +216,7 @@ export function Home() {
                 <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'var(--color-cubi-ink)', letterSpacing: '-0.6px' }}>
                   Hébergé en France, conforme RGPD, pensé pour la confidentialité académique
                 </h2>
-                <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+                <p className="mt-4 text-sm sm:text-base leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                   L'organisation reste responsable de traitement au sens du RGPD pour l'ensemble des données
                   étudiantes et enseignantes. CUBI intervient strictement comme sous-traitant : aucune donnée
                   n'est monétisée ni exploitée par la plateforme.
@@ -231,7 +231,7 @@ export function Home() {
                 ].map((f) => (
                   <Card key={f.label} className="!p-5">
                     <div className="font-display font-bold text-sm mt-3" style={{ color: 'var(--color-cubi-ink)' }}>{f.label}</div>
-                    <div className="text-xs mt-1" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 50%, transparent)' }}>{f.text}</div>
+                    <div className="text-xs mt-1" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>{f.text}</div>
                   </Card>
                 ))}
               </div>
@@ -262,7 +262,7 @@ export function Home() {
               >
                 Une tarification qui suit votre usage réel
               </h2>
-              <p className="mt-4 max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 55%, transparent)' }}>
+              <p className="mt-4 max-w-lg text-sm sm:text-base" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
                 CUBI facture au volume de sessions simultanées réellement nécessaires. La tarification est progressive par paliers cumulatifs : chaque tranche
                 supplémentaire bénéficie d'un tarif dégressif, sans effet de seuil brutal.
               </p>

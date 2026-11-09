@@ -192,7 +192,7 @@ export function Messages() {
   if (error && !data) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -217,7 +217,7 @@ export function Messages() {
       <FilterPills options={FILTERS} value={filter} onChange={setFilter} />
 
       <div className="flex items-center mt-5 mb-4">
-        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.6)' }}>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
           {filtered.length} conversation{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -229,7 +229,7 @@ export function Messages() {
         {filtered.length === 0 && (
           <div
             className="rounded-2xl py-12 text-center text-sm"
-            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.35)' }}
+            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}
           >
             {conversations.length === 0
               ? "Aucune conversation pour l'instant. Écrivez à une organisation avec « Nouveau message »."

@@ -12,10 +12,10 @@ import type { Alerte, AlerteSev } from '../../mocks/data'
 // ── Alert item ────────────────────────────────────────────────────────────────
 
 const ICON_MAP: Record<AlerteSev, React.ReactNode> = {
-  error:   <AlertCircle  size={15} style={{ color: '#EF4444' }} />,
-  warning: <AlertTriangle size={15} style={{ color: '#F59E0B' }} />,
-  info:    <Info          size={15} style={{ color: '#38BDF8' }} />,
-  success: <CheckCircle2  size={15} style={{ color: '#22C55E' }} />,
+  error:   <AlertCircle  size={15} style={{ color: '#dc2626' }} />,
+  warning: <AlertTriangle size={15} style={{ color: '#b45309' }} />,
+  info:    <Info          size={15} style={{ color: '#0369a1' }} />,
+  success: <CheckCircle2  size={15} style={{ color: '#15803d' }} />,
 }
 
 const BG_MAP: Record<AlerteSev, { bg: string; border: string }> = {
@@ -35,7 +35,7 @@ function AlertItem({ alerte }: { alerte: Alerte }) {
       <div className="mt-0.5 shrink-0">{ICON_MAP[alerte.severite]}</div>
       <div className="flex-1 min-w-0">
         <p className="text-sm" style={{ color: '#1a1040' }}>{alerte.message}</p>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.38)' }}>{alerte.date}</p>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{alerte.date}</p>
       </div>
     </div>
   )
@@ -103,7 +103,7 @@ export function Overview() {
           {visible.length > 0
             ? visible.map((a) => <AlertItem key={a.id} alerte={a} />)
             : (
-              <p className="text-sm text-center py-4" style={{ color: 'rgba(30,15,70,0.35)' }}>
+              <p className="text-sm text-center py-4" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 Aucune alerte dans cette catégorie
               </p>
             )}

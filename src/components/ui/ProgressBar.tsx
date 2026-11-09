@@ -13,7 +13,7 @@ export function ProgressBar({ value, label, valueLabel, height = 'sm' }: Progres
     <div>
       {(label || valueLabel) && (
         <div className="flex items-center justify-between mb-2">
-          {label    && <span className="text-xs font-medium" style={{ color: 'rgba(30,15,70,0.55)' }}>{label}</span>}
+          {label    && <span className="text-xs font-medium" style={{ color: 'rgba(30,15,70,0.7)' }}>{label}</span>}
           {valueLabel && <span className="text-xs font-bold" style={{ color: '#6B4FE0' }}>{valueLabel}</span>}
         </div>
       )}

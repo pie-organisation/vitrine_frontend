@@ -59,7 +59,7 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     >
       <span
         className="text-xs font-semibold shrink-0"
-        style={{ color: 'rgba(30,15,70,0.45)', minWidth: '110px' }}
+        style={{ color: 'rgba(30,15,70,0.62)', minWidth: '110px' }}
       >
         {label}
       </span>
@@ -103,7 +103,7 @@ function DemandeCard({
               <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>
                 {demande.nomEntite}
               </div>
-              <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.42)' }}>
+              <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 Soumis le {demande.dateSubmission}
               </div>
             </div>
@@ -122,7 +122,7 @@ function DemandeCard({
           <div className="flex items-center gap-2.5 flex-wrap">
             <code
               className="text-xs font-medium px-2 py-1 rounded-lg"
-              style={{ background: 'rgba(107,79,224,0.06)', color: 'rgba(30,15,70,0.6)' }}
+              style={{ background: 'rgba(107,79,224,0.06)', color: 'rgba(30,15,70,0.7)' }}
             >
               SIRET {demande.siret}
             </code>
@@ -142,7 +142,7 @@ function DemandeCard({
             <div className="flex items-center gap-2">
               <button
                 className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border-none cursor-pointer"
-                style={{ background: 'rgba(34,197,94,0.1)', color: '#16a34a', fontFamily: 'var(--font-sans)' }}
+                style={{ background: 'rgba(34,197,94,0.1)', color: '#15803d', fontFamily: 'var(--font-sans)' }}
                 onClick={(e) => { e.stopPropagation(); onValider() }}
               >
                 <CheckCircle2 size={13} />
@@ -195,7 +195,7 @@ function DemandeDetailModal({
           label="SIRET"
           value={
             <div className="flex items-center gap-2 justify-end">
-              <code className="text-xs" style={{ color: 'rgba(30,15,70,0.6)' }}>{demande.siret}</code>
+              <code className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{demande.siret}</code>
               <Badge variant={demande.siretVerifie ? 'green' : 'neutral'}>
                 {demande.siretVerifie ? '✓ Vérifié' : 'Non vérifié'}
               </Badge>
@@ -234,7 +234,7 @@ function DemandeDetailModal({
         <div className="flex gap-3 mt-6">
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm border-none cursor-pointer"
-            style={{ background: 'rgba(34,197,94,0.12)', color: '#16a34a', fontFamily: 'var(--font-sans)' }}
+            style={{ background: 'rgba(34,197,94,0.12)', color: '#15803d', fontFamily: 'var(--font-sans)' }}
             onClick={() => { onValider(); onClose() }}
           >
             <CheckCircle2 size={15} />
@@ -297,7 +297,7 @@ export function Demandes() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -338,7 +338,7 @@ export function Demandes() {
       <FilterPills options={FILTERS} value={filter} onChange={handleFilter} />
 
       <div className="flex items-center mt-5 mb-4">
-        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.6)' }}>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
           {filtered.length} demande{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -356,7 +356,7 @@ export function Demandes() {
         {visible.length === 0 && (
           <div
             className="rounded-2xl py-12 text-center text-sm"
-            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.35)' }}
+            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}
           >
             Aucune demande dans cette catégorie.
           </div>

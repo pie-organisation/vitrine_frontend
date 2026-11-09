@@ -12,7 +12,7 @@ export function Textarea({ label, ...props }: TextareaProps) {
       <label
         htmlFor={id}
         className="text-xs font-semibold"
-        style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)', fontFamily: 'var(--font-sans)' }}
+        style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)', fontFamily: 'var(--font-sans)' }}
       >
         {label}
       </label>

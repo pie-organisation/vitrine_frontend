@@ -20,7 +20,7 @@ export function MentionsLegales() {
         <Card className="!p-7 sm:!p-9">
           <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>Éditeur du site</h2>
           <br />
-          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             CUBI — [Forme juridique à compléter], au capital de [montant] €, immatriculée au RCS de [ville] sous le
             numéro [SIRET]. Siège social : [adresse]. Directeur de la publication : [nom]. Contact :
             contact@cubi.fr.
@@ -30,7 +30,7 @@ export function MentionsLegales() {
         <Card className="!p-7 sm:!p-9">
           <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>Hébergement</h2>
           <br />
-          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             Ce site est hébergé par [nom de l'hébergeur], [adresse de l'hébergeur].
           </p>
         </Card>
@@ -38,7 +38,7 @@ export function MentionsLegales() {
         <Card className="!p-7 sm:!p-9">
           <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>Données personnelles</h2>
           <br />
-          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             Les informations recueillies via le formulaire de contact sont utilisées uniquement pour répondre à votre
             demande. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos
             données, à exercer à l'adresse contact@cubi.fr.
@@ -48,7 +48,7 @@ export function MentionsLegales() {
         <Card id="cgv" className="!p-7 sm:!p-9 scroll-mt-24">
           <h2 className="font-display font-bold text-2xl sm:text-3xl mt-4" style={{ color: 'color-mix(in srgb, #6B4FE0 33%, #C084FC 33%, #E879F9 34%)', letterSpacing: '-0.6px' }}>Conditions générales de vente (CGV)</h2>
           <br />
-          <div className="flex flex-col gap-4 text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 60%, transparent)' }}>
+          <div className="flex flex-col gap-4 text-sm leading-relaxed" style={{ color: 'color-mix(in srgb, var(--color-cubi-ink) 70%, transparent)' }}>
             <p>
               <strong style={{ color: 'var(--color-cubi-ink)' }}>Objet — </strong>
               Les présentes CGV encadrent la vente de sessions d'accompagnement informatique à distance proposées par

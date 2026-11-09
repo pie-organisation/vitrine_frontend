@@ -34,11 +34,11 @@ const TOOLTIP_STYLE = {
     color:        '#1a1040',
   },
   itemStyle:  { color: '#6B4FE0', fontWeight: 600 },
-  labelStyle: { color: 'rgba(30,15,70,0.5)', marginBottom: '2px' },
+  labelStyle: { color: 'rgba(30,15,70,0.7)', marginBottom: '2px' },
   cursor:     { stroke: 'rgba(107,79,224,0.2)', strokeWidth: 1 },
 }
 
-const AXIS_TICK = { fontSize: 10, fill: 'rgba(30,15,70,0.38)', fontFamily: 'var(--font-sans)' }
+const AXIS_TICK = { fontSize: 10, fill: 'rgba(30,15,70,0.62)', fontFamily: 'var(--font-sans)' }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -186,7 +186,7 @@ export function Analytics() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>{p.orgs}</span>
-                    <span className="text-xs" style={{ color: 'rgba(30,15,70,0.35)' }}>
+                    <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
                       ({Math.round((p.orgs / repartitionPlans.reduce((a, b) => a + b.orgs, 0)) * 100)} %)
                     </span>
                   </div>
@@ -201,7 +201,7 @@ export function Analytics() {
           <div className="flex flex-col gap-5">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.5)' }}>
+                <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
                   Taux de renouvellement
                 </span>
                 <span
@@ -232,7 +232,7 @@ export function Analytics() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.5)' }}>
+                <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
                   Taux de churn
                 </span>
                 <span
@@ -263,7 +263,7 @@ export function Analytics() {
 
             <div
               className="text-xs p-3 rounded-xl mt-1"
-              style={{ background: 'rgba(34,197,94,0.07)', color: 'rgba(30,15,70,0.6)' }}
+              style={{ background: 'rgba(34,197,94,0.07)', color: 'rgba(30,15,70,0.7)' }}
             >
               Tendance positive sur 12 mois — le taux de churn est en baisse de 2 points par rapport à l'année précédente.
             </div>

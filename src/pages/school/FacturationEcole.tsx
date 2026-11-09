@@ -47,7 +47,7 @@ function InvoiceRow({ invoice }: { invoice: SchoolInvoice }) {
           <div className="text-sm font-semibold truncate" style={{ color: '#1a1040' }}>
             {invoice.reference}
           </div>
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.42)' }}>
+          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
             Émise le {invoice.date} · Éch. {invoice.echeance}
           </div>
         </div>
@@ -145,7 +145,7 @@ export function FacturationEcole() {
         <h1 className="font-display font-extrabold text-2xl" style={{ color: '#1a1040', letterSpacing: '-0.5px' }}>
           Facturation
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           Contrat et suivi de vos factures
         </p>
       </div>
@@ -166,7 +166,7 @@ export function FacturationEcole() {
               className="flex items-center justify-between py-2.5"
               style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}
             >
-              <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.45)' }}>{label}</span>
+              <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.62)' }}>{label}</span>
               <span className="text-sm font-medium" style={{ color: '#1a1040' }}>{value}</span>
             </div>
           ))}
@@ -178,7 +178,7 @@ export function FacturationEcole() {
           <div className="flex gap-3 mb-4">
             {[
               { label: 'Admins',     value: nbAdmins,    color: '#6B4FE0' },
-              { label: 'Scolarité',  value: nbScolarite, color: '#0284c7' },
+              { label: 'Scolarité',  value: nbScolarite, color: '#0369a1' },
               { label: 'Élèves',     value: nbEleves,    color: '#C084FC' },
             ].map(({ label, value, color }) => (
               <div
@@ -197,7 +197,7 @@ export function FacturationEcole() {
                 >
                   {value}
                 </div>
-                <div className="text-[10px] mt-1 font-medium" style={{ color: 'rgba(30,15,70,0.4)' }}>{label}</div>
+                <div className="text-[10px] mt-1 font-medium" style={{ color: 'rgba(30,15,70,0.62)' }}>{label}</div>
               </div>
             ))}
           </div>
@@ -220,7 +220,7 @@ export function FacturationEcole() {
         <div>
           {visible.map((f) => <InvoiceRow key={f.id} invoice={f} />)}
           {visible.length === 0 && (
-            <p className="text-sm text-center py-6" style={{ color: 'rgba(30,15,70,0.35)' }}>
+            <p className="text-sm text-center py-6" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Aucune facture dans cette catégorie.
             </p>
           )}

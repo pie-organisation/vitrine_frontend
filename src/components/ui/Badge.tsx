@@ -8,10 +8,10 @@ interface BadgeProps {
 
 const styles: Record<BadgeVariant, React.CSSProperties> = {
   violet:  { background: 'rgba(107,79,224,0.1)',   color: '#6B4FE0',  border: '1px solid rgba(107,79,224,0.2)'  },
-  green:   { background: 'rgba(34,197,94,0.1)',    color: '#16a34a',  border: '1px solid rgba(34,197,94,0.2)'   },
+  green:   { background: 'rgba(34,197,94,0.1)',    color: '#15803d',  border: '1px solid rgba(34,197,94,0.2)'   },
   yellow:  { background: 'rgba(251,191,36,0.12)',  color: '#b45309',  border: '1px solid rgba(251,191,36,0.3)'  },
-  blue:    { background: 'rgba(56,189,248,0.1)',   color: '#0284c7',  border: '1px solid rgba(56,189,248,0.2)'  },
-  neutral: { background: 'rgba(30,15,70,0.07)',    color: 'rgba(30,15,70,0.55)', border: '1px solid rgba(30,15,70,0.1)'  },
+  blue:    { background: 'rgba(56,189,248,0.1)',   color: '#0369a1',  border: '1px solid rgba(56,189,248,0.2)'  },
+  neutral: { background: 'rgba(30,15,70,0.07)',    color: 'rgba(30,15,70,0.7)', border: '1px solid rgba(30,15,70,0.1)'  },
   red:     { background: 'rgba(239,68,68,0.1)',    color: '#dc2626',  border: '1px solid rgba(239,68,68,0.2)'   },
 }
 

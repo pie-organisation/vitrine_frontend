@@ -16,14 +16,14 @@ export function MetricCard({ label, value, sublabel }: MetricCardProps) {
     >
       <div
         className="text-[10px] font-bold uppercase tracking-widest mb-3"
-        style={{ color: 'rgba(107,79,224,0.5)' }}
+        style={{ color: '#6B4FE0' }}
       >
         {label}
       </div>
       <div
         className="font-display font-extrabold text-3xl leading-none"
         style={{
-          background: 'linear-gradient(135deg, #6B4FE0 0%, #C084FC 55%, #E879F9 100%)',
+          background: 'linear-gradient(135deg, #6B4FE0 0%, #9333EA 55%, #B42FC4 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -33,7 +33,7 @@ export function MetricCard({ label, value, sublabel }: MetricCardProps) {
         {value}
       </div>
       {sublabel && (
-        <div className="text-xs mt-1.5" style={{ color: 'rgba(30,15,70,0.4)' }}>
+        <div className="text-xs mt-1.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           {sublabel}
         </div>
       )}

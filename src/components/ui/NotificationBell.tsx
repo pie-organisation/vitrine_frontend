@@ -9,9 +9,9 @@ import type { AppNotification, NotifType } from '../../mocks/data'
 
 const TYPE_META: Record<NotifType, { icon: React.ReactNode; color: string }> = {
   demande:  { icon: <ClipboardList size={13} />, color: '#6B4FE0' },
-  paiement: { icon: <CreditCard    size={13} />, color: '#F59E0B' },
-  anomalie: { icon: <AlertTriangle size={13} />, color: '#EF4444' },
-  info:     { icon: <Info          size={13} />, color: '#38BDF8' },
+  paiement: { icon: <CreditCard    size={13} />, color: '#b45309' },
+  anomalie: { icon: <AlertTriangle size={13} />, color: '#dc2626' },
+  info:     { icon: <Info          size={13} />, color: '#0369a1' },
 }
 
 // ── Notification item ─────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ function NotifItem({ notif }: { notif: AppNotification }) {
         <p className="text-xs leading-snug" style={{ color: '#1a1040', fontWeight: notif.lu ? 400 : 600 }}>
           {notif.message}
         </p>
-        <p className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.38)' }}>{notif.horodatage}</p>
+        <p className="text-[10px] mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{notif.horodatage}</p>
       </div>
       {!notif.lu && (
         <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: '#6B4FE0' }} />
@@ -146,7 +146,7 @@ export function NotificationBell() {
           {/* List */}
           <div>
             {notifications.length === 0 && (
-              <div className="px-4 py-6 text-center text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>
+              <div className="px-4 py-6 text-center text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 Aucune notification pour le moment.
               </div>
             )}

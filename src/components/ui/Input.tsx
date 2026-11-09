@@ -12,7 +12,7 @@ export function Input({ label, ...props }: InputProps) {
       <label
         htmlFor={id}
         className="text-xs font-semibold"
-        style={{ color: 'rgba(30,15,70,0.6)', fontFamily: 'var(--font-sans)' }}
+        style={{ color: 'rgba(30,15,70,0.7)', fontFamily: 'var(--font-sans)' }}
       >
         {label}
       </label>

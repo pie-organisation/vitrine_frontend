@@ -15,7 +15,7 @@ function ContactRow({ label, value }: { label: string; value: string }) {
       className="flex items-start justify-between gap-4 py-3"
       style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}
     >
-      <span className="text-xs font-bold uppercase tracking-wider shrink-0" style={{ color: 'rgba(107,79,224,0.5)', minWidth: '150px' }}>
+      <span className="text-xs font-bold uppercase tracking-wider shrink-0" style={{ color: '#6B4FE0', minWidth: '150px' }}>
         {label}
       </span>
       <span className="text-sm text-right" style={{ color: '#1a1040' }}>{value}</span>
@@ -50,7 +50,7 @@ export function Contact() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -63,7 +63,7 @@ export function Contact() {
         <h1 className="font-display font-extrabold text-2xl" style={{ color: '#1a1040', letterSpacing: '-0.5px' }}>
           Contact
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           Informations du référent de votre organisation
         </p>
       </div>

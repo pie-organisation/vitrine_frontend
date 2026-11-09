@@ -10,7 +10,7 @@ import type { LogEntry, LogType } from '../../mocks/data'
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const TYPE_META: Record<LogType, { icon: React.ReactNode; color: string; label: string }> = {
-  connexion:    { icon: <LogIn       size={13} />, color: '#0284c7', label: 'Connexion'    },
+  connexion:    { icon: <LogIn       size={13} />, color: '#0369a1', label: 'Connexion'    },
   modification: { icon: <Edit3       size={13} />, color: '#6B4FE0', label: 'Modification' },
   erreur:       { icon: <AlertCircle size={13} />, color: '#dc2626', label: 'Erreur'       },
   securite:     { icon: <Shield      size={13} />, color: '#b45309', label: 'Sécurité'     },
@@ -49,15 +49,15 @@ function LogRow({ entry }: { entry: LogEntry }) {
             <span className="text-xs font-medium ml-2" style={{ color: '#1a1040' }}>
               {entry.organisation}
             </span>
-            <span className="text-xs ml-1" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <span className="text-xs ml-1" style={{ color: 'rgba(30,15,70,0.62)' }}>
               ({entry.utilisateur})
             </span>
           </div>
-          <span className="text-[10px] font-mono shrink-0" style={{ color: 'rgba(30,15,70,0.35)' }}>
+          <span className="text-[10px] font-mono shrink-0" style={{ color: 'rgba(30,15,70,0.62)' }}>
             {entry.horodatage}
           </span>
         </div>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.55)' }}>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.7)' }}>
           {entry.message}
         </p>
       </div>
@@ -133,7 +133,7 @@ export function Logs() {
 
       {/* Count + security badge */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.6)' }}>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
           {filtered.length} événement{filtered.length !== 1 ? 's' : ''}
         </span>
         {secCount > 0 && (
@@ -159,7 +159,7 @@ export function Logs() {
         {visible.length > 0
           ? visible.map((l) => <LogRow key={l.id} entry={l} />)
           : (
-            <p className="text-sm text-center py-8" style={{ color: 'rgba(30,15,70,0.35)' }}>
+            <p className="text-sm text-center py-8" style={{ color: 'rgba(30,15,70,0.62)' }}>
               Aucun événement ne correspond aux filtres appliqués.
             </p>
           )}

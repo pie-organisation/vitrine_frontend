@@ -61,7 +61,7 @@ function MembreRow({
         <div className="flex items-center gap-3.5 min-w-0">
           <div
             className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-sm shrink-0"
-            style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
+            style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff' }}
           >
             {initials}
           </div>
@@ -69,7 +69,7 @@ function MembreRow({
             <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>
               {membre.prenom} {membre.nom}
             </div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.42)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {membre.email}
             </div>
           </div>
@@ -80,7 +80,7 @@ function MembreRow({
           <span className="hidden sm:block">
             <Badge variant={role.variant}>{role.label}</Badge>
           </span>
-          <span className="text-xs hidden md:block" style={{ color: 'rgba(30,15,70,0.35)' }}>
+          <span className="text-xs hidden md:block" style={{ color: 'rgba(30,15,70,0.62)' }}>
             depuis {membre.dateAjout}
           </span>
 
@@ -185,7 +185,7 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
         onChange={(e) => setEmail(e.target.value)}
       />
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.6)', fontFamily: 'var(--font-sans)' }}>
+        <label className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)', fontFamily: 'var(--font-sans)' }}>
           Rôle
         </label>
         <select className="cubi-input" value={role} onChange={(e) => setRole(e.target.value)}>
@@ -200,7 +200,7 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
           {error}
         </div>
       )}
-      <div className="text-xs p-3 rounded-xl" style={{ background: 'rgba(107,79,224,0.06)', color: 'rgba(30,15,70,0.55)' }}>
+      <div className="text-xs p-3 rounded-xl" style={{ background: 'rgba(107,79,224,0.06)', color: 'rgba(30,15,70,0.7)' }}>
         Un email avec un lien d'activation sera envoyé pour définir le mot de passe. Valable 48 h.
       </div>
       <div className="flex gap-3 mt-1">
@@ -243,11 +243,11 @@ function EditRoleModal({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-sm" style={{ color: 'rgba(30,15,70,0.6)' }}>
-        {membre.prenom} {membre.nom} — <span style={{ color: 'rgba(30,15,70,0.4)' }}>{membre.email}</span>
+      <div className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
+        {membre.prenom} {membre.nom} — <span style={{ color: 'rgba(30,15,70,0.62)' }}>{membre.email}</span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.6)', fontFamily: 'var(--font-sans)' }}>
+        <label className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)', fontFamily: 'var(--font-sans)' }}>
           Rôle
         </label>
         <select className="cubi-input" value={role} onChange={(e) => setRole(e.target.value as RoleEquipe)}>
@@ -347,7 +347,7 @@ export function Equipe() {
   if (error) return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
       <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.5)' }}>{error}</p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
       <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
         style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
     </div>
@@ -397,7 +397,7 @@ export function Equipe() {
         {filtered.length === 0 && (
           <div
             className="rounded-2xl py-12 text-center text-sm"
-            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.35)' }}
+            style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(107,79,224,0.08)', color: 'rgba(30,15,70,0.62)' }}
           >
             Aucun membre dans cette catégorie.
           </div>

@@ -18,7 +18,7 @@ function Switch({ checked, onChange, id }: { checked: boolean; onChange: (v: boo
       style={{
         width: '36px',
         height: '20px',
-        background: checked ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.15)',
+        background: checked ? 'linear-gradient(135deg, #6B4FE0, #9333EA)' : 'rgba(107,79,224,0.15)',
       }}
       onClick={() => onChange(!checked)}
     >
@@ -54,7 +54,7 @@ function ToggleRow({ id, label, description, checked, onChange }: {
         >
           {label}
         </label>
-        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>{description}</span>
+        <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>{description}</span>
       </div>
       <Switch id={id} checked={checked} onChange={onChange} />
     </div>
@@ -147,13 +147,13 @@ export function Profil() {
           <div className="relative">
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center font-display font-extrabold text-xl"
-              style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
+              style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff' }}
             >
               {admin.initials}
             </div>
             <button
               className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center border-none cursor-pointer"
-              style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}
+              style={{ background: 'linear-gradient(135deg, #6B4FE0, #9333EA)', color: '#fff' }}
               onClick={() => console.log('upload-avatar')}
               title="Changer l'avatar"
             >
@@ -164,7 +164,7 @@ export function Profil() {
             <div className="font-display font-bold text-sm" style={{ color: '#1a1040' }}>
               {admin.prenom} {admin.nom}
             </div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>{roleLabel}</div>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>{roleLabel}</div>
             <button
               className="text-xs mt-2 font-semibold border-none bg-transparent cursor-pointer p-0"
               style={{ color: '#6B4FE0', fontFamily: 'var(--font-sans)' }}
@@ -246,7 +246,7 @@ export function Profil() {
             <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>
               Authentification à deux facteurs (2FA)
             </div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
               {twoFA
                 ? 'Activée — votre compte est protégé par une 2FA'
                 : "Désactivée — protégez votre compte avec une application d'authentification"}
@@ -289,7 +289,7 @@ export function Profil() {
               >
                 Rapport mensuel
               </label>
-              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.45)' }}>
+              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
                 Résumé mensuel automatique des métriques clés
               </span>
             </div>

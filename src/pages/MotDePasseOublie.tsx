@@ -41,7 +41,7 @@ export function MotDePasseOublie() {
             >
               Mot de passe oublié
             </h1>
-            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.5)' }}>
+            <p className="text-sm" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Renseignez votre e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
             </p>
           </div>
@@ -60,7 +60,7 @@ export function MotDePasseOublie() {
             </div>
           </form>
 
-          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.45)' }}>
+          <p className="mt-7 text-center text-sm" style={{ color: 'rgba(30,15,70,0.62)' }}>
             <Link
               to="/login"
               className="font-semibold transition-opacity hover:opacity-80"
