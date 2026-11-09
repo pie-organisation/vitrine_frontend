@@ -27,12 +27,12 @@ const FAQ_ITEMS: { category: string; items: { q: string; a: string }[] }[] = [
     category: 'Sécurité et données',
     items: [
       {
-        q: 'Où sont hébergées les données de l\u2019établissement ?',
-        a: 'Exclusivement en France — sur le serveur physique de l\u2019établissement pour un déploiement pilote, ou sur un cloud souverain pour la montée en charge. Le traitement reste imperméable aux lois extraterritoriales et conforme au RGPD.',
+        q: 'Où sont hébergées les données de l\u2019organisation ?',
+        a: 'Exclusivement en France — sur le serveur physique de l\u2019organisation pour un déploiement pilote, ou sur un cloud souverain pour la montée en charge. Le traitement reste imperméable aux lois extraterritoriales et conforme au RGPD.',
       },
       {
         q: 'Qui est responsable des données au sens du RGPD ?',
-        a: 'L\u2019établissement conserve la qualité de responsable de traitement pour l\u2019ensemble des données étudiantes et enseignantes. CUBI intervient strictement comme sous-traitant : aucune donnée n\u2019est monétisée ni exploitée par la plateforme.',
+        a: 'L\u2019organisation conserve la qualité de responsable de traitement pour l\u2019ensemble des données étudiantes et enseignantes. CUBI intervient strictement comme sous-traitant : aucune donnée n\u2019est monétisée ni exploitée par la plateforme.',
       },
       {
         q: 'Deux personnes peuvent-elles se connecter en même temps sur le même compte ?',
@@ -45,7 +45,7 @@ const FAQ_ITEMS: { category: string; items: { q: string; a: string }[] }[] = [
     items: [
       {
         q: 'Comment est calculé le tarif ?',
-        a: 'Sur le nombre de sessions simultanées réellement nécessaires à l\u2019établissement avec un tarif dégressif par palier de volume.',
+        a: 'Sur le nombre de sessions simultanées réellement nécessaires à l\u2019organisation avec un tarif dégressif par palier de volume.',
       },
       {
         q: 'Puis-je souscrire et payer directement en ligne ?',

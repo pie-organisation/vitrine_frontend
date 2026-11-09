@@ -96,14 +96,14 @@ export const mockOrganisations: Organisation[] = [
     historique: [
       { id: 'h1', date: '01/11/2024', evenement: 'Renouvellement du plan Pack Campus',      type: 'success' },
       { id: 'h2', date: '15/09/2024', evenement: "Ajout de l'administrateur Marc Dubois",  type: 'info'    },
-      { id: 'h3', date: '20/07/2024', evenement: 'Modification du SIRET école',            type: 'warning' },
+      { id: 'h3', date: '20/07/2024', evenement: "Modification du SIRET de l'organisation",          type: 'warning' },
       { id: 'h4', date: '15/01/2024', evenement: 'Création du compte',                     type: 'success' },
     ],
     usage: { sessionsMois: 87, heuresCumulees: 412, tauxUtilisation: 70 },
   },
   {
     id: '2',
-    nom: 'École Supérieure du Numérique',
+    nom: 'Institut Supérieur du Numérique',
     type: 'ecole',
     ville: 'Paris',
     statut: 'actif',
@@ -251,7 +251,7 @@ export const mockPlans: Plan[] = [
   {
     id: 'p2',
     nom: 'Pack Campus',
-    description: 'De 100 à 500 sessions/mois · Pour les établissements scolaires et PME',
+    description: 'De 100 à 500 sessions/mois · Pour les organisations scolaires et PME',
     sessionsMin: 100,
     sessionsMax: 500,
     tarif: '24 € / utilisateur / mois',
@@ -459,12 +459,12 @@ export interface SessionActive {
 
 export const mockSessions: SessionActive[] = [
   { id: 's1', nomUtilisateur: 'Sophie Martin',   organisation: 'Lycée Jean Moulin',         organisationId: '1', heureDebut: '08:34', duree: '2h14', statut: 'actif',    ip: '91.198.174.12'  },
-  { id: 's2', nomUtilisateur: 'Alice Fontaine',   organisation: 'École Supérieure du Num.',  organisationId: '2', heureDebut: '09:01', duree: '1h52', statut: 'actif',    ip: '185.220.101.3'  },
-  { id: 's3', nomUtilisateur: 'Emma Lambert',     organisation: 'École Supérieure du Num.',  organisationId: '2', heureDebut: '09:15', duree: '1h38', statut: 'actif',    ip: '185.220.101.3'  },
+  { id: 's2', nomUtilisateur: 'Alice Fontaine',   organisation: 'Institut Supérieur du Num.',  organisationId: '2', heureDebut: '09:01', duree: '1h52', statut: 'actif',    ip: '185.220.101.3'  },
+  { id: 's3', nomUtilisateur: 'Emma Lambert',     organisation: 'Institut Supérieur du Num.',  organisationId: '2', heureDebut: '09:15', duree: '1h38', statut: 'actif',    ip: '185.220.101.3'  },
   { id: 's4', nomUtilisateur: 'François Dupont',  organisation: 'Institut de Formation Pro', organisationId: '6', heureDebut: '07:58', duree: '3h07', statut: 'anomalie', ip: '81.23.45.111'   },
   { id: 's5', nomUtilisateur: 'Antoine Garnier',  organisation: 'PME Tech Solutions',        organisationId: '4', heureDebut: '10:02', duree: '0h47', statut: 'actif',    ip: '46.165.221.5'   },
   { id: 's6', nomUtilisateur: 'Nathalie Simon',   organisation: 'Institut de Formation Pro', organisationId: '6', heureDebut: '08:22', duree: '2h43', statut: 'actif',    ip: '81.23.45.112'   },
-  { id: 's7', nomUtilisateur: 'Jean-Paul Renard', organisation: 'École Supérieure du Num.',  organisationId: '2', heureDebut: '10:30', duree: '0h25', statut: 'actif',    ip: '185.220.101.3'  },
+  { id: 's7', nomUtilisateur: 'Jean-Paul Renard', organisation: 'Institut Supérieur du Num.',  organisationId: '2', heureDebut: '10:30', duree: '0h25', statut: 'actif',    ip: '185.220.101.3'  },
 ]
 
 // ── Facturation ───────────────────────────────────────────────────────────────
@@ -484,12 +484,12 @@ export interface Facture {
 
 export const mockFactures: Facture[] = [
   { id: 'f1', organisationId: '1', organisation: 'Lycée Jean Moulin',             plan: 'Pack Campus',   montant: '2 988 €',  echeance: '31/12/2024', statut: 'payee',      reference: 'FAC-2024-0042' },
-  { id: 'f2', organisationId: '2', organisation: 'École Supérieure du Numérique', plan: 'Pack Sur-Mesure', montant: 'Sur devis', echeance: '30/11/2024', statut: 'en_attente', reference: 'FAC-2024-0043' },
+  { id: 'f2', organisationId: '2', organisation: 'Institut Supérieur du Numérique', plan: 'Pack Sur-Mesure', montant: 'Sur devis', echeance: '30/11/2024', statut: 'en_attente', reference: 'FAC-2024-0043' },
   { id: 'f3', organisationId: '3', organisation: 'Groupe DigitalEduc',            plan: 'Pack Institut', montant: '405 €',    echeance: '15/12/2024', statut: 'impayee',    reference: 'FAC-2024-0044' },
   { id: 'f4', organisationId: '4', organisation: 'PME Tech Solutions',            plan: 'Pack Campus',   montant: '1 824 €',  echeance: '30/11/2024', statut: 'payee',      reference: 'FAC-2024-0045' },
   { id: 'f5', organisationId: '6', organisation: 'Institut de Formation Pro',     plan: 'Pack Campus',   montant: '3 744 €',  echeance: '01/12/2024', statut: 'en_attente', reference: 'FAC-2024-0046' },
   { id: 'f6', organisationId: '1', organisation: 'Lycée Jean Moulin',             plan: 'Pack Campus',   montant: '2 988 €',  echeance: '31/12/2023', statut: 'payee',      reference: 'FAC-2023-0089' },
-  { id: 'f7', organisationId: '2', organisation: 'École Supérieure du Numérique', plan: 'Pack Campus',   montant: '2 988 €',  echeance: '30/06/2024', statut: 'payee',      reference: 'FAC-2024-0012' },
+  { id: 'f7', organisationId: '2', organisation: 'Institut Supérieur du Numérique', plan: 'Pack Campus',   montant: '2 988 €',  echeance: '30/06/2024', statut: 'payee',      reference: 'FAC-2024-0012' },
 ]
 
 // La facturation n'est pas encore implémentée côté backend (le stub renvoie
@@ -515,12 +515,12 @@ export interface LogEntry {
 export const mockLogs: LogEntry[] = [
   { id: 'l1',  type: 'connexion',    organisation: 'Lycée Jean Moulin',         utilisateur: 'Sophie Martin',    message: 'Connexion réussie',                                          horodatage: '28/11/2024 11:34:02' },
   { id: 'l2',  type: 'securite',     organisation: 'Institut de Formation Pro', utilisateur: 'François Dupont',  message: 'Session multiple détectée et bloquée par session_guard',      horodatage: '28/11/2024 10:58:47' },
-  { id: 'l3',  type: 'connexion',    organisation: 'École Supérieure du Num.',  utilisateur: 'Alice Fontaine',   message: 'Connexion réussie',                                          horodatage: '28/11/2024 09:01:15' },
+  { id: 'l3',  type: 'connexion',    organisation: 'Institut Supérieur du Num.',  utilisateur: 'Alice Fontaine',   message: 'Connexion réussie',                                          horodatage: '28/11/2024 09:01:15' },
   { id: 'l4',  type: 'erreur',       organisation: 'Groupe DigitalEduc',        utilisateur: 'Robert Blanchard', message: 'Échec de connexion — mot de passe incorrect (3e tentative)',  horodatage: '28/11/2024 08:47:22' },
   { id: 'l5',  type: 'modification', organisation: 'PME Tech Solutions',        utilisateur: 'Antoine Garnier',  message: 'Modification du SIRET organisation',                         horodatage: '27/11/2024 17:12:09' },
   { id: 'l6',  type: 'securite',     organisation: 'Lycée Victor Hugo',         utilisateur: 'Hélène Petit',     message: 'Tentative de connexion depuis IP non reconnue — bloquée',    horodatage: '27/11/2024 16:05:33' },
   { id: 'l7',  type: 'connexion',    organisation: 'Lycée Jean Moulin',         utilisateur: 'Marc Dubois',      message: 'Connexion réussie',                                          horodatage: '27/11/2024 14:28:57' },
-  { id: 'l8',  type: 'modification', organisation: 'École Supérieure du Num.',  utilisateur: 'Jean-Paul Renard', message: 'Mise à jour plan : Pack Campus → Pack Sur-Mesure',           horodatage: '27/11/2024 11:34:44' },
+  { id: 'l8',  type: 'modification', organisation: 'Institut Supérieur du Num.',  utilisateur: 'Jean-Paul Renard', message: 'Mise à jour plan : Pack Campus → Pack Sur-Mesure',           horodatage: '27/11/2024 11:34:44' },
   { id: 'l9',  type: 'erreur',       organisation: 'CFA Tech Avenir',           utilisateur: 'Luc Fontaine',     message: 'Paiement refusé — carte expirée',                            horodatage: '26/11/2024 15:20:11' },
   { id: 'l10', type: 'connexion',    organisation: 'Institut de Formation Pro', utilisateur: 'Nathalie Simon',   message: 'Connexion réussie',                                          horodatage: '26/11/2024 09:00:38' },
   { id: 'l11', type: 'securite',     organisation: 'Groupe DigitalEduc',        utilisateur: 'Robert Blanchard', message: 'Compte suspendu après 5 tentatives échouées',                 horodatage: '25/11/2024 22:14:06' },
@@ -587,8 +587,8 @@ export const mockOffres: Offre[] = [
   },
   {
     id: 'o2',
-    nom: 'Licence Établissement',
-    tagline: "L'offre complète pour votre établissement",
+    nom: 'Licence Organisation',
+    tagline: "L'offre complète pour votre organisation",
     prix: '249 €/mois',
     statut: 'publiee',
     features: [
@@ -604,12 +604,12 @@ export const mockOffres: Offre[] = [
   {
     id: 'o3',
     nom: 'Licence Groupe',
-    tagline: "Pour les réseaux d'établissements",
+    tagline: "Pour les réseaux d'organisations",
     prix: 'Sur devis',
     statut: 'publiee',
     features: [
       'Sessions illimitées',
-      'Gestion multi-établissements',
+      'Gestion multi-organisations',
       'SLA 99,9 % garanti',
       'CSM dédié',
       'Formations sur site',
@@ -618,78 +618,34 @@ export const mockOffres: Offre[] = [
   },
 ]
 
-// ── Messages de contact ───────────────────────────────────────────────────────
+// ── Messagerie organisations <-> équipe Cubi ──────────────────────────────────
 
-export type MessageStatut = 'non_lu' | 'traite'
+export type ConversationStatut = 'ouverte' | 'traitee'
+export type AuteurType = 'cubi' | 'ecole'
 
-export interface Message {
+export interface Conversation {
   id: string
-  expediteur: string
-  email: string
+  organisationId: string
+  organisation: string
   objet: string
-  contenu: string
+  statut: ConversationStatut
+  nonLu: boolean
+  dernierMessage: string
+  dernierAuteur: AuteurType
+  nbMessages: number
   date: string
-  statut: MessageStatut
 }
 
-export const mockMessages: Message[] = [
-  {
-    id: 'msg1',
-    expediteur: 'Pierre Gautier',
-    email: 'p.gautier@lycee-pasteur.fr',
-    objet: 'Demande de démonstration CUBI',
-    contenu:
-      "Bonjour,\n\nJe suis directeur administratif au Lycée Pasteur de Strasbourg et nous cherchons une plateforme IA conforme RGPD pour nos 280 élèves.\n\nPouvez-vous organiser une démonstration ?\n\nCordialement,\nPierre Gautier",
-    date: '28/11/2024 14h22',
-    statut: 'non_lu',
-  },
-  {
-    id: 'msg2',
-    expediteur: 'Camille Roux',
-    email: 'c.roux@esgi.fr',
-    objet: 'Question sur le plan Groupe',
-    contenu:
-      'Bonjour,\n\nNous sommes un groupe de 3 écoles (ESGI, ECE, ISEP) et souhaitons une licence groupée. Avez-vous des tarifs spécifiques pour les consortiums scolaires ?\n\nMerci,\nCamille Roux',
-    date: '27/11/2024 09h15',
-    statut: 'non_lu',
-  },
-  {
-    id: 'msg3',
-    expediteur: 'Laurent Morin',
-    email: 'l.morin@cfamorin.fr',
-    objet: 'Bug — téléchargement de rapport impossible',
-    contenu:
-      "Bonjour,\n\nNous rencontrons un problème avec le téléchargement des rapports d'usage mensuel. Le bouton ne répond plus depuis la mise à jour du 20/11.\n\nLaurent Morin, responsable IT",
-    date: '26/11/2024 16h40',
-    statut: 'traite',
-  },
-  {
-    id: 'msg4',
-    expediteur: 'Aurélie Chassaing',
-    email: 'a.chassaing@sfa-formation.com',
-    objet: 'Intérêt pour CUBI — tarif personnalisé',
-    contenu:
-      'Bonjour,\n\nNotre organisme compte 450 apprenants sur 4 sites. Votre offre Groupe nous intéresse mais nous aimerions discuter un tarif adapté à notre structure.\n\nAurélie Chassaing, DAF',
-    date: '25/11/2024 11h05',
-    statut: 'traite',
-  },
-  {
-    id: 'msg5',
-    expediteur: 'Romain Berthier',
-    email: 'r.berthier@univ-poitiers.fr',
-    objet: 'Documentation RGPD requise par notre DPO',
-    contenu:
-      "Bonjour,\n\nNotre DPO exige une documentation complète sur la conformité RGPD de CUBI avant toute décision d'achat. Pouvez-vous nous transmettre votre registre de traitement ?\n\nRomain Berthier, Université de Poitiers",
-    date: '24/11/2024 08h30',
-    statut: 'non_lu',
-  },
-]
+export interface ConversationMessage {
+  id: string
+  auteurType: AuteurType
+  auteurNom: string
+  contenu: string
+  date: string
+}
 
-// Les messages de contact ne sont pas encore stockés côté backend (le stub
-// renvoie toujours []) : on retombe sur des messages de démonstration tant
-// que l'API n'a rien de réel à montrer.
-export function withMessagesMockFallbacks(messages: Message[] | null): Message[] {
-  return messages && messages.length > 0 ? messages : mockMessages
+export interface ConversationThread extends Conversation {
+  messages: ConversationMessage[]
 }
 
 // ── Analytics ─────────────────────────────────────────────────────────────────

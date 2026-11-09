@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "lucide-react": "^1.22.0",
+    "posthog-js": "^1.447.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-is": "^19.2.7",

@@ -33,6 +33,7 @@ import { Comptes }            from './pages/school/Comptes'
 import { Sessions }           from './pages/school/Sessions'
 import { FacturationEcole }   from './pages/school/FacturationEcole'
 import { Contact }            from './pages/school/Contact'
+import { Messages as SchoolMessages } from './pages/school/Messages'
 
 export default function App() {
   return (
@@ -70,13 +71,14 @@ export default function App() {
             <Route path="profil"                element={<Profil />} />
           </Route>
 
-          {/* School / Group dashboard — protected, réservé aux admins d'école */}
+          {/* School / Group dashboard — protected, réservé aux admins d'organisation */}
           <Route path="/school" element={<ProtectedRoute allow="ecole"><SchoolLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard"   element={<Dashboard />}        />
             <Route path="comptes"     element={<Comptes />}          />
             <Route path="sessions"    element={<Sessions />}         />
             <Route path="facturation" element={<FacturationEcole />} />
+            <Route path="messages"    element={<SchoolMessages />}   />
             <Route path="contact"     element={<Contact />}          />
           </Route>
 

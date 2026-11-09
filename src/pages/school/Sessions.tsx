@@ -4,6 +4,7 @@ import { PageHeader } from '../../components/ui/PageHeader'
 import { Badge }      from '../../components/ui/Badge'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import posthog from '../../posthog'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -27,7 +28,7 @@ const ROLE_LABEL: Record<string, string> = {
 }
 
 // Données d'exemple affichées tant qu'aucune vraie session n'existe encore
-// (le endpoint /school/sessions est réel, mais vide sur une école toute neuve).
+// (le endpoint /school/sessions est réel, mais vide sur une organisation toute neuve).
 const MOCK_SESSIONS: Session[] = [
   { id: 'mock-1', nomUtilisateur: 'Sophie Martin',  role: 'eleve',      heureDebut: '08:34', duree: '2h14', statut: 'active',   anomalie: false, ip: '91.198.174.12', appareilOs: 'Windows 11', typeSession: 'normale' },
   { id: 'mock-2', nomUtilisateur: 'Karim Belaid',   role: 'enseignant', heureDebut: '09:01', duree: '1h52', statut: 'active',   anomalie: false, ip: '185.220.101.3', appareilOs: 'macOS',      typeSession: 'normale' },
@@ -126,7 +127,10 @@ export function Sessions() {
   const handleTerminate = (id: string) => {
     setActionError(null)
     api.delete(ENDPOINTS.schoolSession(id))
-      .then(refetch)
+      .then(() => {
+        posthog.capture('session_terminated')
+        refetch()
+      })
       .catch((e) => setActionError(e instanceof Error ? e.message : 'Erreur lors de la fermeture de la session.'))
   }
 

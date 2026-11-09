@@ -8,6 +8,7 @@ import { FilterPills } from '../../components/ui/FilterPills'
 import { useApi }        from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import { useAuth }        from '../../contexts/AuthContext'
+import posthog               from '../../posthog'
 import type { MembreEquipe, RoleEquipe } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -147,6 +148,7 @@ function InviteModal({ onClose, onInvited }: { onClose: () => void; onInvited: (
     setSending(true); setError(null)
     try {
       await api.post(ENDPOINTS.equipe, { prenom, nom, email, role })
+      posthog.capture('team_invitation_sent', { invited_role: role })
       setSuccess(true)
       // Le rafraîchissement de la liste déclenche un état "loading" au niveau
       // de la page parente, qui démonterait cette modale si on l'appelait ici —
@@ -230,6 +232,7 @@ function EditRoleModal({
     setSaving(true); setError(null)
     try {
       await api.patch(ENDPOINTS.membreEquipe(membre.id), { role })
+      posthog.capture('team_member_role_updated', { role })
       onSaved()
       onClose()
     } catch (e) {
@@ -286,6 +289,7 @@ function ConfirmDeleteModal({
     setDeleting(true); setError(null)
     try {
       await api.delete(ENDPOINTS.membreEquipe(membre.id))
+      posthog.capture('team_member_removed')
       onDeleted()
       onClose()
     } catch (e) {
