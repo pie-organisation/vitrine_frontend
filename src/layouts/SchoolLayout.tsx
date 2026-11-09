@@ -48,7 +48,9 @@ function Sidebar({ org, isMobile, onClose }: { org: SchoolOrgMin | null; isMobil
     >
       {/* Logo */}
       <div className="flex items-center justify-between mb-6 px-1">
-        <Logo />
+        <Link to="/school/dashboard" className="no-underline" aria-label="Tableau de bord">
+          <Logo />
+        </Link>
         {isMobile && (
           <button
             onClick={onClose}
@@ -129,7 +131,9 @@ export function SchoolLayout() {
           >
             <Menu size={17} />
           </button>
-          <Logo size="sm" />
+          <Link to="/school/dashboard" className="no-underline" aria-label="Tableau de bord">
+            <Logo size="sm" />
+          </Link>
         </div>
 
         <main className="flex-1 overflow-auto">

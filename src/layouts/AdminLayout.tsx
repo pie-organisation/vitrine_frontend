@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet }   from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 import { Menu }     from 'lucide-react'
 import { Sidebar }  from '../components/ui/Sidebar'
 import { Logo }     from '../components/ui/Logo'
@@ -50,9 +50,9 @@ export function AdminLayout() {
           >
             <Menu size={17} />
           </button>
-          <span className="relative">
+          <Link to="/admin/overview" className="relative no-underline" aria-label="Tableau de bord">
             <Logo size="sm" />
-          </span>
+          </Link>
         </div>
 
         {/* Scrollable content area */}

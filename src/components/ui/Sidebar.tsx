@@ -126,7 +126,9 @@ export function Sidebar({ onClose, isMobile }: SidebarProps) {
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         {/* Logo + notifications + mobile close */}
         <div className="flex items-center justify-between mb-6 px-1">
-          <Logo />
+          <Link to="/admin/overview" className="no-underline" aria-label="Tableau de bord">
+            <Logo />
+          </Link>
           <div className="flex items-center gap-1.5">
             <NotificationBell />
             {isMobile && (
