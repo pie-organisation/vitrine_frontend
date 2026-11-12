@@ -71,7 +71,9 @@ export async function parseMembersFile(file: File): Promise<MemberInput[]> {
   throw new Error('Formats acceptés : .xlsx, .xls, .csv')
 }
 
-export function parseMembersTextarea(text: string): MemberInput[] {
+
+/** Liste collée à la main : une ligne par élève, « email;nom;prénom » (ou séparés par virgule/tabulation). */
+export function parseMembersText(text: string): MemberInput[] {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
   if (lines.length === 0) return []
   const rows = lines.map((l) => l.split(/[;,\t]/).map((c) => c.trim()))
@@ -79,8 +81,9 @@ export function parseMembersTextarea(text: string): MemberInput[] {
   return rowsToMembers(looksHeader ? rows : [['email', 'nom', 'prenom'], ...rows])
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-export const invalidMembers = (members: MemberInput[]) => members.filter((m) => !EMAIL_RE.test(m.email))
+const EMAIL_RE =/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const isValidEmail = (email: string) => EMAIL_RE.test(email)
+export const invalidMembers = (members: MemberInput[]) => members.filter((m) => !isValidEmail(m.email))
 
 /** Télécharge un CSV généré côté navigateur (UTF-8 avec BOM pour Excel). */
 export function downloadCsv(filename: string, rows: string[][]) {

@@ -52,7 +52,7 @@ function MachinesContent() {
               <RefreshCw size={14} className={loading ? 'animate-spin' : undefined} /> Actualiser
             </button>
             <Link to="/school/machines/nouvelle" className="btn-primary !w-auto !py-2 !px-4 text-sm no-underline flex items-center gap-1.5">
-              <Plus size={15} /> Créer une machine
+              <Plus size={15} /> Créer des machines
             </Link>
           </>
         }
