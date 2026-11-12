@@ -10,6 +10,24 @@ import { Badge }          from '../../components/ui/Badge'
 import { DotsPagination } from '../../components/ui/DotsPagination'
 import { useApi }         from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
+import { Link }           from 'react-router-dom'
+import { VmStatusBadge }  from '../../components/vdi/VmStatusBadge'
+import { useVdi }         from '../../contexts/VdiContext'
+import { groupIdOf, type VdiVm } from '../../api/vdi'
+
+/** Rattachement d'un compte Cubi à son compte « postes de travail » (même e-mail). */
+interface Poste { groupId?: string; groupName?: string; vm?: VdiVm }
+
+function usePostes() {
+  const { connected, userByEmail, vmByUserId, groupById } = useVdi()
+  return (email: string): Poste | null => {
+    if (!connected) return null
+    const u = userByEmail.get(email.toLowerCase())
+    if (!u) return {}
+    const gid = groupIdOf(u)
+    return { groupId: gid || undefined, groupName: groupById.get(gid)?.name ?? u.groupe_name, vm: vmByUserId.get(u.id) }
+  }
+}
 import type {
   SchoolAccount,
   SchoolOrg,
@@ -110,11 +128,12 @@ function StatusToggle({ statut, onChange }: { statut: AccountStatut; onChange: (
 
 // ── AccountRow ────────────────────────────────────────────────────────────────
 
-function AccountRow({ account, selected, checked, statut, onSelect, onCheck }: {
+function AccountRow({ account, selected, checked, statut, poste, onSelect, onCheck }: {
   account: SchoolAccount
   selected: boolean
   checked: boolean
   statut: AccountStatut
+  poste: Poste | null
   onSelect: () => void
   onCheck: (e: React.MouseEvent) => void
 }) {
@@ -170,6 +189,13 @@ function AccountRow({ account, selected, checked, statut, onSelect, onCheck }: {
           </div>
         </div>
 
+        {poste && (
+          <span className="hidden sm:flex items-center gap-2 shrink-0">
+            {poste.groupName && <Badge variant="violet">{poste.groupName}</Badge>}
+            {poste.vm ? <VmStatusBadge status={poste.vm.status} vmid={poste.vm.vmid} /> : <Badge variant="neutral">Sans machine</Badge>}
+          </span>
+        )}
+
         {!isActif && (
           <span
             className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
@@ -187,9 +213,10 @@ function AccountRow({ account, selected, checked, statut, onSelect, onCheck }: {
 
 // ── DetailPanel ───────────────────────────────────────────────────────────────
 
-function DetailPanel({ account, statut, onEdit, onDelete, onClose, onToggleStatus }: {
+function DetailPanel({ account, statut, poste, onEdit, onDelete, onClose, onToggleStatus }: {
   account: SchoolAccount
   statut: AccountStatut
+  poste: Poste | null
   onEdit: () => void
   onDelete: () => void
   onClose: () => void
@@ -250,6 +277,23 @@ function DetailPanel({ account, statut, onEdit, onDelete, onClose, onToggleStatu
             <div className="text-sm font-medium break-all" style={{ color: '#1a1040', fontFamily: mono ? 'monospace' : 'inherit' }}>{value}</div>
           </div>
         ))}
+
+        {poste && (
+          <>
+            <div className="py-3" style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}>
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#6B4FE0' }}>Groupe</div>
+              {poste.groupId
+                ? <Link to={`/school/groupes/${poste.groupId}`} className="text-sm font-medium" style={{ color: '#6B4FE0' }}>{poste.groupName ?? 'Voir le groupe'}</Link>
+                : <span className="text-sm" style={{ color: 'rgba(30,15,70,0.55)' }}>Aucun</span>}
+            </div>
+            <div className="py-3" style={{ borderBottom: '1px solid rgba(107,79,224,0.07)' }}>
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#6B4FE0' }}>Machine</div>
+              {poste.vm
+                ? <Link to={`/school/machines/${poste.vm.vmid}`} className="no-underline"><VmStatusBadge status={poste.vm.status} vmid={poste.vm.vmid} /></Link>
+                : <span className="text-sm" style={{ color: 'rgba(30,15,70,0.55)' }}>Aucune</span>}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="px-5 pb-5 flex flex-col gap-2">
@@ -789,6 +833,9 @@ export function Comptes() {
   const [checkedIds,     setCheckedIds]    = useState<Set<string>>(new Set())
   const [statusMap,      setStatusMap]     = useState<Record<string, AccountStatut>>({})
   const [search,         setSearch]        = useState('')
+  const [groupFilter,    setGroupFilter]   = useState('')
+  const posteOf = usePostes()
+  const { connected: vdiConfigured, groupes: vdiGroupes } = useVdi()
   const [statusFilter,   setStatusFilter]  = useState<'all' | 'actif' | 'inactif'>('all')
   const [showEdit,       setShowEdit]      = useState(false)
   const [showDelete,     setShowDelete]    = useState(false)
@@ -813,6 +860,7 @@ export function Comptes() {
   const accounts = useMemo(() => {
     let list = allAccountsRaw.filter((a) => a.type === tab)
     if (statusFilter !== 'all') list = list.filter((a) => getStatut(a) === statusFilter)
+    if (groupFilter) list = list.filter((a) => posteOf(a.email)?.groupId === groupFilter)
     if (search.trim()) {
       const q = search.toLowerCase()
       list = list.filter((a) =>
@@ -823,7 +871,7 @@ export function Comptes() {
     }
     return list
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, statusFilter, search, statusMap, allAccountsRaw])
+  }, [tab, statusFilter, search, statusMap, allAccountsRaw, groupFilter, posteOf])
 
   const totalPages = Math.ceil(accounts.length / PER_PAGE)
   const visible    = accounts.slice(page * PER_PAGE, (page + 1) * PER_PAGE)
@@ -859,9 +907,10 @@ export function Comptes() {
   const handleExport = () => {
     const list = accounts
     const csv = [
-      ['Nom', 'Prénom', 'Email', 'Rôle', 'Licence', 'Statut', 'Dernière connexion'].join(','),
+      ['Nom', 'Prénom', 'Email', 'Rôle', 'Licence', 'Statut', 'Dernière connexion', 'Groupe', 'Machine'].join(','),
       ...list.map((a) =>
-        [a.nom, a.prenom, a.email, a.type, a.licenceCubi, getStatut(a), a.derniereConnexion].join(',')
+        [a.nom, a.prenom, a.email, a.type, a.licenceCubi, getStatut(a), a.derniereConnexion,
+          posteOf(a.email)?.groupName ?? '', posteOf(a.email)?.vm ? String(posteOf(a.email)?.vm?.vmid) : ''].join(',')
       ),
     ].join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
@@ -936,6 +985,16 @@ export function Comptes() {
           </button>
         ))}
 
+        {/* Filtre groupe (postes de travail) */}
+        {vdiConfigured && vdiGroupes.length > 0 && (
+          <select value={groupFilter} onChange={(e) => { setGroupFilter(e.target.value); setPage(0) }}
+            aria-label="Filtrer par groupe" className="text-xs font-semibold px-3 py-2 rounded-xl cursor-pointer outline-none"
+            style={{ background: groupFilter ? 'rgba(107,79,224,0.12)' : 'rgba(255,255,255,0.8)', color: groupFilter ? '#6B4FE0' : 'rgba(30,15,70,0.7)', border: '1px solid rgba(107,79,224,0.15)', fontFamily: 'var(--font-sans)' }}>
+            <option value="">Tous les groupes</option>
+            {vdiGroupes.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
+        )}
+
         {/* Exporter */}
         <button onClick={handleExport}
           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border-none cursor-pointer"
@@ -1002,6 +1061,7 @@ export function Comptes() {
                 selected={detailId === a.id}
                 checked={checkedIds.has(a.id)}
                 statut={getStatut(a)}
+                poste={posteOf(a.email)}
                 onSelect={() => setDetailId(a.id === detailId ? null : a.id)}
                 onCheck={(e) => { e.stopPropagation(); toggleCheck(a.id) }}
               />
@@ -1026,6 +1086,7 @@ export function Comptes() {
               <DetailPanel
                 account={selected}
                 statut={getStatut(selected)}
+                poste={posteOf(selected.email)}
                 onEdit={() => setShowEdit(true)}
                 onDelete={() => setShowDelete(true)}
                 onClose={() => setDetailId(null)}
@@ -1037,6 +1098,7 @@ export function Comptes() {
                 <DetailPanel
                   account={selected}
                   statut={getStatut(selected)}
+                poste={posteOf(selected.email)}
                   onEdit={() => setShowEdit(true)}
                   onDelete={() => setShowDelete(true)}
                   onClose={() => setDetailId(null)}

@@ -6,6 +6,7 @@ import {
 } from 'react'
 import { api, ENDPOINTS, TOKEN_KEY, USER_KEY, clearAuth, ApiError } from '../api/client'
 import posthog, { posthogLogger } from '../posthog'
+import { clearVdiToken } from '../api/vdi'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -108,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(authUser)
       return authUser
     } catch (err) {
-      if (err instanceof ApiError && err.status === 403 && err.code === 'FORBIDDEN') {
+      if (err instanceof ApiError && err.status === 403 && (err.code === 'reset_required' || err.code === 'FORBIDDEN')) {
         // Backend renvoie 403 "reset_required" → mot de passe temporaire à changer
         window.location.href = '/reset-password'
         throw err
@@ -116,6 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const msg =
         err instanceof ApiError && err.status === 401
           ? 'Email ou mot de passe incorrect.'
+          : err instanceof ApiError && err.status === 403 && err.code === 'organisation_inactive'
+            ? "Votre établissement n'est pas encore actif. Il le sera dès la signature du contrat envoyé par e-mail."
           : err instanceof Error ? err.message : 'Identifiants incorrects.'
       setLoginError(msg)
       throw err
@@ -128,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     posthogLogger.info('authenticated_session_ended')
     posthog.reset()
     clearAuth()
+    clearVdiToken() // session des postes de travail liée à la session Cubi
     setToken(null)
     setUser(null)
   }, [])

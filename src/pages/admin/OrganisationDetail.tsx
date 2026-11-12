@@ -15,22 +15,28 @@ import { Input }          from '../../components/ui/Input'
 import { useApi }         from '../../hooks/useApi'
 import { useAuth }        from '../../contexts/AuthContext'
 import { api, ENDPOINTS } from '../../api/client'
+import { ApiError }     from '../../api/client'
+import { facturesApi, organisationsApi, type Facture } from '../../api/documents'
+import { FactureStatutBadge } from '../../components/documents/StatusBadges'
+import { PdfButton }      from '../../components/documents/PdfButton'
+import { ErrorState, Notice } from '../../components/ui/AsyncState'
+import type { BadgeVariant } from '../../components/ui/Badge'
 import type {
   Organisation,
   AdminUser,
   HistoriqueItem,
   OrgStatus,
   HistoType,
-  Facture,
 } from '../../mocks/data'
 import { withOrgDetailMockFallbacks } from '../../mocks/data'
 
 // ── Badge helpers ─────────────────────────────────────────────────────────────
 
-const STATUS_BADGE: Record<OrgStatus, { label: string; variant: 'green' | 'yellow' | 'red' }> = {
+const STATUS_BADGE: Record<OrgStatus, { label: string; variant: BadgeVariant }> = {
   actif:      { label: 'Actif',      variant: 'green'  },
   en_attente: { label: 'En attente', variant: 'yellow' },
   suspendu:   { label: 'Suspendu',   variant: 'red'    },
+  inactif:    { label: 'Contrat non signé', variant: 'neutral' },
 }
 
 // ── Admin card ────────────────────────────────────────────────────────────────
@@ -190,10 +196,110 @@ function Spinner() {
 
 // ── Suppression définitive (confirmation par saisie du nom) ──────────────────
 
-function DeleteOrgConfirm({ org, onCancel, onDeleted }: { org: Organisation; onCancel: () => void; onDeleted: () => void }) {
+// ── Suspension (contrats ou factures existants : pièces à conserver 10 ans) ──
+
+function SuspendOrgConfirm({ org, onCancel, onSuspended, reason }: {
+  org: Organisation
+  onCancel: () => void
+  onSuspended: (message: string) => void
+  reason?: string
+}) {
+  const [busy,  setBusy]  = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const suspend = async () => {
+    setBusy(true)
+    setError(null)
+    try {
+      const r = await organisationsApi.suspendre(org.id)
+      onSuspended(r.message || 'Organisation suspendue.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'La suspension a échoué.')
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {reason && (
+        <div className="flex gap-3 rounded-xl p-3.5"
+          style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.35)' }}>
+          <AlertTriangle size={18} className="shrink-0 mt-0.5" style={{ color: '#b45309' }} />
+          <p className="text-sm" style={{ color: '#1a1040' }}>{reason}</p>
+        </div>
+      )}
+      <p className="text-sm leading-relaxed" style={{ color: 'rgba(30,15,70,0.75)' }}>
+        {org.type === 'groupe'
+          ? <>Le groupe <strong>{org.nom}</strong> et tous ses établissements seront suspendus : </>
+          : <>L'organisation <strong>{org.nom}</strong> sera suspendue : </>}
+        plus aucune connexion possible. Contrats, factures et historique sont conservés.
+      </p>
+      {error && <p className="text-xs" style={{ color: '#dc2626' }}>{error}</p>}
+      <div className="flex gap-3">
+        <button type="button" className="btn-action flex-1" onClick={onCancel} disabled={busy}>Annuler</button>
+        <button type="button" className="btn-danger flex-1 !py-2.5" onClick={suspend} disabled={busy}>
+          {busy ? 'Suspension…' : "Suspendre l'organisation"}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Réactivation d'une organisation suspendue ────────────────────────────────
+
+function ReactivateOrgConfirm({ org, onCancel, onDone }: {
+  org: Organisation
+  onCancel: () => void
+  onDone: (message: string) => void
+}) {
+  const [busy,  setBusy]  = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const reactivate = async () => {
+    setBusy(true)
+    setError(null)
+    try {
+      const r = await organisationsApi.reactiver(org.id)
+      onDone(r.message || 'Organisation réactivée.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'La réactivation a échoué.')
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm leading-relaxed" style={{ color: 'rgba(30,15,70,0.75)' }}>
+        {org.type === 'groupe'
+          ? <>Le groupe <strong>{org.nom}</strong> et ses établissements suspendus redeviendront actifs : </>
+          : <>L'organisation <strong>{org.nom}</strong> redeviendra active : </>}
+        les comptes pourront de nouveau se connecter et la facturation reprendra au mois en cours.
+      </p>
+      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
+        Les mois de suspension ne sont pas facturés automatiquement : émets-les depuis la Facturation si besoin.
+      </p>
+      {error && <p className="text-xs" style={{ color: '#dc2626' }}>{error}</p>}
+      <div className="flex gap-3">
+        <button type="button" className="btn-action flex-1" onClick={onCancel} disabled={busy}>Annuler</button>
+        <button type="button" className="btn-action flex-1" onClick={reactivate} disabled={busy}
+          style={{ background: 'rgba(107,79,224,0.1)' }}>
+          {busy ? 'Réactivation…' : 'Réactiver'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function DeleteOrgConfirm({ org, onCancel, onDeleted, onSuspended }: {
+  org: Organisation
+  onCancel: () => void
+  onDeleted: () => void
+  onSuspended: (message: string) => void
+}) {
   const [confirmText, setConfirmText] = useState('')
   const [deleting,    setDeleting]    = useState(false)
   const [error,       setError]       = useState<string | null>(null)
+  const [suspendReason, setSuspendReason] = useState<string | null>(null)
   const isGroupe = org.type === 'groupe'
   const nbEtab   = org.nbEtablissements ?? 1
   const matches  = confirmText.trim() === org.nom.trim()
@@ -205,9 +311,18 @@ function DeleteOrgConfirm({ org, onCancel, onDeleted }: { org: Organisation; onC
       await api.delete(ENDPOINTS.organisation(org.id))
       onDeleted()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'La suppression a échoué.')
+      // 409 { action: 'suspendre' } : contrat ou facture existant, suppression interdite
+      if (e instanceof ApiError && e.status === 409 && e.data.action === 'suspendre') {
+        setSuspendReason(e.message)
+      } else {
+        setError(e instanceof Error ? e.message : 'La suppression a échoué.')
+      }
       setDeleting(false)
     }
+  }
+
+  if (suspendReason) {
+    return <SuspendOrgConfirm org={org} reason={suspendReason} onCancel={onCancel} onSuspended={onSuspended} />
   }
 
   return (
@@ -260,14 +375,17 @@ export function OrganisationDetail() {
   const { id }    = useParams<{ id: string }>()
   const navigate  = useNavigate()
 
-  const { data: rawOrg, loading: loadingOrg, error: errorOrg } = useApi<Organisation>(
+  const { data: rawOrg, loading: loadingOrg, error: errorOrg, refetch: refetchOrg } = useApi<Organisation>(
     () => api.get<Organisation>(ENDPOINTS.organisation(id ?? '')),
     [id]
   )
-  const { data: factures } = useApi<Facture[]>(
-    () => api.get<Facture[]>(ENDPOINTS.factures + '?organisation=' + id),
+  const { data: factures, error: errorFactures, refetch: refetchFactures } = useApi<Facture[]>(
+    () => facturesApi.list({ organisation: id }).then((r) => r.data),
     [id]
   )
+  const [showSuspend, setShowSuspend] = useState(false)
+  const [showReactivate, setShowReactivate] = useState(false)
+  const [orgNotice,   setOrgNotice]   = useState<string | null>(null)
 
   const [showHistory,    setShowHistory]    = useState(false)
   const [showModal,      setShowModal]      = useState(false)
@@ -289,7 +407,7 @@ export function OrganisationDetail() {
 
   const org         = withOrgDetailMockFallbacks(rawOrg)
   const orgFactures = factures ?? []
-  const st          = STATUS_BADGE[org.statut]
+  const st          = STATUS_BADGE[org.statut] ?? { label: org.statut, variant: 'neutral' as const }
 
   const adminPages  = Math.ceil(org.admins.length / ADMINS_PER_PAGE)
   const visAdmins   = org.admins.slice(adminPage * ADMINS_PER_PAGE, (adminPage + 1) * ADMINS_PER_PAGE)
@@ -318,6 +436,8 @@ export function OrganisationDetail() {
           </button>
         </div>
       )}
+
+      {orgNotice && <div className="mb-4"><Notice tone="success" onClose={() => setOrgNotice(null)}>{orgNotice}</Notice></div>}
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-1.5 text-xs mb-4" style={{ color: 'rgba(30,15,70,0.62)' }}>
@@ -348,13 +468,16 @@ export function OrganisationDetail() {
             <button className="btn-primary !w-auto text-xs !py-2 !px-3.5" onClick={() => setShowModal(true)}>
               Modifier
             </button>
-            <button className="btn-action text-xs !py-2 !px-3.5" onClick={() => console.log('suspend', id)}>
-              Suspendre
-            </button>
-            <button className="btn-action text-xs !py-2 !px-3.5" onClick={() => console.log('renew', id)}>
-              Renouveler
-            </button>
-            {canDelete && (
+            {canDelete && org.statut === 'actif' && (
+              <button className="btn-action text-xs !py-2 !px-3.5" onClick={() => setShowSuspend(true)}>
+                Suspendre
+              </button>
+            )}
+            {canDelete && org.statut === 'suspendu' && (
+              <button className="btn-action text-xs !py-2 !px-3.5" onClick={() => setShowReactivate(true)}>
+                Réactiver
+              </button>
+            )}            {canDelete && (
               <button className="btn-danger text-xs !py-2 !px-3.5" onClick={() => setShowDelete(true)}>
                 Supprimer
               </button>
@@ -462,27 +585,37 @@ export function OrganisationDetail() {
       </SectionCard>
 
       {/* Facturation */}
-      <SectionCard title="Facturation" className="mb-5">
-        {orgFactures.length > 0 ? (
+      <SectionCard
+        title="Facturation"
+        className="mb-5"
+        action={orgFactures.length > 0 ? (
+          <button type="button" className="btn-action text-xs !py-1.5 !px-3"
+            onClick={() => navigate(`/admin/facturation?organisation=${id}`)}>
+            Tout voir
+          </button>
+        ) : undefined}
+      >
+        {errorFactures ? (
+          <ErrorState compact message={errorFactures} onRetry={refetchFactures} />
+        ) : orgFactures.length > 0 ? (
           <div>
             {orgFactures.map((f, i) => (
               <div
                 key={f.id}
-                className="flex items-center justify-between py-2.5"
+                className="flex items-center justify-between gap-3 py-2.5 flex-wrap cursor-pointer"
                 style={{ borderBottom: i < orgFactures.length - 1 ? '1px solid rgba(107,79,224,0.07)' : 'none' }}
+                onClick={() => navigate(`/admin/facturation/${f.id}`)}
               >
-                <div>
+                <div className="min-w-0">
                   <span className="text-sm font-medium" style={{ color: '#1a1040' }}>{f.reference}</span>
-                  <span className="text-xs ml-2" style={{ color: 'rgba(30,15,70,0.62)' }}>Éch. {f.echeance}</span>
+                  <span className="text-xs ml-2" style={{ color: 'rgba(30,15,70,0.62)' }}>
+                    {f.type === 'avoir' && f.factureOrigine ? `Avoir sur ${f.factureOrigine}` : `Éch. ${f.echeance}`}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold" style={{ color: '#1a1040' }}>{f.montant}</span>
-                  <Badge
-                    variant={f.statut === 'payee' ? 'green' : f.statut === 'en_attente' ? 'yellow' : 'red'}
-                    dot
-                  >
-                    {f.statut === 'payee' ? 'Payée' : f.statut === 'en_attente' ? 'En attente' : 'Impayée'}
-                  </Badge>
+                  <span className="text-sm font-semibold tabular-nums" style={{ color: '#1a1040' }}>{f.montant}</span>
+                  <FactureStatutBadge statut={f.statut} />
+                  <PdfButton iconOnly fetchBlob={() => facturesApi.pdf(f.id)} filename={`${f.reference}.pdf`} label={`Télécharger ${f.reference}`} />
                 </div>
               </div>
             ))}
@@ -513,6 +646,31 @@ export function OrganisationDetail() {
           org={org}
           onCancel={() => setShowDelete(false)}
           onDeleted={() => navigate('/admin/organisations', { replace: true })}
+          onSuspended={(message) => { setShowDelete(false); setOrgNotice(message); refetchOrg() }}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showSuspend}
+        onClose={() => setShowSuspend(false)}
+        title={org.type === 'groupe' ? 'Suspendre le groupe' : "Suspendre l'organisation"}
+      >
+        <SuspendOrgConfirm
+          org={org}
+          onCancel={() => setShowSuspend(false)}
+          onSuspended={(message) => { setShowSuspend(false); setOrgNotice(message); refetchOrg() }}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showReactivate}
+        onClose={() => setShowReactivate(false)}
+        title={org.type === 'groupe' ? 'Réactiver le groupe' : "Réactiver l'organisation"}
+      >
+        <ReactivateOrgConfirm
+          org={org}
+          onCancel={() => setShowReactivate(false)}
+          onDone={(message) => { setShowReactivate(false); setOrgNotice(message); refetchOrg() }}
         />
       </Modal>
     </div>

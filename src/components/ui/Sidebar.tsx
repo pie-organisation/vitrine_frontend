@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, LogOut, X,
   ClipboardList, Receipt, Terminal, Users,
-  Mail, Sparkles, BarChart2,
+  Mail, Sparkles, BarChart2, FileSignature,
   type LucideIcon,
 } from 'lucide-react'
 import { Logo }             from './Logo'
@@ -25,6 +25,7 @@ function navMain(demandesEnAttente: number, messagesNonLus: number): NavItemDef[
     { to: '/admin/messages',      icon: Mail,            label: 'Messages',       badge: messagesNonLus || undefined },
     { to: '/admin/organisations', icon: Building2,       label: 'Organisations'   },
     { to: '/admin/analytics',     icon: BarChart2,       label: 'Analytics'       },
+    { to: '/admin/contrats',      icon: FileSignature,   label: 'Contrats'        },
     { to: '/admin/facturation',   icon: Receipt,         label: 'Facturation'     },
     { to: '/admin/offres',        icon: Sparkles,        label: 'Offres'          },
     { to: '/admin/logs',          icon: Terminal,        label: 'Logs'            },

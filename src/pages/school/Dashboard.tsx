@@ -2,8 +2,11 @@ import { UserPlus, Pencil, Trash2, LogIn, FileText, AlertTriangle, AlertCircle, 
 import { ProgressBar } from '../../components/ui/ProgressBar'
 import { useApi } from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
-import type { SchoolOrg, SchoolAccount, SchoolInvoice, SchoolActivity } from '../../mocks/schoolData'
-import { withOrgMockFallbacks, mockSchoolFactures, mockSchoolActivity } from '../../mocks/schoolData'
+import type { SchoolOrg, SchoolAccount, SchoolActivity } from '../../mocks/schoolData'
+import { withOrgMockFallbacks, mockSchoolActivity } from '../../mocks/schoolData'
+import type { SchoolInvoice } from '../../api/documents'
+import { PostesSummary } from '../../components/vdi/PostesSummary'
+import { useAuth } from '../../contexts/AuthContext'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -92,6 +95,7 @@ function Spinner() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Dashboard() {
+  const { user } = useAuth()
   const { data: orgData, loading: loadingOrg } = useApi<SchoolOrg>(
     () => api.get<SchoolOrg>(ENDPOINTS.schoolOrg),
     []
@@ -113,9 +117,8 @@ export function Dashboard() {
 
   const org = withOrgMockFallbacks(orgData)
   const allAccounts = accounts ?? []
-  // Facturation et journal d'activité ne sont pas encore alimentés par le backend :
-  // on retombe sur des données de démonstration tant qu'ils sont vides.
-  const allFactures = facturesData && facturesData.length > 0 ? facturesData : mockSchoolFactures
+  const allFactures = facturesData ?? []
+  // Le journal d'activité n'est pas encore alimenté par le backend : démonstration tant qu'il est vide.
   const allActivity = activityData && activityData.length > 0 ? activityData : mockSchoolActivity
 
   const nbActifs    = allAccounts.filter((a) => a.statut === 'actif').length
@@ -128,8 +131,12 @@ export function Dashboard() {
     ? Math.round((org.licencesUtilisees / org.nbLicences) * 100)
     : 0
 
-  const prochaineFacture = allFactures.find((f) => f.statut === 'a_venir')
-  const firstAccount = allAccounts[0]
+  // Aucune facture n'est émise à l'avance : on met en avant la plus ancienne restant à régler
+  const prochaineFacture = allFactures
+    .filter((f) => f.statut === 'en_cours')
+    .sort((a, b) => (a.dateEcheance ?? '').localeCompare(b.dateEcheance ?? ''))[0]
+  // Salue l'utilisateur connecté (et non le premier compte de la liste)
+  const prenom = user?.prenom ?? ''
 
   if (loading) return <Spinner />
 
@@ -141,7 +148,7 @@ export function Dashboard() {
           className="font-display font-extrabold text-2xl"
           style={{ color: '#1a1040', letterSpacing: '-0.5px' }}
         >
-          Bonjour, {firstAccount?.prenom ?? ''} 👋
+          Bonjour{prenom ? `, ${prenom}` : ''} 👋
         </h1>
         <p className="text-sm mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
           Voici l'état actuel de votre organisation — {org.nom}
@@ -182,9 +189,9 @@ export function Dashboard() {
           gradient="linear-gradient(135deg, #10B981, #34D399)"
         />
         <KpiCard
-          label="Prochaine facture"
+          label="Facture à régler"
           value={prochaineFacture ? prochaineFacture.montant : '—'}
-          sub={prochaineFacture ? `Éch. ${prochaineFacture.echeance}` : 'Aucune à venir'}
+          sub={prochaineFacture ? `Éch. ${prochaineFacture.echeance}` : 'Aucune en attente'}
           icon={<FileText size={16} />}
           gradient="linear-gradient(135deg, #F59E0B, #FCD34D)"
         />
@@ -196,6 +203,9 @@ export function Dashboard() {
           gradient="linear-gradient(135deg, #E879F9, #C084FC)"
         />
       </div>
+
+      {/* Postes de travail (groupes, machines) */}
+      <PostesSummary />
 
       {/* Jetons bar */}
       <div

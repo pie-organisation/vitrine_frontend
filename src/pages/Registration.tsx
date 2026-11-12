@@ -1,28 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Plus, Trash2 } from 'lucide-react'
 import { DotGridBackground } from '../components/ui/DotGridBackground'
 import { DecorativeOrbs }   from '../components/ui/DecorativeOrbs'
 import { Logo }             from '../components/ui/Logo'
 import { Input }            from '../components/ui/Input'
-import { Select }           from '../components/ui/Select'
 import { Button }           from '../components/ui/Button'
 import { Card }             from '../components/ui/Card'
 import { SectionTitle }     from '../components/ui/SectionTitle'
 import { api, ENDPOINTS }   from '../api/client'
+import { calculerPalier, formatEuros, type Palier } from '../api/documents'
 import posthog               from '../posthog'
 
-interface Licence {
+// Catalogue public GET /auth/licences. Le back ne renvoie aujourd'hui que { id, nom } (triés par
+// sessions_min) ; si sessions_min / sessions_max / prix_unitaire y sont ajoutés, le palier et son
+// prix s'affichent automatiquement.
+interface LicencePublique {
   id:  string
   nom: string
+  sessions_min?: number | null
+  sessions_max?: number | null
+  prix_unitaire?: number | string | null
 }
 
-const MOCK_LICENCES: Licence[] = [
-  { id: 'pack-institut',   nom: 'Pack Institut'   },
-  { id: 'pack-campus',     nom: 'Pack Campus'     },
-  { id: 'pack-academique', nom: 'Pack Académique' },
-  { id: 'pack-sur-mesure', nom: 'Pack Sur-Mesure' },
-]
+const toPalier = (l: LicencePublique): Palier | null =>
+  typeof l.sessions_min === 'number' && l.prix_unitaire !== undefined && l.prix_unitaire !== null
+    ? { id: l.id, nom: l.nom, sessionsMin: l.sessions_min, sessionsMax: l.sessions_max ?? null, prixUnitaire: Number(l.prix_unitaire) }
+    : null
 
 type Mode = 'ecole' | 'groupe'
 
@@ -36,12 +40,76 @@ interface Etablissement {
   nom_responsable: string
   prenom_responsable: string
   email_responsable: string
+  nb_licences_estime: string
 }
 
 const emptyEtablissement = (): Etablissement => ({
   nom: '', siret: '', visa: '', adresse: '', code_postal: '', ville: '',
-  nom_responsable: '', prenom_responsable: '', email_responsable: '',
+  nom_responsable: '', prenom_responsable: '', email_responsable: '', nb_licences_estime: '',
 })
+
+const parseQuantite = (s: string): number | null => {
+  const n = Number(s)
+  return s.trim() !== '' && Number.isInteger(n) && n >= 1 ? n : null
+}
+
+// ── Palier calculé (lecture seule) ────────────────────────────────────────────
+
+function PalierCalcule({ licences, total, error, onRetry }: {
+  licences: LicencePublique[] | null
+  total: number | null
+  error: string | null
+  onRetry: () => void
+}) {
+  const paliers = (licences ?? []).map(toPalier)
+  const complet = licences !== null && paliers.every((p): p is Palier => p !== null)
+  const palier = complet && total ? calculerPalier(paliers as Palier[], total) : null
+
+  return (
+    <div className="rounded-xl px-4 py-3 text-sm"
+      style={{ background: 'rgba(107,79,224,0.05)', border: '1px solid rgba(107,79,224,0.14)', color: '#1a1040' }}
+      aria-live="polite">
+      {error ? (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span style={{ color: '#dc2626' }}>Le catalogue des offres n'a pas pu être chargé.</span>
+          <button type="button" className="btn-action" onClick={onRetry}>Réessayer</button>
+        </div>
+      ) : licences === null ? (
+        <span style={{ color: 'rgba(30,15,70,0.62)' }}>Chargement des offres…</span>
+      ) : !total ? (
+        <span style={{ color: 'rgba(30,15,70,0.62)' }}>Indiquez le nombre d'utilisateurs pour connaître votre offre.</span>
+      ) : palier ? (
+        <span>
+          Offre : <strong>{palier.nom}</strong> · {formatEuros(palier.prixUnitaire)} HT par utilisateur et par mois
+          <span className="block text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
+            Soit environ {formatEuros(palier.prixUnitaire * total)} HT/mois pour {total} utilisateur{total > 1 ? 's' : ''}. Confirmé dans votre contrat.
+          </span>
+        </span>
+      ) : complet ? (
+        <span>Aucune offre standard ne couvre {total} utilisateurs : l'équipe Cubi vous proposera une offre adaptée.</span>
+      ) : (
+        <span style={{ color: 'rgba(30,15,70,0.72)' }}>
+          Votre offre est déterminée automatiquement selon le nombre d'utilisateurs ({total}) et confirmée dans votre contrat.
+        </span>
+      )}
+    </div>
+  )
+}
+
+/** type_licence_id reste exigé par POST /auth/inscription : on l'envoie calculé, jamais choisi. */
+function licencePourQuantite(licences: LicencePublique[], total: number | null): string {
+  if (!licences.length) return ''
+  const paliers = licences.map(toPalier)
+  if (total && paliers.every((p): p is Palier => p !== null)) {
+    const p = calculerPalier(paliers as Palier[], total)
+    if (p) return p.id
+    // Au-delà du dernier palier : le plus élevé (l'admin recalcule à la validation)
+    return licences[licences.length - 1].id
+  }
+  // Catalogue sans bornes : premier palier (trié par sessions_min) ; le palier réel est
+  // recalculé par le back à la validation à partir de la quantité.
+  return licences[0].id
+}
 
 function Divider() {
   return <div className="h-px my-1" style={{ background: 'rgba(107,79,224,0.08)' }} />
@@ -121,6 +189,8 @@ function EtablissementFields({
       </div>
       <Input label="Email du responsable" type="email" placeholder="responsable@etablissement.fr"
         value={value.email_responsable} onChange={set('email_responsable')} required />
+      <Input label="Nombre d'utilisateurs estimé" type="number" min={1} step={1} inputMode="numeric" placeholder="Ex : 40"
+        value={value.nb_licences_estime} onChange={set('nb_licences_estime')} required />
     </div>
   )
 }
@@ -133,14 +203,27 @@ export function Registration() {
   const [loading,   setLoading]   = useState(false)
   const [error,     setError]     = useState<string | null>(null)
   const [success,   setSuccess]   = useState(false)
-  const [licences,  setLicences]  = useState<Licence[]>([])
+  const [licences,  setLicences]  = useState<LicencePublique[] | null>(null)
+  const [licencesError, setLicencesError] = useState<string | null>(null)
+  const [nbEcole,   setNbEcole]   = useState('')
   const [etablissements, setEtablissements] = useState<Etablissement[]>([emptyEtablissement(), emptyEtablissement()])
 
-  useEffect(() => {
-    api.get<Licence[]>(ENDPOINTS.licences)
-      .then((data) => setLicences(data && data.length > 0 ? data : MOCK_LICENCES))
-      .catch(() => setLicences(MOCK_LICENCES))
+  const chargerLicences = useCallback(() => {
+    setLicencesError(null)
+    setLicences(null)
+    api.get<LicencePublique[]>(ENDPOINTS.licences)
+      .then((data) => {
+        if (!data?.length) throw new Error('Catalogue vide')
+        setLicences(data)
+      })
+      .catch((e: unknown) => setLicencesError(e instanceof Error ? e.message : 'Catalogue indisponible'))
   }, [])
+
+  useEffect(() => { chargerLicences() }, [chargerLicences])
+
+  // Quantité totale : celle de l'école, ou la somme des établissements (même palier pour tout le groupe)
+  const quantites = mode === 'groupe' ? etablissements.map((e) => parseQuantite(e.nb_licences_estime)) : [parseQuantite(nbEcole)]
+  const total = quantites.every((q) => q !== null) ? quantites.reduce<number>((s, q) => s + (q ?? 0), 0) : null
 
   const updateEtablissement = (i: number, patch: Partial<Etablissement>) =>
     setEtablissements((list) => list.map((e, j) => (j === i ? { ...e, ...patch } : e)))
@@ -152,10 +235,24 @@ export function Registration() {
     setError(null)
     setLoading(true)
     const raw = Object.fromEntries(new FormData(e.currentTarget))
+    if (!licences?.length) {
+      setError("Le catalogue des offres n'est pas chargé. Réessayez dans un instant.")
+      setLoading(false)
+      return
+    }
+    if (total === null) {
+      setError("Indiquez un nombre d'utilisateurs estimé (entier supérieur ou égal à 1).")
+      setLoading(false)
+      return
+    }
+    const type_licence_id = licencePourQuantite(licences, total)
     try {
       await api.post(ENDPOINTS.inscription, mode === 'groupe'
-        ? { type: 'groupe', ...raw, etablissements }
-        : { type: 'ecole', ...raw })
+        ? {
+            type: 'groupe', ...raw, type_licence_id,
+            etablissements: etablissements.map((et) => ({ ...et, nb_licences_estime: parseQuantite(et.nb_licences_estime) })),
+          }
+        : { type: 'ecole', ...raw, type_licence_id, nb_licences_estime: parseQuantite(nbEcole) })
       posthog.capture('registration_application_submitted', {
         type: mode,
         ...(mode === 'groupe' ? { nb_etablissements: etablissements.length } : {}),
@@ -185,8 +282,8 @@ export function Registration() {
             </h2>
             <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
               {mode === 'groupe'
-                ? "Votre demande pour vos établissements a bien été reçue. Après validation par l'équipe CUBI (sous 24–48h), chaque responsable recevra un email pour accéder à son espace."
-                : "Votre demande d'inscription a bien été reçue. L'équipe CUBI vous contactera sous 24–48h."}
+                ? "Votre demande pour vos établissements a bien été reçue. Après validation par l'équipe CUBI (sous 24–48h), vous recevrez votre contrat à signer en ligne ; chaque responsable recevra ensuite un email pour accéder à son espace."
+                : "Votre demande d'inscription a bien été reçue. Après validation par l'équipe CUBI (sous 24–48h), vous recevrez votre contrat à signer en ligne. Votre accès sera actif dès la signature."}
             </p>
             <Button onClick={() => navigate('/')}>Retour à l'accueil</Button>
           </Card>
@@ -213,7 +310,7 @@ export function Registration() {
             <p className="text-sm mb-6" style={{ color: 'rgba(30,15,70,0.7)' }}>
               Complétez le formulaire ci-dessous pour créer votre compte CUBI.
             </p>
-            <ModeSwitch mode={mode} onChange={(m) => { setMode(m); setError(null) }} />
+            <ModeSwitch mode={mode} onChange={(m) => { setMode(m); setError(null); setNbEcole('') }} />
           </div>
 
           {/* key : remonte le formulaire au changement de mode pour repartir de champs propres */}
@@ -265,14 +362,19 @@ export function Registration() {
             <Divider />
 
             <section>
-              <SectionTitle>Licence</SectionTitle>
-              <Select label={mode === 'groupe' ? 'Licence souhaitée (pour tous les établissements)' : 'Licence souhaitée'}
-                name="type_licence_id" defaultValue="" required>
-                <option value="" disabled>Sélectionner une licence</option>
-                {licences.map((l) => (
-                  <option key={l.id} value={l.id}>{l.nom}</option>
-                ))}
-              </Select>
+              <SectionTitle>Utilisateurs et offre</SectionTitle>
+              <div className="flex flex-col gap-4">
+                {mode === 'ecole' ? (
+                  <Input label="Nombre d'utilisateurs estimé" type="number" min={1} step={1} inputMode="numeric"
+                    placeholder="Ex : 120" value={nbEcole} onChange={(e) => setNbEcole(e.target.value)} required />
+                ) : (
+                  <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>
+                    Indiquez le nombre d'utilisateurs de chaque établissement ci-dessous :
+                    l'offre est calculée sur le total{total ? ` (${total})` : ''} et s'applique à tout le groupe.
+                  </p>
+                )}
+                <PalierCalcule licences={licences} total={total} error={licencesError} onRetry={chargerLicences} />
+              </div>
             </section>
 
             <Divider />
@@ -333,7 +435,7 @@ export function Registration() {
             )}
 
             <div className="mt-1">
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading || !licences?.length}>
                 {loading ? 'Envoi en cours…' : "Envoyer la demande d'inscription"}
               </Button>
             </div>

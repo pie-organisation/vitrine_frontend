@@ -1,6 +1,6 @@
 export type AccountType    = 'admin' | 'scolarite' | 'eleve'
-export type InvoiceStatut  = 'presentee' | 'en_cours' | 'a_venir'
 export type AccountStatut  = 'actif' | 'inactif'
+// Factures : plus de mock, types InvoiceStatut / SchoolInvoice dans src/api/documents.ts
 
 export interface SchoolAccount {
   id: string
@@ -11,15 +11,6 @@ export interface SchoolAccount {
   licenceCubi: string
   statut: AccountStatut
   derniereConnexion: string
-}
-
-export interface SchoolInvoice {
-  id: string
-  reference: string
-  date: string
-  echeance: string
-  montant: string
-  statut: InvoiceStatut
 }
 
 export interface SchoolOrg {
@@ -114,16 +105,6 @@ export const mockSchoolAccounts: SchoolAccount[] = [
   { id: 'e10', type: 'eleve', nom: 'Morel',    prenom: 'Inès',    email: 'ines.morel@eleves-vhugo.fr',      licenceCubi: 'CUBI-ELV-010', statut: 'actif',   derniereConnexion: 'Il y a 5 jours'  },
   { id: 'e11', type: 'eleve', nom: 'Fournier', prenom: 'Maxime',  email: 'maxime.fournier@eleves-vhugo.fr', licenceCubi: 'CUBI-ELV-011', statut: 'actif',   derniereConnexion: 'Il y a 2h'       },
   { id: 'e12', type: 'eleve', nom: 'Girard',   prenom: 'Camille', email: 'camille.girard@eleves-vhugo.fr',  licenceCubi: 'CUBI-ELV-012', statut: 'actif',   derniereConnexion: 'Il y a 1 jour'   },
-]
-
-export const mockSchoolFactures: SchoolInvoice[] = [
-  { id: 'f1', reference: 'FACT-2025-009', date: '01/09/2025', echeance: '15/09/2025', montant: '249 €', statut: 'presentee' },
-  { id: 'f2', reference: 'FACT-2025-010', date: '01/10/2025', echeance: '15/10/2025', montant: '249 €', statut: 'presentee' },
-  { id: 'f3', reference: 'FACT-2025-011', date: '01/11/2025', echeance: '15/11/2025', montant: '249 €', statut: 'presentee' },
-  { id: 'f4', reference: 'FACT-2026-001', date: '01/01/2026', echeance: '15/01/2026', montant: '249 €', statut: 'presentee' },
-  { id: 'f5', reference: 'FACT-2026-002', date: '01/02/2026', echeance: '15/02/2026', montant: '249 €', statut: 'en_cours'  },
-  { id: 'f6', reference: 'FACT-2026-007', date: '01/07/2026', echeance: '15/07/2026', montant: '249 €', statut: 'a_venir'  },
-  { id: 'f7', reference: 'FACT-2026-008', date: '01/08/2026', echeance: '15/08/2026', montant: '249 €', statut: 'a_venir'  },
 ]
 
 export const mockSchoolActivity: SchoolActivity[] = [

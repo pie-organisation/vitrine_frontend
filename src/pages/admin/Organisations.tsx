@@ -11,14 +11,16 @@ import { DotsPagination } from '../../components/ui/DotsPagination'
 import { useApi }          from '../../hooks/useApi'
 import { api, ENDPOINTS }  from '../../api/client'
 import type { Organisation, OrgStatus, OrgType } from '../../mocks/data'
+import type { BadgeVariant } from '../../components/ui/Badge'
 import { withOrgListMockFallbacks } from '../../mocks/data'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const STATUS_BADGE: Record<OrgStatus, { label: string; variant: 'green' | 'yellow' | 'red' }> = {
+const STATUS_BADGE: Record<OrgStatus, { label: string; variant: BadgeVariant }> = {
   actif:      { label: 'Actif',      variant: 'green'  },
   en_attente: { label: 'En attente', variant: 'yellow' },
   suspendu:   { label: 'Suspendu',   variant: 'red'    },
+  inactif:    { label: 'Contrat non signé', variant: 'neutral' },
 }
 
 const TYPE_BADGE: Record<OrgType, { label: string; variant: 'blue' | 'violet' }> = {
@@ -29,8 +31,9 @@ const TYPE_BADGE: Record<OrgType, { label: string; variant: 'blue' | 'violet' }>
 // ── Organisation row card ─────────────────────────────────────────────────────
 
 function OrgRow({ org, onClick }: { org: Organisation; onClick: () => void }) {
-  const st = STATUS_BADGE[org.statut]
-  const ty = TYPE_BADGE[org.type]
+  // Statut inconnu du front : badge neutre plutôt qu'un crash
+  const st = STATUS_BADGE[org.statut] ?? { label: org.statut, variant: 'neutral' as const }
+  const ty = TYPE_BADGE[org.type] ?? { label: org.type, variant: 'blue' as const }
 
   return (
     <ListCard onClick={onClick}>
@@ -83,6 +86,7 @@ const FILTERS = [
   { value: 'groupe',    label: 'Groupes'    },
   { value: 'actif',     label: 'Actives'    },
   { value: 'suspendu',  label: 'Suspendues' },
+  { value: 'inactif',   label: 'Contrat non signé' },
 ]
 
 const PER_PAGE = 4

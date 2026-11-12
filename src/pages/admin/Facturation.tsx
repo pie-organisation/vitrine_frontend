@@ -1,267 +1,269 @@
-import { useState } from 'react'
-import { Eye } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ChevronRight, FilePlus2 } from 'lucide-react'
 import { PageHeader }     from '../../components/ui/PageHeader'
-import { ExportButton }   from '../../components/ui/ExportButton'
-import { MetricCard }     from '../../components/ui/MetricCard'
 import { FilterPills }    from '../../components/ui/FilterPills'
 import { ListCard }       from '../../components/ui/ListCard'
-import { Badge }          from '../../components/ui/Badge'
-import { DotsPagination } from '../../components/ui/DotsPagination'
 import { Modal }          from '../../components/ui/Modal'
-import { Logo }           from '../../components/ui/Logo'
-import { useApi }        from '../../hooks/useApi'
+import { Spinner, ErrorState, EmptyState, Notice } from '../../components/ui/AsyncState'
+import { FactureStatutBadge } from '../../components/documents/StatusBadges'
+import { PdfButton }      from '../../components/documents/PdfButton'
+import { useApi }         from '../../hooks/useApi'
+import { useCanWrite }    from '../../hooks/useCanWrite'
 import { api, ENDPOINTS } from '../../api/client'
-import type { Facture, FactureStatut } from '../../mocks/data'
-import { withFacturesMockFallbacks } from '../../mocks/data'
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-const STATUT_BADGE: Record<FactureStatut, { label: string; variant: 'green' | 'yellow' | 'red' }> = {
-  payee:      { label: 'Payée',      variant: 'green'  },
-  en_attente: { label: 'En attente', variant: 'yellow' },
-  impayee:    { label: 'Impayée',    variant: 'red'    },
-}
-
-// ── Filter options ─────────────────────────────────────────────────────────────
+import {
+  facturesApi, contratsApi, formatDate, aujourdhuiIso,
+  type Facture, type Contrat,
+} from '../../api/documents'
+import type { Organisation } from '../../mocks/data'
 
 const FILTERS = [
-  { value: 'all',        label: 'Toutes'     },
-  { value: 'payee',      label: 'Payées'     },
+  { value: '',           label: 'Toutes'     },
   { value: 'en_attente', label: 'En attente' },
   { value: 'impayee',    label: 'Impayées'   },
+  { value: 'payee',      label: 'Payées'     },
+  { value: 'annulee',    label: 'Annulées'   },
+  { value: 'avoir',      label: 'Avoirs'     },
 ]
 
-const PER_PAGE = 5
+const PAR_PAGE = 50 // côté back, avec ?page=
 
-// ── Facture row ───────────────────────────────────────────────────────────────
+// ── Ligne ─────────────────────────────────────────────────────────────────────
 
-function FactureRow({ facture, onView }: { facture: Facture; onView: () => void }) {
-  const st = STATUT_BADGE[facture.statut]
-
+function FactureRow({ facture, onOpen }: { facture: Facture; onOpen: () => void }) {
+  const estAvoir = facture.type === 'avoir' || facture.statut === 'avoir'
   return (
-    <ListCard>
+    <ListCard onClick={onOpen}>
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3.5 min-w-0">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-bold text-sm shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, rgba(107,79,224,0.1), rgba(232,121,249,0.1))',
-              color: '#6B4FE0',
-            }}
-          >
-            {facture.organisation[0]}
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-bold text-sm shrink-0"
+            style={{ background: 'linear-gradient(135deg, rgba(107,79,224,0.1), rgba(232,121,249,0.1))', color: '#6B4FE0' }}>
+            {facture.organisation?.[0] ?? '?'}
           </div>
           <div className="min-w-0">
-            <div className="font-display font-bold text-sm truncate" style={{ color: '#1a1040' }}>
-              {facture.organisation}
-            </div>
+            <div className="font-display font-bold text-sm truncate" style={{ color: '#1a1040' }}>{facture.organisation}</div>
             <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
-              {facture.reference} · {facture.plan}
+              {facture.reference}
+              {estAvoir && facture.factureOrigine ? ` · avoir sur ${facture.factureOrigine}` : ` · ${facture.plan ?? ''}`}
+              {facture.periodeDebut ? ` · ${formatDate(facture.periodeDebut)} → ${formatDate(facture.periodeFin)}` : ''}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3 flex-wrap justify-end shrink-0">
           <div className="text-right">
-            <div className="text-sm font-semibold" style={{ color: '#1a1040' }}>{facture.montant}</div>
-            <div className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Éch. {facture.echeance}</div>
+            <div className="text-sm font-semibold tabular-nums" style={{ color: '#1a1040' }}>{facture.montant}</div>
+            <div className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
+              {facture.datePaiement ? `Payée le ${formatDate(facture.datePaiement)}` : estAvoir ? `Émis le ${formatDate(facture.dateEmission)}` : `Éch. ${facture.echeance}`}
+            </div>
           </div>
-          <Badge variant={st.variant} dot>{st.label}</Badge>
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded-lg border-none cursor-pointer"
-            style={{ background: 'rgba(107,79,224,0.07)', color: '#6B4FE0' }}
-            onClick={onView}
-            title="Voir la facture"
-          >
-            <Eye size={14} />
-          </button>
+          <FactureStatutBadge statut={facture.statut} />
+          <PdfButton iconOnly fetchBlob={() => facturesApi.pdf(facture.id)} filename={`${facture.reference}.pdf`} label={`Télécharger ${facture.reference}`} />
+          <ChevronRight size={16} style={{ color: 'rgba(107,79,224,0.5)' }} />
         </div>
       </div>
     </ListCard>
   )
 }
 
-// ── Invoice modal ─────────────────────────────────────────────────────────────
+// ── Émission manuelle ─────────────────────────────────────────────────────────
 
-function InvoiceModal({ facture }: { facture: Facture }) {
-  return (
-    <div>
-      {/* Header */}
-      <div
-        className="flex items-start justify-between pb-5 mb-5"
-        style={{ borderBottom: '1px solid rgba(107,79,224,0.1)' }}
-      >
-        <Logo size="md" />
-        <div className="text-right">
-          <div className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.62)' }}>FACTURE</div>
-          <div className="font-display font-bold text-lg" style={{ color: '#1a1040' }}>
-            {facture.reference}
-          </div>
-          <div className="text-xs mt-0.5" style={{ color: 'rgba(30,15,70,0.62)' }}>
-            Échéance : {facture.echeance}
-          </div>
-        </div>
-      </div>
-
-      {/* Recipient */}
-      <div className="mb-5">
-        <div className="text-xs font-semibold mb-1" style={{ color: 'rgba(30,15,70,0.62)' }}>FACTURÉ À</div>
-        <div className="font-semibold text-sm" style={{ color: '#1a1040' }}>{facture.organisation}</div>
-      </div>
-
-      {/* Line item */}
-      <div
-        className="rounded-xl overflow-hidden mb-5"
-        style={{ border: '1px solid rgba(107,79,224,0.1)' }}
-      >
-        <div
-          className="grid grid-cols-3 gap-2 px-4 py-2.5 text-xs font-semibold"
-          style={{ background: 'rgba(107,79,224,0.05)', color: 'rgba(30,15,70,0.7)' }}
-        >
-          <span>Description</span>
-          <span className="text-center">Durée</span>
-          <span className="text-right">Montant HT</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2 px-4 py-3.5 text-sm" style={{ color: '#1a1040' }}>
-          <span>{facture.plan}</span>
-          <span className="text-center">12 mois</span>
-          <span className="text-right font-semibold">{facture.montant}</span>
-        </div>
-      </div>
-
-      {/* Totals */}
-      <div className="flex flex-col gap-1.5 items-end">
-        <div className="flex justify-between w-52">
-          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>Sous-total HT</span>
-          <span className="text-xs font-medium" style={{ color: '#1a1040' }}>{facture.montant}</span>
-        </div>
-        <div className="flex justify-between w-52">
-          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>TVA (20 %)</span>
-          <span className="text-xs font-medium" style={{ color: '#1a1040' }}>calculée</span>
-        </div>
-        <div
-          className="flex justify-between w-52 pt-2"
-          style={{ borderTop: '1px solid rgba(107,79,224,0.12)' }}
-        >
-          <span className="text-sm font-bold" style={{ color: '#1a1040' }}>TOTAL TTC</span>
-          <span
-            className="text-sm font-bold"
-            style={{
-              background: 'linear-gradient(135deg, #6B4FE0, #9333EA)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            {facture.montant}
-          </span>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div
-        className="mt-6 pt-4 text-center text-xs"
-        style={{ borderTop: '1px solid rgba(107,79,224,0.1)', color: 'rgba(30,15,70,0.62)' }}
-      >
-        CUBI SAS · 75001 Paris · SIRET 832 000 001 00014 · contact@cubi.fr
-      </div>
-    </div>
-  )
+function dernierJourDuMois(mois: string): string {
+  const [y, m] = mois.split('-').map(Number)
+  const d = new Date(Date.UTC(y, m, 0))
+  return d.toISOString().slice(0, 10)
 }
 
-// ── Spinner ───────────────────────────────────────────────────────────────────
+function EmettreModal({ onClose, onDone }: { onClose: () => void; onDone: (f: { id: string; reference: string }) => void }) {
+  // Contrats signés : seuls facturables. Paginés par 20 côté back : on charge toutes les pages.
+  const { data: contrats, loading, error, refetch } = useApi<Contrat[]>(async () => {
+    const first = await contratsApi.list('signe', 1)
+    const pages = Math.ceil(first.total / (first.parPage || 20))
+    const rest = await Promise.all(Array.from({ length: Math.max(0, pages - 1) }, (_, i) => contratsApi.list('signe', i + 2)))
+    return [first, ...rest].flatMap((p) => p.items)
+  }, [])
 
-function Spinner() {
+  const [contratId, setContratId] = useState('')
+  const [mois,      setMois]      = useState(aujourdhuiIso().slice(0, 7))
+  const [busy,      setBusy]      = useState(false)
+  const [err,       setErr]       = useState<string | null>(null)
+
+  const contrat = contrats?.find((c) => c.id === contratId) ?? null
+  // Première période : de la date d'effet à la fin du mois
+  const effet = contrat?.dateEffet ?? null
+  const debutMois = `${mois}-01`
+  const periodeDebut = effet && effet.slice(0, 7) === mois && effet > debutMois ? effet : debutMois
+  const periodeFin = mois ? dernierJourDuMois(mois) : ''
+  const avantEffet = !!effet && periodeFin < effet
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!contrat || !mois) return
+    setBusy(true)
+    setErr(null)
+    try {
+      const f = await facturesApi.emettre({ contratId: contrat.id, periodeDebut, periodeFin })
+      onDone({ id: f.id, reference: f.reference })
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : "L'émission a échoué.")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (loading) return <Spinner />
+  if (error) return <ErrorState compact message={error} onRetry={refetch} />
+
   return (
-    <div className="flex items-center justify-center py-16">
-      <div className="w-7 h-7 rounded-full border-2 animate-spin"
-        style={{ borderColor: 'rgba(107,79,224,0.2)', borderTopColor: '#6B4FE0' }} />
-    </div>
+    <form onSubmit={submit} className="flex flex-col gap-4">
+      <p className="text-sm" style={{ color: 'rgba(30,15,70,0.72)' }}>
+        Émission manuelle d'une période (un mois civil au plus), par exemple pour refacturer une période annulée par avoir.
+        Le job quotidien facture déjà automatiquement le mois en cours.
+      </p>
+      <label className="flex flex-col gap-1.5">
+        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>Contrat signé</span>
+        <select className="cubi-input" value={contratId} onChange={(e) => setContratId(e.target.value)} required>
+          <option value="" disabled>Sélectionner un contrat</option>
+          {(contrats ?? []).map((c) => (
+            <option key={c.id} value={c.id}>{c.numero} — {c.organisation}</option>
+          ))}
+        </select>
+        {contrats && contrats.length === 0 && (
+          <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>Aucun contrat signé.</span>
+        )}
+      </label>
+      <label className="flex flex-col gap-1.5">
+        <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>Mois facturé</span>
+        <input className="cubi-input" type="month" value={mois} onChange={(e) => setMois(e.target.value)} required />
+        {contrat && mois && (
+          <span className="text-xs" style={{ color: avantEffet ? '#dc2626' : 'rgba(30,15,70,0.62)' }}>
+            {avantEffet
+              ? `Période antérieure à la date d'effet du contrat (${formatDate(effet)}).`
+              : `Période : ${formatDate(periodeDebut)} → ${formatDate(periodeFin)}`}
+          </span>
+        )}
+      </label>
+      {err && <Notice tone="error">{err}</Notice>}
+      <div className="flex gap-3">
+        <button type="button" className="btn-action flex-1" onClick={onClose} disabled={busy}>Annuler</button>
+        <button type="submit" className="btn-action flex-1" disabled={busy || !contrat || avantEffet}
+          style={{ background: 'rgba(107,79,224,0.1)' }}>
+          {busy ? 'Émission…' : 'Émettre la facture'}
+        </button>
+      </div>
+    </form>
   )
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function Facturation() {
-  const [filter,     setFilter]     = useState('all')
-  const [page,       setPage]       = useState(0)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const canWrite = useCanWrite()
+  const [params, setParams] = useSearchParams()
+  const statut       = params.get('statut') ?? ''
+  const organisation = params.get('organisation') ?? ''
+  const page         = Math.max(1, parseInt(params.get('page') ?? '1', 10) || 1)
 
-  const { data: factures, loading, error, refetch } = useApi<Facture[]>(
-    () => api.get<Facture[]>(ENDPOINTS.factures),
-    []
+  const [showEmettre, setShowEmettre] = useState(false)
+
+  const setFilter = (patch: Record<string, string>) => {
+    const next = new URLSearchParams(params)
+    for (const [k, v] of Object.entries(patch)) { if (v) next.set(k, v); else next.delete(k) }
+    if (!('page' in patch)) next.delete('page')
+    setParams(next, { replace: true })
+  }
+
+  const { data, loading, error, refetch } = useApi(
+    () => facturesApi.list({ statut: statut || undefined, organisation: organisation || undefined, page }),
+    [statut, organisation, page],
   )
-  const allFactures = withFacturesMockFallbacks(factures)
+  const { data: orgs } = useApi<Organisation[]>(() => api.get<Organisation[]>(ENDPOINTS.organisations), [])
 
-  const handleFilter = (f: string) => { setFilter(f); setPage(0) }
+  const factures = data?.data ?? []
+  // X-Total-Count n'est lisible que si le back l'expose en CORS ; sinon on déduit « page suivante » d'une page pleine
+  const total = data?.total ?? null
+  const totalPages = total !== null ? Math.max(1, Math.ceil(total / PAR_PAGE)) : null
+  const hasNext = totalPages !== null ? page < totalPages : factures.length === PAR_PAGE
 
-  const filtered =
-    filter === 'all'
-      ? allFactures
-      : allFactures.filter((f) => f.statut === filter)
-
-  const totalPages = Math.ceil(filtered.length / PER_PAGE)
-  const visible    = filtered.slice(page * PER_PAGE, (page + 1) * PER_PAGE)
-  const selected   = allFactures.find((f) => f.id === selectedId) ?? null
-
-  const enAttente = allFactures.filter((f) => f.statut === 'en_attente').length
-  const impayees  = allFactures.filter((f) => f.statut === 'impayee').length
-
-  if (loading) return <Spinner />
-  if (error) return (
-    <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-semibold" style={{ color: '#dc2626' }}>Erreur de chargement</p>
-      <p className="text-xs" style={{ color: 'rgba(30,15,70,0.7)' }}>{error}</p>
-      <button onClick={refetch} className="text-xs font-semibold px-4 py-2 rounded-xl border-none cursor-pointer"
-        style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0' }}>Réessayer</button>
-    </div>
+  const orgOptions = useMemo(
+    () => [...(orgs ?? [])].sort((a, b) => a.nom.localeCompare(b.nom, 'fr')),
+    [orgs],
   )
+
+  useEffect(() => { document.querySelector('main')?.scrollTo({ top: 0 }) }, [page])
 
   return (
     <div>
       <PageHeader
         title="Facturation"
-        subtitle="Suivi des paiements et factures clients"
-        actions={<ExportButton filename="facturation" />}
+        subtitle="Factures et avoirs émis à partir des contrats signés"
+        actions={canWrite ? (
+          <button type="button" className="btn-action flex items-center gap-1.5" onClick={() => setShowEmettre(true)}>
+            <FilePlus2 size={14} /> Émettre une facture
+          </button>
+        ) : undefined}
       />
 
-      {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
-        <MetricCard label="MRR estimé"           value="58 320 €" sublabel="ce mois"             />
-        <MetricCard label="Factures en attente"  value={enAttente} sublabel="à traiter"           />
-        <MetricCard label="Impayés"              value={impayees}  sublabel="intervention requise" />
-        <MetricCard label="Échéances 7 jours"    value={2}         sublabel="à anticiper"          />
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <FilterPills options={FILTERS} value={statut} onChange={(v) => setFilter({ statut: v })} />
+        <select
+          className="cubi-input lg:max-w-xs"
+          aria-label="Filtrer par organisation"
+          value={organisation}
+          onChange={(e) => setFilter({ organisation: e.target.value })}
+        >
+          <option value="">Toutes les organisations</option>
+          {orgOptions.map((o) => <option key={o.id} value={o.id}>{o.nom}</option>)}
+        </select>
       </div>
 
-      {/* Filters */}
-      <FilterPills options={FILTERS} value={filter} onChange={handleFilter} />
+      {loading ? <Spinner /> : error ? <ErrorState message={error} onRetry={refetch} /> : (
+        <>
+          <div className="flex items-center mt-5 mb-4">
+            <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
+              {total !== null ? `${total} document${total !== 1 ? 's' : ''}` : `${factures.length} document${factures.length !== 1 ? 's' : ''} sur cette page`}
+            </span>
+          </div>
 
-      <div className="flex items-center mt-5 mb-4">
-        <span className="text-sm font-semibold" style={{ color: 'rgba(30,15,70,0.7)' }}>
-          {filtered.length} facture{filtered.length !== 1 ? 's' : ''}
-        </span>
-      </div>
+          {factures.length === 0 ? (
+            <EmptyState
+              title={statut || organisation ? 'Aucune facture pour ces filtres.' : 'Aucune facture émise pour le moment.'}
+              hint={statut || organisation ? undefined : 'La première facture est émise automatiquement à la signature d\'un contrat.'}
+            />
+          ) : (
+            <div className="flex flex-col gap-2.5">
+              {factures.map((f) => (
+                <FactureRow key={f.id} facture={f} onOpen={() => navigate(`/admin/facturation/${f.id}`)} />
+              ))}
+            </div>
+          )}
 
-      {/* List */}
-      <div className="flex flex-col gap-2.5">
-        {visible.map((f) => (
-          <FactureRow key={f.id} facture={f} onView={() => setSelectedId(f.id)} />
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <div className="mt-6">
-          <DotsPagination total={totalPages} current={page} onChange={setPage} showLabel />
-        </div>
+          {(page > 1 || hasNext) && (
+            <div className="mt-6 flex items-center justify-center gap-3">
+              <button type="button" className="btn-action" disabled={page <= 1} onClick={() => setFilter({ page: String(page - 1) })}>
+                Précédent
+              </button>
+              <span className="text-xs" style={{ color: 'rgba(30,15,70,0.62)' }}>
+                Page {page}{totalPages !== null ? ` sur ${totalPages}` : ''}
+              </span>
+              <button type="button" className="btn-action" disabled={!hasNext} onClick={() => setFilter({ page: String(page + 1) })}>
+                Suivant
+              </button>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Invoice modal */}
-      <Modal
-        isOpen={!!selected}
-        onClose={() => setSelectedId(null)}
-        title="Aperçu de la facture"
-        size="lg"
-      >
-        {selected && <InvoiceModal facture={selected} />}
+      <Modal isOpen={showEmettre} onClose={() => setShowEmettre(false)} title="Émettre une facture" size="lg">
+        {showEmettre && (
+          <EmettreModal
+            onClose={() => setShowEmettre(false)}
+            onDone={(f) => {
+              setShowEmettre(false)
+              navigate(`/admin/facturation/${f.id}`, { state: { notice: `Facture ${f.reference} émise.` } })
+            }}
+          />
+        )}
       </Modal>
     </div>
   )

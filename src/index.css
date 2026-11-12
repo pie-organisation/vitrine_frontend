@@ -194,6 +194,16 @@ body {
   border-color: rgba(107, 79, 224, 0.7);
 }
 
+/* Boutons désactivés : visibles comme tels */
+.btn-action:disabled,
+.btn-danger:disabled,
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 /* ── Primary button ── */
 /* Dégradé foncé pour garder le texte blanc au-dessus de 4.5:1 sur toute la largeur */
 .btn-primary {

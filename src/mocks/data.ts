@@ -1,7 +1,8 @@
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type OrgType     = 'ecole' | 'groupe'
-export type OrgStatus   = 'actif' | 'en_attente' | 'suspendu'
+// 'inactif' : organisation créée à la validation, en attente de signature du contrat
+export type OrgStatus   = 'actif' | 'en_attente' | 'suspendu' | 'inactif'
 export type AlerteSev   = 'error' | 'warning' | 'info' | 'success'
 export type HistoType   = 'info' | 'warning' | 'success'
 export type PlanStatus  = 'actif' | 'brouillon' | 'archive'
@@ -317,7 +318,7 @@ export const mockAlertes: Alerte[] = [
 
 // ── Demandes ──────────────────────────────────────────────────────────────────
 
-export type DemandeStatut = 'en_attente' | 'validee' | 'refusee'
+export type DemandeStatut = 'en_attente' | 'validee' | 'refusee' | 'expiree'
 
 export interface Demande {
   id: string
@@ -339,6 +340,8 @@ export interface Demande {
   prenomContact: string
   emailContact: string
   visaEcole?: string
+  /** Nombre d'utilisateurs estimé à l'inscription (école) ; null si non renseigné */
+  nbLicencesEstime?: number | null
   /** Demande de groupe : un établissement + son responsable par élément */
   etablissements?: DemandeEtablissement[]
 }
@@ -353,6 +356,7 @@ export interface DemandeEtablissement {
   nomResponsable: string
   prenomResponsable: string
   emailResponsable: string
+  nbLicencesEstime?: number | null
 }
 
 export const mockDemandes: Demande[] = [
@@ -484,36 +488,7 @@ export const mockSessions: SessionActive[] = [
 ]
 
 // ── Facturation ───────────────────────────────────────────────────────────────
-
-export type FactureStatut = 'payee' | 'en_attente' | 'impayee'
-
-export interface Facture {
-  id: string
-  organisationId: string
-  organisation: string
-  plan: string
-  montant: string
-  echeance: string
-  statut: FactureStatut
-  reference: string
-}
-
-export const mockFactures: Facture[] = [
-  { id: 'f1', organisationId: '1', organisation: 'Lycée Jean Moulin',             plan: 'Pack Campus',   montant: '2 988 €',  echeance: '31/12/2024', statut: 'payee',      reference: 'FAC-2024-0042' },
-  { id: 'f2', organisationId: '2', organisation: 'Institut Supérieur du Numérique', plan: 'Pack Sur-Mesure', montant: 'Sur devis', echeance: '30/11/2024', statut: 'en_attente', reference: 'FAC-2024-0043' },
-  { id: 'f3', organisationId: '3', organisation: 'Groupe DigitalEduc',            plan: 'Pack Institut', montant: '405 €',    echeance: '15/12/2024', statut: 'impayee',    reference: 'FAC-2024-0044' },
-  { id: 'f4', organisationId: '4', organisation: 'PME Tech Solutions',            plan: 'Pack Campus',   montant: '1 824 €',  echeance: '30/11/2024', statut: 'payee',      reference: 'FAC-2024-0045' },
-  { id: 'f5', organisationId: '6', organisation: 'Institut de Formation Pro',     plan: 'Pack Campus',   montant: '3 744 €',  echeance: '01/12/2024', statut: 'en_attente', reference: 'FAC-2024-0046' },
-  { id: 'f6', organisationId: '1', organisation: 'Lycée Jean Moulin',             plan: 'Pack Campus',   montant: '2 988 €',  echeance: '31/12/2023', statut: 'payee',      reference: 'FAC-2023-0089' },
-  { id: 'f7', organisationId: '2', organisation: 'Institut Supérieur du Numérique', plan: 'Pack Campus',   montant: '2 988 €',  echeance: '30/06/2024', statut: 'payee',      reference: 'FAC-2024-0012' },
-]
-
-// La facturation n'est pas encore implémentée côté backend (le stub renvoie
-// toujours []) : on retombe sur des factures de démonstration tant que
-// l'API n'a rien de réel à montrer.
-export function withFacturesMockFallbacks(factures: Facture[] | null): Facture[] {
-  return factures && factures.length > 0 ? factures : mockFactures
-}
+// Plus de mock : les types Facture / SchoolInvoice sont dans src/api/documents.ts.
 
 // ── Logs ──────────────────────────────────────────────────────────────────────
 

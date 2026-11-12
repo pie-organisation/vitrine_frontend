@@ -1,16 +1,26 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Users, Receipt, Phone, Wifi, Mail, LogOut, Menu, X, type LucideIcon } from 'lucide-react'
+import {
+  LayoutDashboard, Users, Receipt, Phone, Mail, LogOut, Menu, X,
+  UsersRound, Monitor, Package, type LucideIcon,
+} from 'lucide-react'
 import { Logo } from '../components/ui/Logo'
 import { useAuth } from '../contexts/AuthContext'
+import { VdiProvider } from '../contexts/VdiContext'
 import { api, ENDPOINTS } from '../api/client'
 
 interface SchoolOrgMin { nom: string; plan: string }
 
-const NAV: { to: string; icon: LucideIcon; label: string }[] = [
+type NavEntry = { to: string; icon: LucideIcon; label: string } | { section: string }
+
+const NAV: NavEntry[] = [
   { to: '/school/dashboard',   icon: LayoutDashboard, label: 'Tableau de bord' },
   { to: '/school/comptes',     icon: Users,           label: 'Comptes'         },
-  { to: '/school/sessions',    icon: Wifi,            label: 'Sessions'        },
+  { section: 'Postes de travail' },
+  { to: '/school/groupes',     icon: UsersRound,      label: 'Groupes'         },
+  { to: '/school/machines',    icon: Monitor,         label: 'Machines'        },
+  { to: '/school/logiciels',   icon: Package,         label: 'Logiciels'       },
+  { section: 'Établissement' },
   { to: '/school/facturation', icon: Receipt,         label: 'Facturation'     },
   { to: '/school/messages',    icon: Mail,            label: 'Messages'        },
   { to: '/school/contact',     icon: Phone,           label: 'Contact'         },
@@ -64,7 +74,11 @@ function Sidebar({ org, isMobile, onClose }: { org: SchoolOrgMin | null; isMobil
 
       {/* Nav */}
       <nav className="flex flex-col gap-0.5 flex-1">
-        {NAV.map((n) => <NavItem key={n.to} {...n} />)}
+        {NAV.map((n) => 'section' in n ? (
+          <div key={n.section} className="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(30,15,70,0.45)' }}>
+            {n.section}
+          </div>
+        ) : <NavItem key={n.to} {...n} />)}
       </nav>
 
       {/* Org info + logout */}
@@ -145,7 +159,9 @@ export function SchoolLayout() {
             }}
           />
           <div className="p-5 lg:p-8">
-            <Outlet />
+            <VdiProvider>
+              <Outlet />
+            </VdiProvider>
           </div>
         </main>
       </div>
