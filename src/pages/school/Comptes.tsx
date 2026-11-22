@@ -11,6 +11,7 @@ import { DotsPagination } from '../../components/ui/DotsPagination'
 import { useApi }         from '../../hooks/useApi'
 import { api, ENDPOINTS } from '../../api/client'
 import { useTemplateDownload } from "../../hooks/useTemplateDownload";
+import { useImportUsers, Compte } from '../../hooks/useImportUser'
 import type { UserChoices } from "../../features/import_template/Types";
 import type {
   SchoolAccount,
@@ -18,6 +19,7 @@ import type {
   AccountType,
   AccountStatut,
 } from '../../mocks/schoolData'
+import { EMAIL_RE } from '../../features/import_template/Normalize'
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
@@ -46,8 +48,6 @@ const ROLE_TABS: { value: AccountType; label: string }[] = [
   { value: 'scolarite', label: 'Scolarité' },
   { value: 'eleve',     label: 'Élève'     },
 ]
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // ── Password strength ─────────────────────────────────────────────────────────
 
@@ -697,16 +697,52 @@ function ManualCreateView({ onBack, onSaved }: { onBack: () => void; onSaved: ()
 
 // ── ImportView ────────────────────────────────────────────────────────────────
 
+// À mettre en haut de Comptes.tsx, hors du composant :
+// import type { Compte } from '../../hooks/useImportUsers'   // ou depuis Types.ts selon où vous l'avez défini
+
+const USER_CHOICES: UserChoices = {
+  roles: ['admin', 'scolarite', 'eleve'],
+}
+
+const toFormData = (c: Compte): FormData => {
+  const type = c.role as AccountType
+  return {
+    type,
+    nom: c.nom,
+    prenom: c.prenom,
+    email: c.email,
+    password: c.mot_de_passe_temporaire,
+    licence: generateLicence(type),
+  }
+}
+
 function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
   const [dragging, setDragging] = useState(false)
-  const [fileName, setFileName] = useState<string | null>(null)
-  const [importError, setImportError] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null)
+  const fileName = file?.name ?? ''
+  const [pending, setPending] = useState<FormData[]>([])
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
-  const userChoices: UserChoices = {
-    roles: ["admin", "scolarite", "eleve"],
-  };
-  
-  const { handleXlsx, handleCsv, loading } = useTemplateDownload(userChoices);
+  const { handleXlsx, handleCsv, loading: templateLoading } = useTemplateDownload(USER_CHOICES)
+  const { readFile, loading: reading, error: importError } = useImportUsers(USER_CHOICES)
+
+  const handleRead = async () => {
+    if (!file) return
+    const rows = await readFile(file)
+    if (rows) setPending(rows.map(toFormData))
+  }
+
+  const handleSave = () => {
+    setSaving(true)
+    setSaveError(null)
+    api.post(ENDPOINTS.schoolComptes, { comptes: pending })
+      .then(() => { onSaved(); onBack() })
+      .catch((e) => {
+        setSaving(false)
+        setSaveError(e instanceof Error ? e.message : 'Erreur lors de la création des comptes.')
+      })
+  }
 
   return (
     <div>
@@ -718,7 +754,7 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
         <span className="text-xs font-semibold" style={{ color: 'rgba(30,15,70,0.5)' }}>Import de fichier</span>
       </div>
 
-      <div className="max-w-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
         <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid rgba(107,79,224,0.12)', boxShadow: '0 4px 24px rgba(107,79,224,0.07)' }}>
           <h2 className="font-display font-extrabold text-base mb-1" style={{ color: '#1a1040' }}>Import de fichier</h2>
           <p className="text-xs mb-5" style={{ color: 'rgba(30,15,70,0.45)' }}>Importez un fichier CSV ou Excel (.xlsx) pour créer plusieurs comptes simultanément.</p>
@@ -727,7 +763,11 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             style={{ border: `2px dashed ${dragging ? '#6B4FE0' : 'rgba(107,79,224,0.25)'}`, background: dragging ? 'rgba(107,79,224,0.06)' : 'rgba(107,79,224,0.02)' }}
             onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
             onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) setFileName(f.name) }}
+            onDrop={(e) => {
+              e.preventDefault(); setDragging(false)
+              const f = e.dataTransfer.files[0]
+              if (f && /\.(csv|xlsx|xls)$/i.test(f.name)) { setFile(f); setPending([]) }
+            }}
             onClick={() => document.getElementById('file-input-import')?.click()}
           >
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: dragging ? 'linear-gradient(135deg, #6B4FE0, #C084FC)' : 'rgba(107,79,224,0.1)' }}>
@@ -736,7 +776,7 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             {fileName ? (
               <>
                 <p className="font-display font-bold text-sm mb-1" style={{ color: '#6B4FE0' }}>{fileName}</p>
-                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>Fichier prêt à être importé</p>
+                <p className="text-xs" style={{ color: 'rgba(30,15,70,0.4)' }}>Fichier prêt à être lu</p>
               </>
             ) : (
               <>
@@ -746,7 +786,7 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
               </>
             )}
             <input id="file-input-import" type="file" accept=".csv,.xlsx,.xls" className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) setFileName(f.name) }} />
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) { setFile(f); setPending([]) } }} />
           </div>
 
           <div className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl mb-5"
@@ -759,30 +799,18 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              {/* Bouton secondaire */}
               <button
                 className="text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer whitespace-nowrap"
-                style={{
-                  background: 'transparent',
-                  color: '#6B4FE0',
-                  border: '1px solid rgba(107,79,224,0.25)',
-                  fontFamily: 'var(--font-sans)',
-                }}
+                style={{ background: 'transparent', color: '#6B4FE0', border: '1px solid rgba(107,79,224,0.25)', fontFamily: 'var(--font-sans)' }}
                 onClick={handleCsv}>
                 Télécharger en CSV
               </button>
 
-              {/* Bouton principal */}
               <button
                 className="text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer whitespace-nowrap"
-                style={{
-                  background: 'rgba(107,79,224,0.1)',
-                  color: '#6B4FE0',
-                  border: '1px solid transparent',
-                  fontFamily: 'var(--font-sans)',
-                }}
-                onClick={handleXlsx} disabled={loading}>
-                {loading ? "Génération…" : "Télécharger en Excel"}
+                style={{ background: 'rgba(107,79,224,0.1)', color: '#6B4FE0', border: '1px solid transparent', fontFamily: 'var(--font-sans)' }}
+                onClick={handleXlsx} disabled={templateLoading}>
+                {templateLoading ? 'Génération…' : 'Télécharger en Excel'}
               </button>
             </div>
           </div>
@@ -795,18 +823,49 @@ function ImportView({ onBack, onSaved }: { onBack: () => void; onSaved: () => vo
           )}
 
           <div className="flex gap-3">
-            <button className="btn-primary flex-1" disabled={!fileName} style={{ opacity: fileName ? 1 : 0.4 }}
-              onClick={() => {
-                setImportError(null)
-                api.post(ENDPOINTS.schoolComptes, { fichier: fileName })
-                  .then(() => { onSaved(); onBack() })
-                  .catch((e) => setImportError(e instanceof Error ? e.message : "Erreur lors de l'import."))
-              }}>
-              Importer le fichier
+            <button className="btn-primary flex-1" disabled={!file || reading}
+              style={{ opacity: file && !reading ? 1 : 0.4 }}
+              onClick={handleRead}>
+              {reading ? 'Lecture du fichier…' : 'Lire le fichier'}
             </button>
             <button className="btn-action" style={{ width: 'auto', padding: '0 18px' }} onClick={onBack}>Annuler</button>
           </div>
         </div>
+
+        {/* ── Preview ── */}
+        {pending.length > 0 && (
+          <div className="rounded-2xl p-6 flex flex-col"
+            style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(107,79,224,0.1)', boxShadow: '0 4px 24px rgba(107,79,224,0.05)' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display font-extrabold text-base" style={{ color: '#1a1040' }}>Comptes à ajouter</h2>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                style={{ background: 'linear-gradient(135deg, #6B4FE0, #C084FC)', color: '#fff' }}>
+                {pending.length}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {pending.map((item, i) => (
+                <PendingRow key={i} item={item} index={i}
+                  onRemove={() => setPending((p) => p.filter((_, idx) => idx !== i))} />
+              ))}
+            </div>
+
+            {saveError && (
+              <div className="rounded-xl px-3 py-2.5 text-xs mt-4"
+                style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#dc2626' }}>
+                {saveError}
+              </div>
+            )}
+
+            <div className="mt-5 pt-4" style={{ borderTop: '1px solid rgba(107,79,224,0.08)' }}>
+              <button className="btn-primary w-full" disabled={saving}
+                style={{ opacity: saving ? 0.4 : 1 }} onClick={handleSave}>
+                {saving ? 'Enregistrement…' : `Enregistrer ${pending.length} compte${pending.length > 1 ? 's' : ''}`}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

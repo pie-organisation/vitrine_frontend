@@ -1,6 +1,6 @@
 // Centralized API client — reads base URL from env, injects JWT, handles errors uniformly.
 
-const API_BASE = ((import.meta.env.VITE_API_BASE_URL as string) ?? '').replace(/\/$/, '')
+const API_BASE = ((import.meta.env.VITE_API_BASE_URL as string) ?? '').replace(/\/$/, '')//((import.meta.env.VITE_API_BASE_URL as string) ?? '').replace(/\/$/, '')
 
 // ── Error type ────────────────────────────────────────────────────────────────
 

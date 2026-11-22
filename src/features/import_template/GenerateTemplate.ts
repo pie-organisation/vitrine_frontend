@@ -70,3 +70,26 @@ export function generateCsv(
     type: "text/csv;charset=utf-8;",
   });
 }
+
+export async function generateConflictsXlsx(
+  columns: TemplateColumn[],
+  conflicts: { row: Record<string, string>; reason: string }[]
+): Promise<Blob> {
+  const { default: ExcelJS } = await import("exceljs");
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet("Import");
+
+  ws.columns = [
+    ...columns.map((c) => ({ header: c.header, key: c.key, width: c.width ?? 20 })),
+    { header: "Motif", key: "motif", width: 40 },
+  ];
+  ws.getRow(1).font = { bold: true };
+  ws.columns.forEach((_, i) => (ws.getColumn(i + 1).numFmt = "@"));
+
+  conflicts.forEach(({ row, reason }) => ws.addRow({ ...row, motif: reason }));
+
+  const buffer = await wb.xlsx.writeBuffer();
+  return new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+}
